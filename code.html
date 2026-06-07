@@ -60,7 +60,7 @@
 <body class="text-gray-800 overflow-x-hidden min-h-screen flex flex-col" style="background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, rgba(236, 72, 153, 0.04) 90%);">
 
   <!-- Main Pages Wrapper -->
-  <div class="relative overflow-hidden w-full flex-grow">
+  <div class="relative overflow-hidden w-full flex-grow flex flex-col">
 
     <!-- PAGE 1: HOME -->
     <div id="page-home" class="w-full min-h-screen relative page-active">
@@ -243,9 +243,9 @@
 
 
     <!-- PAGE 2: CHATS -->
-    <div id="page-chats" class="w-full min-h-screen absolute top-0 left-0 page-left">
+    <div id="page-chats" class="w-full min-h-screen absolute top-0 left-0 page-left flex flex-col">
       <!-- BEGIN: Hero Section / Top Area -->
-      <section class="relative w-full overflow-hidden pb-10" data-purpose="hero-header">
+      <section id="chats-hero" class="relative w-full overflow-hidden pb-10 transition-all duration-300" data-purpose="hero-header">
         <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
         <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
           <!-- Glowing ambient blobs for depth -->
@@ -279,8 +279,8 @@
           </svg>
         </div>
 
-        <!-- Header Area -->
-        <div class="relative z-10 px-6 py-4 flex justify-between items-center">
+        <!-- Header Area 1: Chats List Header -->
+        <div id="header-chats-list" class="relative z-10 px-6 py-4 flex justify-between items-center transition-all duration-300">
           <!-- Right Heart Button -->
           <button class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -300,8 +300,34 @@
           </button>
         </div>
 
+        <!-- Header Area 2: Active Chat Header (Hidden initially) -->
+        <div id="header-chat-detail" class="hidden relative z-10 px-6 py-4 flex justify-between items-center transition-all duration-300">
+          <!-- Right Back Button to Chats List -->
+          <button onclick="closeActiveChat()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+
+          <!-- Centered Name and Status -->
+          <div class="flex items-center space-x-3 space-x-reverse">
+            <img id="active-chat-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">
+            <div class="text-right">
+              <h2 id="active-chat-name" class="text-sm font-bold text-slate-900">سارة حسن</h2>
+              <span id="active-chat-status" class="text-[10px] text-green-500 font-medium">نشط الآن</span>
+            </div>
+          </div>
+
+          <!-- Left Phone Options Button -->
+          <button class="text-slate-800 hover:text-purple-600 transition-colors p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+            </svg>
+          </button>
+        </div>
+
         <!-- Search Bar -->
-        <div class="relative z-10 px-6 mt-4">
+        <div id="chats-search-container" class="relative z-10 px-6 mt-4 transition-all duration-300">
           <div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
             <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
@@ -311,73 +337,113 @@
         </div>
       </section>
 
-      <!-- Chats List Container -->
-      <main class="flex-grow bg-white rounded-t-[32px] -mt-6 pt-8 px-6 pb-32 shadow-inner relative z-20 min-h-screen">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-sm font-bold text-slate-800">المحادثات الأخيرة</h2>
-          <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">3 رسائل جديدة</span>
+      <!-- Chats List -->
+      <main id="chats-main-box" class="flex-grow bg-white rounded-t-[32px] -mt-6 pt-8 px-6 pb-24 shadow-inner relative z-20 transition-all duration-300 flex flex-col">
+        
+        <!-- View 1: Conversations List -->
+        <div id="view-chats-list" class="flex flex-col space-y-4 flex-grow transition-all duration-300">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-sm font-bold text-slate-800">المحادثات الأخيرة</h2>
+            <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">3 رسائل جديدة</span>
+          </div>
+
+          <div class="space-y-4" id="chats-list-container">
+            <!-- Conversation Item 1 -->
+            <div onclick="openActiveChat('سارة حسن')" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item cursor-pointer" data-name="سارة حسن">
+              <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
+                <div class="flex-shrink-0">
+                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150" alt="سارة حسن" class="w-12 h-12 rounded-full object-cover">
+                </div>
+                <div class="overflow-hidden">
+                  <div class="flex items-center space-x-1.5 space-x-reverse">
+                    <h4 class="text-sm font-bold text-slate-950 truncate">سارة حسن</h4>
+                    <span class="text-[9px] bg-purple-50 text-purple-600 px-1.5 py-0.2 rounded font-medium">مصممة</span>
+                  </div>
+                  <p class="text-xs text-slate-600 truncate mt-1 font-bold">مرحباً! هل اطلعت على تصميم واجهة LUMO الجديد؟</p>
+                </div>
+              </div>
+              <div class="flex flex-col items-end flex-shrink-0">
+                <span class="text-[10px] text-purple-600 font-bold">10:30 ص</span>
+                <span class="mt-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white text-[9px] font-bold h-5 w-5 flex items-center justify-center rounded-full shadow-sm">2</span>
+              </div>
+            </div>
+
+            <!-- Conversation Item 2 -->
+            <div onclick="openActiveChat('أحمد علي')" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item cursor-pointer" data-name="أحمد علي">
+              <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
+                <div class="flex-shrink-0">
+                  <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150" alt="أحمد علي" class="w-12 h-12 rounded-full object-cover">
+                </div>
+                <div class="overflow-hidden">
+                  <div class="flex items-center space-x-1.5 space-x-reverse">
+                    <h4 class="text-sm font-bold text-slate-950 truncate">أحمد علي</h4>
+                    <span class="text-[9px] bg-pink-50 text-pink-600 px-1.5 py-0.2 rounded font-medium">مطور</span>
+                  </div>
+                  <p class="text-xs text-slate-400 truncate mt-1">الرمز البرمجي جاهز للمراجعة، قمت برفعه على GitHub.</p>
+                </div>
+              </div>
+              <div class="flex flex-col items-end flex-shrink-0">
+                <span class="text-[10px] text-slate-400">أمس</span>
+                <span class="mt-2 text-[10px] text-slate-300">✓✓</span>
+              </div>
+            </div>
+
+            <!-- Conversation Item 3 -->
+            <div onclick="openActiveChat('ديما يوسف')" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item cursor-pointer" data-name="ديما يوسف">
+              <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
+                <div class="flex-shrink-0">
+                  <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150" alt="ديما يوسف" class="w-12 h-12 rounded-full object-cover">
+                </div>
+                <div class="overflow-hidden">
+                  <div class="flex items-center space-x-1.5 space-x-reverse">
+                    <h4 class="text-sm font-bold text-slate-950 truncate">ديما يوسف</h4>
+                    <span class="text-[9px] bg-orange-50 text-orange-600 px-1.5 py-0.2 rounded font-medium">إدارة</span>
+                  </div>
+                  <p class="text-xs text-slate-400 truncate mt-1">شكراً لك، سأتواصل معك لمناقشة التفاصيل المالية لاحقاً.</p>
+                </div>
+              </div>
+              <div class="flex flex-col items-end flex-shrink-0">
+                <span class="text-[10px] text-slate-400">2 يونيو</span>
+                <span class="mt-2 text-[10px] text-slate-300">✓✓</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="space-y-4" id="chats-list-container">
-          <!-- Conversation Item 1 -->
-          <a href="chat.html?name=سارة%20حسن&img=https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80%26w=150&title=مصممة%20واجهات" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item" data-name="سارة حسن">
-            <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
-              <div class="flex-shrink-0">
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150" alt="سارة حسن" class="w-12 h-12 rounded-full object-cover">
-              </div>
-              <div class="overflow-hidden">
-                <div class="flex items-center space-x-1.5 space-x-reverse">
-                  <h4 class="text-sm font-bold text-slate-950 truncate">سارة حسن</h4>
-                  <span class="text-[9px] bg-purple-50 text-purple-600 px-1.5 py-0.2 rounded font-medium">مصممة</span>
-                </div>
-                <p class="text-xs text-slate-600 truncate mt-1 font-bold">مرحباً! هل اطلعت على تصميم واجهة LUMO الجديد؟</p>
-              </div>
-            </div>
-            <div class="flex flex-col items-end flex-shrink-0">
-              <span class="text-[10px] text-purple-600 font-bold">10:30 ص</span>
-              <span class="mt-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white text-[9px] font-bold h-5 w-5 flex items-center justify-center rounded-full shadow-sm">2</span>
-            </div>
-          </a>
+        <!-- View 2: Active Chat details feed (Hidden initially) -->
+        <div id="view-chat-detail" class="hidden flex flex-col flex-grow transition-all duration-300">
+          <!-- Scrollable Message Feed -->
+          <div id="active-chat-feed" class="flex-grow overflow-y-auto space-y-4 pb-4 max-h-[50vh] hide-scrollbar" style="direction: rtl;">
+            <!-- Messages populated via loadConversationMessages() -->
+          </div>
 
-          <!-- Conversation Item 2 -->
-          <a href="chat.html?name=أحمد%20علي&img=https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80%26w=150&title=مطور%20تطبيقات" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item" data-name="أحمد علي">
-            <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
-              <div class="flex-shrink-0">
-                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150" alt="أحمد علي" class="w-12 h-12 rounded-full object-cover">
-              </div>
-              <div class="overflow-hidden">
-                <div class="flex items-center space-x-1.5 space-x-reverse">
-                  <h4 class="text-sm font-bold text-slate-950 truncate">أحمد علي</h4>
-                  <span class="text-[9px] bg-pink-50 text-pink-600 px-1.5 py-0.2 rounded font-medium">مطور</span>
-                </div>
-                <p class="text-xs text-slate-400 truncate mt-1">الرمز البرمجي جاهز للمراجعة، قمت برفعه على GitHub.</p>
-              </div>
+          <!-- Typing Indicator -->
+          <div id="active-chat-typing" class="hidden flex items-center space-x-2 space-x-reverse pb-2">
+            <img id="active-chat-typing-avatar" src="" alt="Avatar" class="w-7 h-7 rounded-full object-cover">
+            <div class="bg-slate-100 text-slate-400 text-[10px] px-3 py-1.5 rounded-2xl rounded-br-none border border-gray-100 flex items-center space-x-1 space-x-reverse">
+              <span class="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+              <span class="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+              <span class="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
             </div>
-            <div class="flex flex-col items-end flex-shrink-0">
-              <span class="text-[10px] text-slate-400">أمس</span>
-              <span class="mt-2 text-[10px] text-slate-300">✓✓</span>
-            </div>
-          </a>
+          </div>
 
-          <!-- Conversation Item 3 -->
-          <a href="chat.html?name=ديما%20يوسف&img=https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80%26w=150&title=مديرة%20مشاريع" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item" data-name="ديما يوسف">
-            <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
-              <div class="flex-shrink-0">
-                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150" alt="ديما يوسف" class="w-12 h-12 rounded-full object-cover">
-              </div>
-              <div class="overflow-hidden">
-                <div class="flex items-center space-x-1.5 space-x-reverse">
-                  <h4 class="text-sm font-bold text-slate-950 truncate">ديما يوسف</h4>
-                  <span class="text-[9px] bg-orange-50 text-orange-600 px-1.5 py-0.2 rounded font-medium">إدارة</span>
-                </div>
-                <p class="text-xs text-slate-400 truncate mt-1">شكراً لك، سأتواصل معك لمناقشة التفاصيل المالية لاحقاً.</p>
-              </div>
-            </div>
-            <div class="flex flex-col items-end flex-shrink-0">
-              <span class="text-[10px] text-slate-400">2 يونيو</span>
-              <span class="mt-2 text-[10px] text-slate-300">✓✓</span>
-            </div>
-          </a>
+          <!-- Message Input Bar inside the white box -->
+          <div class="border-t border-gray-100 pt-3 flex items-center space-x-2 space-x-reverse">
+            <!-- Attach button -->
+            <button class="p-2 hover:bg-slate-50 text-slate-400 hover:text-slate-600 rounded-xl transition-all">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+              </svg>
+            </button>
+            <!-- Input Text -->
+            <input id="active-chat-input" type="text" placeholder="اكتب رسالتك هنا..." class="flex-grow border border-gray-200 focus:border-purple-500 focus:ring-1 focus:ring-purple-500/20 rounded-xl px-4 py-2 text-sm bg-slate-50 text-right">
+            <!-- Send Button -->
+            <button id="active-chat-send-btn" onclick="sendChatMessage()" class="p-2 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white rounded-xl shadow-md hover:scale-105 active:scale-95 transition-all">
+              <svg class="h-4 w-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+              </svg>
+            </button>
+          </div>
         </div>
       </main>
     </div>
@@ -428,31 +494,80 @@
 
   <!-- Scripts -->
   <script>
+    // Mock Data for conversation details
+    const conversationsData = {
+      "سارة حسن": {
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150",
+        messages: [
+          { text: "مرحباً بك! يسعدني جداً التواصل معك لمناقشة مشروع LUMO الإبداعي. هل اطلعت على تصميم واجهة المستخدم الجديد؟", isOutgoing: false, time: "10:30 ص" },
+          { text: "أهلاً سارة، نعم لقد رأيت التحديثات الأخيرة! التصميم والتأثيرات التفاعلية تبدو ممتازة وجذابة للغاية.", isOutgoing: true, time: "10:32 ص" },
+          { text: "هذا رائع! سنقوم اليوم بالعمل على ضبط الأكواد البرمجية بالكامل وربطها بالمستودع. هل ترغب بإضافة أي ميزات أخرى؟", isOutgoing: false, time: "10:33 ص" }
+        ],
+        responses: [
+          "رائع جداً! سأقوم بمراجعة طلبك والعمل عليه فوراً.",
+          "تمام، متى يناسبك أن نلتقي لمناقشة هذا المشروع بتفصيل أكبر؟",
+          "يسعدني جداً اهتمامك. سأرسل لك الملفات المحدثة في أقرب وقت ممكن.",
+          "شكراً لتوضيحك، فكرة ممتازة وسأعمل على تطبيقها!"
+        ],
+        responseIndex: 0
+      },
+      "أحمد علي": {
+        avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150",
+        messages: [
+          { text: "مرحباً يا صديقي، هل الكود جاهز للدمج؟", isOutgoing: false, time: "أمس" },
+          { text: "نعم أحمد، لقد انتهيت من تعديل شريط التنقل السفلي وسأقوم برفعه الآن.", isOutgoing: true, time: "أمس" },
+          { text: "ممتاز! الرمز البرمجي جاهز للمراجعة، قمت برفعه على GitHub.", isOutgoing: false, time: "أمس" }
+        ],
+        responses: [
+          "رائع، سألقي نظرة عليه الآن.",
+          "هل توجد أي مشاكل في التجاوب مع الهواتف؟",
+          "قمت بالدمج بنجاح، شكراً لجهودك الكبيرة!"
+        ],
+        responseIndex: 0
+      },
+      "ديما يوسف": {
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150",
+        messages: [
+          { text: "أهلاً بك، هل اطلعت على الميزانية المحددة للمشروع؟", isOutgoing: false, time: "2 يونيو" },
+          { text: "أهلاً ديما، نعم قمت بمراجعتها وهي تغطي كافة المتطلبات الأساسية.", isOutgoing: true, time: "2 يونيو" },
+          { text: "شكراً لك، سأتواصل معك لمناقشة التفاصيل المالية لاحقاً.", isOutgoing: false, time: "2 يونيو" }
+        ],
+        responses: [
+          "سأقوم بجدولة اجتماع مالي غداً صباحاً.",
+          "هل تحتاج إلى ميزانية إضافية للمكونات الإضافية؟",
+          "ممتاز، بالتوفيق لنا جميعاً!"
+        ],
+        responseIndex: 0
+      }
+    };
+
+    let activeUserName = "";
+
     // 1. Page Navigation Switcher with Slide Animations
     function showPage(pageId) {
+      // If active chat is open, close it first before switching pages
+      if (activeUserName) {
+        closeActiveChat();
+      }
+
       const pageHome = document.getElementById('page-home');
       const pageChats = document.getElementById('page-chats');
       const navHome = document.getElementById('nav-home');
       const navChat = document.getElementById('nav-chat');
 
       if (pageId === 'home') {
-        // Slide Home Page active (translateX 0), Chats Page moves to left (translateX -100%)
         pageHome.className = "w-full min-h-screen relative page-active";
         pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-left";
 
-        // Navigation indicators
         navHome.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
         navHome.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
 
         navChat.querySelector('svg').className.baseVal = "h-6 w-6 text-gray-400";
         navChat.querySelector('span').className = "text-[10px] mt-1 text-gray-400";
       } else if (pageId === 'chats') {
-        // Slide Chats Page active, Home Page moves to right (translateX 100% or -100% depending on perspective)
-        // Here we slide Home to left (-100%) and Chats to active (0)
         pageHome.className = "w-full min-h-screen relative page-right";
         pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-active";
 
-        // Navigation indicators
         navChat.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
         navChat.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
 
@@ -475,6 +590,191 @@
         }
       });
     });
+
+    // 3. Open Specific Chat View (Lifting the recent box up, hiding list, showing feed)
+    function openActiveChat(name) {
+      activeUserName = name;
+      const data = conversationsData[name];
+      if (!data) return;
+
+      // Update active user elements
+      document.getElementById('active-chat-name').textContent = name;
+      document.getElementById('active-chat-avatar').src = data.avatar;
+      document.getElementById('active-chat-typing-avatar').src = data.avatar;
+
+      // Render Messages
+      renderChatMessages(data.messages);
+
+      // Transition Header View
+      document.getElementById('header-chats-list').classList.add('hidden');
+      document.getElementById('header-chat-detail').classList.remove('hidden');
+
+      // Hide Search Bar
+      document.getElementById('chats-search-container').classList.add('hidden');
+
+      // Hide App Bottom Nav
+      document.querySelector('[data-purpose="bottom-navigation"]').classList.add('hidden');
+
+      // Lift main box container to take over the screen
+      const mainBox = document.getElementById('chats-main-box');
+      mainBox.classList.remove('-mt-6', 'pb-24');
+      mainBox.classList.add('-mt-24', 'pb-6');
+
+      // Swap views inside main box
+      document.getElementById('view-chats-list').classList.add('hidden');
+      document.getElementById('view-chat-detail').classList.remove('hidden');
+
+      // Scroll feed to bottom
+      scrollToFeedBottom();
+    }
+
+    // 4. Close Active Chat View and Return to Conversation List
+    function closeActiveChat() {
+      activeUserName = "";
+
+      // Transition Header View
+      document.getElementById('header-chats-list').classList.remove('hidden');
+      document.getElementById('header-chat-detail').classList.add('hidden');
+
+      // Show Search Bar
+      document.getElementById('chats-search-container').classList.remove('hidden');
+
+      // Show App Bottom Nav
+      document.querySelector('[data-purpose="bottom-navigation"]').classList.remove('hidden');
+
+      // Reset main box margin and padding
+      const mainBox = document.getElementById('chats-main-box');
+      mainBox.classList.add('-mt-6', 'pb-24');
+      mainBox.classList.remove('-mt-24', 'pb-6');
+
+      // Swap views back
+      document.getElementById('view-chats-list').classList.remove('hidden');
+      document.getElementById('view-chat-detail').classList.add('hidden');
+    }
+
+    // 5. Render Message Feed dynamically
+    function renderChatMessages(messages) {
+      const feed = document.getElementById('active-chat-feed');
+      feed.innerHTML = `
+        <div class="text-center my-2">
+          <span class="bg-slate-50 border border-gray-100 text-[10px] text-gray-400 font-bold px-3 py-1 rounded-full shadow-sm">اليوم</span>
+        </div>
+      `;
+
+      messages.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        if (msg.isOutgoing) {
+          msgDiv.className = 'flex items-end space-x-2 space-x-reverse max-w-[85%] self-end';
+          msgDiv.innerHTML = `
+            <div>
+              <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white text-xs px-4 py-2.5 rounded-2xl rounded-bl-none shadow-md shadow-purple-500/10 leading-relaxed break-words text-right">
+                ${msg.text}
+              </div>
+              <div class="flex items-center justify-end space-x-1 space-x-reverse mt-1 ml-1">
+                <span class="text-[9px] text-gray-400">${msg.time}</span>
+                <span class="text-[9px] text-purple-600 font-bold">✓✓</span>
+              </div>
+            </div>
+          `;
+        } else {
+          msgDiv.className = 'flex items-end space-x-2 space-x-reverse max-w-[85%]';
+          msgDiv.innerHTML = `
+            <img src="${conversationsData[activeUserName].avatar}" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+            <div>
+              <div class="bg-slate-100 text-slate-800 text-xs px-4 py-2.5 rounded-2xl rounded-br-none border border-gray-100 leading-relaxed break-words text-right">
+                ${msg.text}
+              </div>
+              <span class="text-[9px] text-gray-400 mt-1 block mr-1">${msg.time}</span>
+            </div>
+          `;
+        }
+        feed.appendChild(msgDiv);
+      });
+    }
+
+    // Scroll Feed to bottom helper
+    function scrollToFeedBottom() {
+      const feed = document.getElementById('active-chat-feed');
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    // 6. Handle sending message inside active chat
+    function sendChatMessage() {
+      const input = document.getElementById('active-chat-input');
+      const text = input.value.trim();
+      if (!text || !activeUserName) return;
+
+      const data = conversationsData[activeUserName];
+      const feed = document.getElementById('active-chat-feed');
+      const timeStr = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+      // Add to dataset
+      const newMsg = { text: text, isOutgoing: true, time: timeStr };
+      data.messages.push(newMsg);
+
+      // Append immediately to screen
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'flex items-end space-x-2 space-x-reverse max-w-[85%] self-end';
+      msgDiv.innerHTML = `
+        <div>
+          <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white text-xs px-4 py-2.5 rounded-2xl rounded-bl-none shadow-md shadow-purple-500/10 leading-relaxed break-words text-right">
+            ${text}
+          </div>
+          <div class="flex items-center justify-end space-x-1 space-x-reverse mt-1 ml-1">
+            <span class="text-[9px] text-gray-400">${timeStr}</span>
+            <span class="text-[9px] text-purple-600 font-bold">✓✓</span>
+          </div>
+        </div>
+      `;
+      feed.appendChild(msgDiv);
+      input.value = '';
+      scrollToFeedBottom();
+
+      // Trigger Typing Simulation
+      setTimeout(() => {
+        const typing = document.getElementById('active-chat-typing');
+        typing.classList.remove('hidden');
+        document.getElementById('active-chat-status').textContent = 'يكتب الآن...';
+        document.getElementById('active-chat-status').className = 'text-[10px] text-purple-600 font-bold';
+        scrollToFeedBottom();
+
+        // Send response back
+        setTimeout(() => {
+          typing.classList.add('hidden');
+          document.getElementById('active-chat-status').textContent = 'نشط الآن';
+          document.getElementById('active-chat-status').className = 'text-[10px] text-green-500 font-medium';
+
+          const responseText = data.responses[data.responseIndex % data.responses.length];
+          data.responseIndex++;
+
+          const replyMsg = { text: responseText, isOutgoing: false, time: timeStr };
+          data.messages.push(replyMsg);
+
+          const replyDiv = document.createElement('div');
+          replyDiv.className = 'flex items-end space-x-2 space-x-reverse max-w-[85%]';
+          replyDiv.innerHTML = `
+            <img src="${data.avatar}" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+            <div>
+              <div class="bg-slate-100 text-slate-800 text-xs px-4 py-2.5 rounded-2xl rounded-br-none border border-gray-100 leading-relaxed break-words text-right">
+                ${responseText}
+              </div>
+              <span class="text-[9px] text-gray-400 mt-1 block mr-1">${timeStr}</span>
+            </div>
+          `;
+          feed.appendChild(replyDiv);
+          scrollToFeedBottom();
+        }, 1800);
+
+      }, 800);
+    }
+
+    // Attach keypress listener for Input field
+    document.getElementById('active-chat-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendChatMessage();
+      }
+    });
+
   </script>
 </body>
 </html>
