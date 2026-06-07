@@ -581,6 +581,11 @@
 
     // 3. Chat Navigation (Within Chats Page - Smooth Slide Up)
     function openChat(name, avatar, title) {
+      // Reset scroll position to avoid layout shifts
+      window.scrollTo(0, 0);
+      const pageChats = document.getElementById('page-chats');
+      if (pageChats) pageChats.scrollTop = 0;
+
       activeChatUser = name;
       activeChatAvatar = avatar;
 
