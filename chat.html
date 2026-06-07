@@ -1,200 +1,170 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>LUMO - الدردشة</title>
-    <!-- Tailwind CSS v3 with Plugins -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Font Setup: Noto Sans Arabic -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <style>
-        body {
-            font-family: 'Noto Sans Arabic', sans-serif;
-        }
-        /* Hide scrollbar but keep functionality */
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .pb-safe {
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-    </style>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>LUMO - الدردشة</title>
+  <!-- Tailwind CSS v3 with Plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Font Setup: Using Noto Sans Arabic -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+  <style data-purpose="custom-typography">
+    body {
+      font-family: 'Noto Sans Arabic', sans-serif;
+    }
+  </style>
+  <style data-purpose="custom-layout">
+    /* Fixed bottom bar safe area for iOS */
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    /* Smooth Scroll */
+    .chat-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(168, 85, 247, 0.2) transparent;
+    }
+    .chat-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .chat-scroll::-webkit-scrollbar-thumb {
+      background: rgba(168, 85, 247, 0.2);
+      border-radius: 2px;
+    }
+  </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col relative overflow-hidden bg-slate-950">
+<body class="text-gray-800 flex flex-col min-h-screen bg-slate-50" style="background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, rgba(236, 72, 153, 0.04) 90%);">
 
-    <!-- Glowing Background Blobs -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="absolute -top-40 -right-40 w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[120px]"></div>
-        <div class="absolute top-1/2 -left-40 w-[350px] h-[350px] bg-pink-500/10 rounded-full blur-[100px]"></div>
-        <div class="absolute -bottom-40 right-20 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[130px]"></div>
+  <!-- Chat Header -->
+  <header class="sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 py-4 flex items-center justify-between z-40">
+    <div class="flex items-center gap-3">
+      <!-- Back Button -->
+      <a href="code.html" class="p-2 hover:bg-slate-100 rounded-full transition-colors">
+        <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+      <!-- Active Partner Profile -->
+      <div class="relative">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+          أح
+        </div>
+        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold text-slate-800">أحمد الشمري</h2>
+        <p class="text-[10px] text-green-500 font-medium">نشط الآن</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <!-- Call icon (mock) -->
+      <button class="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-600">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Chat Messages Area -->
+  <main class="flex-1 overflow-y-auto p-4 space-y-4 pb-32 chat-scroll">
+    <!-- Center timestamp -->
+    <div class="flex justify-center my-2">
+      <span class="text-[10px] bg-slate-100 text-slate-500 px-3 py-1 rounded-full font-medium">اليوم، 9:15 ص</span>
     </div>
 
-    <!-- Header / Navigation -->
-    <header class="relative z-10 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <button onclick="window.history.back()" class="p-2 text-slate-400 hover:text-white transition-colors bg-slate-900/60 rounded-xl border border-slate-800">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </button>
-            <div class="relative">
-                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop" alt="أحمد علي" class="w-11 h-11 rounded-full object-cover border-2 border-purple-500/30">
-                <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-950 rounded-full"></span>
-            </div>
-            <div>
-                <h1 class="text-sm font-bold text-white">أحمد علي</h1>
-                <p class="text-[10px] text-slate-400">نشط الآن • مطور واجهات</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-2">
-            <button class="p-2 text-slate-400 hover:text-white transition-colors bg-slate-900/60 rounded-xl border border-slate-800">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                </svg>
-            </button>
-            <button class="p-2 text-slate-400 hover:text-white transition-colors bg-slate-900/60 rounded-xl border border-slate-800">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                </svg>
-            </button>
-        </div>
-    </header>
-
-    <!-- Message List (Feed) -->
-    <main id="chat-feed" class="flex-1 overflow-y-auto px-6 py-6 space-y-6 relative z-10 hide-scrollbar">
-        <!-- Date Divider -->
-        <div class="flex justify-center">
-            <span class="text-[10px] font-medium text-slate-500 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-800/40">اليوم</span>
-        </div>
-
-        <!-- Message: Recipient -->
-        <div class="flex items-end gap-3 max-w-[85%]">
-            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop" class="w-8 h-8 rounded-full object-cover border border-purple-500/20" alt="">
-            <div>
-                <div class="bg-slate-900 border border-slate-800/80 px-4 py-3 rounded-2xl rounded-br-none text-slate-200 text-sm leading-relaxed">
-                    مرحباً! لقد اطلعت على فكرة مشروعك المطروحة على منصة LUMO وأعجبتني جداً. هل أنت متفرغ لمناقشة التفاصيل؟
-                </div>
-                <span class="text-[9px] text-slate-500 mt-1 block mr-2">10:14 ص</span>
-            </div>
-        </div>
-
-        <!-- Message: Sender -->
-        <div class="flex items-end gap-3 max-w-[85%] mr-auto flex-row-reverse">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-purple-500/20">
-                أنت
-            </div>
-            <div>
-                <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white px-4 py-3 rounded-2xl rounded-bl-none text-sm leading-relaxed shadow-lg shadow-purple-900/20">
-                    أهلاً بك أحمد! يسعدني جداً اهتمامك بالفكرة. نعم، بكل تأكيد أنا متفرغ الآن. ما هي الجوانب التي ترغب في البدء بمناقشتها؟
-                </div>
-                <span class="text-[9px] text-slate-500 mt-1 block ml-2 text-left">10:16 ص</span>
-            </div>
-        </div>
-
-        <!-- Message: Recipient with Idea/Card attachment -->
-        <div class="flex items-end gap-3 max-w-[85%]">
-            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop" class="w-8 h-8 rounded-full object-cover border border-purple-500/20" alt="">
-            <div class="space-y-2">
-                <div class="bg-slate-900 border border-slate-800/80 px-4 py-3 rounded-2xl rounded-br-none text-slate-200 text-sm leading-relaxed">
-                    كنت أفكر في تصميم واجهة المستخدم وتجربة المستخدم (UI/UX) لهذا التطبيق. لقد قمت بعمل تصور مبدئي للهيكل الرئيسي:
-                </div>
-                
-                <!-- Shared Project/Design Card -->
-                <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl overflow-hidden shadow-xl max-w-sm">
-                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=400&auto=format&fit=crop" class="w-full h-36 object-cover" alt="تصميم الواجهات">
-                    <div class="p-3">
-                        <div class="flex justify-between items-start mb-1.5">
-                            <span class="px-2 py-0.5 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] font-bold text-purple-400">تصميم واجهة</span>
-                            <span class="text-[9px] text-slate-400">مشروع LUMO</span>
-                        </div>
-                        <h4 class="text-xs font-bold text-white mb-1">واجهة تطبيق LUMO الرئيسية</h4>
-                        <p class="text-[10px] text-slate-400 line-clamp-2">تصميم عصري وجذاب يعتمد على التدرجات اللونية والتأثيرات المضيئة.</p>
-                    </div>
-                </div>
-                <span class="text-[9px] text-slate-500 mt-1 block mr-2">10:19 ص</span>
-            </div>
-        </div>
-    </main>
-
-    <!-- Message Input Panel -->
-    <div class="relative z-10 border-t border-slate-900 bg-slate-950/80 backdrop-blur-md px-6 py-4 pb-safe">
-        <form id="chat-form" class="flex items-center gap-3">
-            <!-- Attachment Button -->
-            <button type="button" class="p-2.5 text-slate-400 hover:text-white transition-colors bg-slate-900/60 rounded-2xl border border-slate-800">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                </svg>
-            </button>
-            
-            <!-- Message Input Area -->
-            <div class="flex-1 relative">
-                <input id="message-input" type="text" autocomplete="off" placeholder="اكتب رسالتك هنا..." class="w-full text-right pr-4 pl-12 py-3 bg-slate-900/60 border border-slate-800 rounded-2xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/20 transition-all">
-                <!-- Emoji/Voice Button -->
-                <button type="button" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Send Button -->
-            <button type="submit" class="p-3 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white rounded-2xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/35 active:scale-95 transition-all">
-                <svg class="h-5 w-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                </svg>
-            </button>
-        </form>
+    <!-- Received Message -->
+    <div class="flex items-end gap-2 max-w-[85%]">
+      <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs flex-shrink-0">
+        أح
+      </div>
+      <div class="bg-white border border-slate-100 p-3.5 rounded-2xl rounded-br-none shadow-sm">
+        <p class="text-sm text-slate-700 leading-relaxed">أهلاً بك! لقد رأيت تصاميمك المميزة في LUMO، هل أنت متفرغ لمشروع جديد؟</p>
+        <span class="block text-[9px] text-slate-400 mt-1 text-left">9:16 ص</span>
+      </div>
     </div>
 
-    <!-- Simple chat animation script -->
-    <script>
-        const chatForm = document.getElementById('chat-form');
-        const messageInput = document.getElementById('message-input');
-        const chatFeed = document.getElementById('chat-feed');
+    <!-- Sent Message -->
+    <div class="flex items-end gap-2 max-w-[85%] mr-auto flex-row-reverse">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
+        أنت
+      </div>
+      <div class="bg-gradient-to-tr from-purple-600 to-pink-600 text-white p-3.5 rounded-2xl rounded-bl-none shadow-md shadow-purple-500/10">
+        <p class="text-sm leading-relaxed">أهلاً أستاذ أحمد! يسعدني جداً اهتمامك. نعم، أنا متفرغ حالياً لمناقشة تفاصيل المشروع.</p>
+        <span class="block text-[9px] text-purple-200 mt-1 text-right">9:18 ص</span>
+      </div>
+    </div>
 
-        // Scroll to bottom on load
-        chatFeed.scrollTop = chatFeed.scrollHeight;
+    <!-- Received Message -->
+    <div class="flex items-end gap-2 max-w-[85%]">
+      <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs flex-shrink-0">
+        أح
+      </div>
+      <div class="bg-white border border-slate-100 p-3.5 rounded-2xl rounded-br-none shadow-sm">
+        <p class="text-sm text-slate-700 leading-relaxed">ممتاز! نحتاج لتصميم واجهة مستخدم لتطبيق تجاري جديد. هل يمكنك إرسال نماذج أعمال مشابهة؟</p>
+        <span class="block text-[9px] text-slate-400 mt-1 text-left">9:20 ص</span>
+      </div>
+    </div>
+  </main>
 
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const text = messageInput.value.trim();
-            if (!text) return;
+  <!-- Message Input & Bottom Nav Area -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 z-50">
+    <!-- Chat Input Form -->
+    <form class="px-4 py-2 flex items-center gap-2" onsubmit="event.preventDefault();">
+      <button type="button" class="p-2.5 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-purple-600">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </button>
+      <input type="text" placeholder="اكتب رسالتك هنا..." class="flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-right" />
+      <button type="submit" class="p-2.5 bg-gradient-to-tr from-purple-600 to-pink-600 text-white rounded-full hover:scale-105 active:scale-95 transition-all shadow-md shadow-purple-500/20">
+        <svg class="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </button>
+    </form>
 
-            // Get current time
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true });
+    <!-- Unified Bottom Navigation -->
+    <nav class="bg-white border-t border-gray-100 px-6 py-1.5 flex justify-between items-center pb-safe" data-purpose="bottom-navigation">
+      <!-- Home -->
+      <a href="code.html" class="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity">
+        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+        <span class="text-[10px] mt-1 text-gray-400">الرئيسية</span>
+      </a>
+      <!-- Gallery -->
+      <div class="flex flex-col items-center cursor-pointer">
+        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+        <span class="text-[10px] mt-1 text-gray-400">المعرض</span>
+      </div>
+      <!-- Add FAB -->
+      <div class="relative -top-0.5">
+        <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 p-3.5 rounded-full shadow-md shadow-purple-500/20 border-[3px] border-white hover:scale-105 active:scale-95 transition-all cursor-pointer">
+          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+        </div>
+      </div>
+      <!-- Chat -->
+      <a href="chat.html" class="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity">
+        <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+        <span class="text-[10px] mt-1 font-bold text-purple-600">الدردشة</span>
+      </a>
+      <!-- Settings -->
+      <div class="flex flex-col items-center cursor-pointer">
+        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+        <span class="text-[10px] mt-1 text-gray-400">الإعدادات</span>
+      </div>
+    </nav>
+  </div>
 
-            // Create message element
-            const msgDiv = document.createElement('div');
-            msgDiv.className = "flex items-end gap-3 max-w-[85%] mr-auto flex-row-reverse animate-fade-in";
-            msgDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-purple-500/20">
-                    أنت
-                </div>
-                <div>
-                    <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white px-4 py-3 rounded-2xl rounded-bl-none text-sm leading-relaxed shadow-lg shadow-purple-900/20">
-                        ${text}
-                    </div>
-                    <span class="text-[9px] text-slate-500 mt-1 block ml-2 text-left">${timeStr}</span>
-                </div>
-            `;
-
-            chatFeed.appendChild(msgDiv);
-            messageInput.value = '';
-            
-            // Scroll to bottom
-            setTimeout(() => {
-                chatFeed.scrollTo({
-                    top: chatFeed.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 50);
-        });
-    </script>
 </body>
 </html>
