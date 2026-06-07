@@ -563,7 +563,7 @@
 
         // Hide inactive page after transition ends (450ms)
         setTimeout(() => {
-          if (!pageChats.classList.contains('page-active')) {
+          if (pageHome.classList.contains('page-active')) {
             pageChats.classList.add('hidden');
           }
         }, 450);
@@ -575,13 +575,12 @@
         navChat.querySelector('svg').className.baseVal = "h-6 w-6 text-gray-400";
         navChat.querySelector('span').className = "text-[10px] mt-1 text-gray-400";
       } else if (pageId === 'chats') {
-        // When chats is active, pageHome becomes absolute so it doesn't take layout space
-        pageHome.className = "w-full min-h-screen absolute top-0 left-0 page-right";
-        pageChats.className = "w-full min-h-screen relative page-active";
+        pageHome.className = "w-full min-h-screen relative page-right";
+        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-active";
 
         // Hide inactive page after transition ends (450ms)
         setTimeout(() => {
-          if (!pageHome.classList.contains('page-active')) {
+          if (pageChats.classList.contains('page-active')) {
             pageHome.classList.add('hidden');
           }
         }, 450);
