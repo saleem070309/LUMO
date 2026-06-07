@@ -70,15 +70,7 @@
       transition: margin 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .chats-list-box-expanded {
-      margin-top: 0px !important;
-      border-radius: 0px !important;
-      padding-top: 16px !important;
-      padding-bottom: 16px !important;
-      height: 100vh !important;
-      min-height: 100vh !important;
-      overflow: hidden !important;
-      display: flex !important;
-      flex-direction: column !important;
+      /* Keep list box unchanged to avoid layout shifts */
     }
   </style>
 </head>
@@ -409,8 +401,8 @@
           </div>
         </div>
 
-        <!-- ACTIVE CHAT WINDOW (Hidden initially) -->
-        <div id="active-chat-window" class="hidden flex flex-col h-full transition-opacity duration-300">
+        <!-- ACTIVE CHAT WINDOW (Slides up from bottom overlay) -->
+        <div id="active-chat-window" class="fixed inset-0 bg-white z-[60] flex flex-col px-6 pt-4 pb-4 pb-safe transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
           
           <!-- Chat Window Header -->
           <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
@@ -581,10 +573,7 @@
 
     // 3. Chat Navigation (Within Chats Page - Smooth Slide Up)
     function openChat(name, avatar, title) {
-      // Reset scroll position to avoid layout shifts
       window.scrollTo(0, 0);
-      const pageChats = document.getElementById('page-chats');
-      if (pageChats) pageChats.scrollTop = 0;
 
       activeChatUser = name;
       activeChatAvatar = avatar;
@@ -597,25 +586,13 @@
       // Populate Message Feed
       renderMessages(name);
 
-      // Slide bottom nav down offscreen
-      document.querySelector('nav').classList.remove('translate-y-0');
-      document.querySelector('nav').classList.add('translate-y-full');
-
-      // Collapse Chats Hero background
-      document.getElementById('chats-hero').classList.add('chats-hero-collapsed');
-
-      // Lift List Box up to top of screen
-      document.getElementById('chats-list-box').classList.add('chats-list-box-expanded');
-
       // Prevent page-level scrolling
       document.body.classList.add('overflow-hidden', 'h-screen');
-      document.getElementById('page-chats').classList.add('h-screen', 'overflow-hidden');
 
-      // Transition layouts inside the box
-      document.getElementById('chats-recents-list').classList.add('hidden');
+      // Slide active chat window overlay up
       const activeChatWin = document.getElementById('active-chat-window');
-      activeChatWin.classList.remove('hidden');
-      activeChatWin.classList.add('flex');
+      activeChatWin.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      activeChatWin.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
 
       setTimeout(scrollToBottom, 50);
     }
@@ -623,25 +600,13 @@
     function closeChat() {
       activeChatUser = null;
 
-      // Restore bottom navigation bar
-      document.querySelector('nav').classList.remove('translate-y-full');
-      document.querySelector('nav').classList.add('translate-y-0');
-
-      // Restore Chats Hero background
-      document.getElementById('chats-hero').classList.remove('chats-hero-collapsed');
-
-      // Lower List Box back to default margin
-      document.getElementById('chats-list-box').classList.remove('chats-list-box-expanded');
-
       // Restore page-level scrolling
       document.body.classList.remove('overflow-hidden', 'h-screen');
-      document.getElementById('page-chats').classList.remove('h-screen', 'overflow-hidden');
 
-      // Transition layouts back
-      document.getElementById('chats-recents-list').classList.remove('hidden');
+      // Slide active chat window overlay down
       const activeChatWin = document.getElementById('active-chat-window');
-      activeChatWin.classList.add('hidden');
-      activeChatWin.classList.remove('flex');
+      activeChatWin.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      activeChatWin.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
     }
 
     // Render messages for current user
