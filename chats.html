@@ -20,74 +20,77 @@
     }
   </style>
 </head>
-<body class="text-gray-800 min-h-screen flex flex-col relative overflow-x-hidden" style="background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, rgba(236, 72, 153, 0.04) 90%);">
+<body class="text-gray-800 min-h-screen flex flex-col" style="background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, rgba(236, 72, 153, 0.04) 90%);">
 
-  <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
-  <div class="absolute top-0 left-0 right-0 h-[280px] overflow-hidden pointer-events-none z-0 bg-slate-50/50" data-purpose="lumo-glow-background">
-    <!-- Glowing ambient blobs for depth -->
-    <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
-    <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
-    <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
-    
-    <!-- First Glow Layer (Deep Peaks & Valleys) -->
-    <svg class="absolute top-0 left-0 w-full h-[280px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="lumo-glow-grad-1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#a855f7" stop-opacity="0.95"/>
-          <stop offset="45%" stop-color="#ec4899" stop-opacity="0.75"/>
-          <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
-          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      <path fill="url(#lumo-glow-grad-1)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-    </svg>
-
-    <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
-    <svg class="absolute top-0 left-0 w-full h-[260px] opacity-80 mix-blend-color-burn" viewBox="0 0 1440 320" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="lumo-glow-grad-2" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#ec4899" stop-opacity="0.95"/>
-          <stop offset="55%" stop-color="#f97316" stop-opacity="0.6"/>
-          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      <path fill="url(#lumo-glow-grad-2)" d="M0,128L60,112C120,96,240,64,360,80C480,96,600,160,720,170.7C840,181,960,139,1080,128C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
-    </svg>
-  </div>
-
-  <!-- Header Area -->
-  <header class="sticky top-0 bg-white/40 backdrop-blur-md border-b border-white/20 z-40 px-6 py-4 flex justify-between items-center relative">
-    <!-- Right Heart Button -->
-    <a href="code.html" class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative block">
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+  <!-- BEGIN: Hero Section / Top Area -->
+  <section class="relative w-full overflow-hidden pb-10" data-purpose="hero-header">
+    <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
+    <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
+      <!-- Glowing ambient blobs for depth -->
+      <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+      <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+      <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
+      
+      <!-- First Glow Layer (Deep Peaks & Valleys) -->
+      <svg class="absolute top-0 left-0 w-full h-[240px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="lumo-glow-grad-1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#a855f7" stop-opacity="0.95"/>
+            <stop offset="45%" stop-color="#ec4899" stop-opacity="0.75"/>
+            <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#lumo-glow-grad-1)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
       </svg>
-    </a>
 
-    <!-- Centered Title -->
-    <h1 class="text-xl font-bold text-slate-900 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent text-center drop-shadow-sm">الرسائل</h1>
-
-    <!-- Left Notification Button -->
-    <button class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+      <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
+      <svg class="absolute top-0 left-0 w-full h-[220px] opacity-80 mix-blend-color-burn" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="lumo-glow-grad-2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ec4899" stop-opacity="0.95"/>
+            <stop offset="55%" stop-color="#f97316" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#lumo-glow-grad-2)" d="M0,128L60,112C120,96,240,64,360,80C480,96,600,160,720,170.7C840,181,960,139,1080,128C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
       </svg>
-      <span class="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-purple-600 ring-1 ring-white animate-pulse"></span>
-    </button>
-  </header>
-
-  <!-- Search Bar -->
-  <div class="px-6 py-4 relative z-10">
-    <div class="relative flex items-center bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-3">
-      <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-      </svg>
-      <input id="search-chats" class="w-full border-none focus:ring-0 text-right bg-transparent placeholder-gray-400 text-sm" placeholder="البحث في المحادثات..." type="text"/>
     </div>
-  </div>
+
+    <!-- Header Area -->
+    <div class="relative z-10 px-6 py-4 flex justify-between items-center">
+      <!-- Right Heart Button -->
+      <button class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+        </svg>
+      </button>
+
+      <!-- Centered Title -->
+      <h1 class="text-xl font-bold text-slate-900 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent text-center filter drop-shadow-[0_1px_4px_rgba(255,255,255,0.4)]">الرسائل</h1>
+
+      <!-- Left Notification Button -->
+      <button class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+        <span class="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-purple-600 ring-1 ring-white animate-pulse"></span>
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="relative z-10 px-6 mt-4">
+      <div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
+        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+        <input id="search-chats" class="w-full border-none focus:ring-0 text-right bg-transparent placeholder-gray-400 text-sm" placeholder="البحث في المحادثات..." type="text"/>
+      </div>
+    </div>
+  </section>
 
   <!-- Chats List -->
-  <main class="flex-grow bg-white rounded-t-[32px] mt-2 pt-6 px-6 pb-24 shadow-inner relative z-10">
+  <main class="flex-grow bg-white rounded-t-[32px] -mt-6 pt-8 px-6 pb-24 shadow-inner relative z-20">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-sm font-bold text-slate-800">المحادثات الأخيرة</h2>
       <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">3 رسائل جديدة</span>
