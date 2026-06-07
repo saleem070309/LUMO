@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LUMO - الدردشة</title>
+    <!-- Tailwind CSS v3 with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Font Setup: Noto Sans Arabic -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+        }
+        /* Hide scrollbar but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col relative overflow-hidden bg-slate-950">
+
+    <!-- Glowing Background Blobs -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-40 -right-40 w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/2 -left-40 w-[350px] h-[350px] bg-pink-500/10 rounded-full blur-[100px]"></div>
+        <div class="absolute -bottom-40 right-20 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[130px]"></div>
+    </div>
+
+    <!-- Header / Navigation -->
+    <header class="relative z-10 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <button onclick="window.history.back()" class="p-2 text-slate-400 hover:text-white transition-colors bg-slate-900/60 rounded-xl border border-slate-800">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop" alt="أحمد علي" class="w-11 h-11 rounded-full object-cover border-2 border-purple-500/30">
+                <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-950 rounded-full"></span>
+            </div>
+            <div>
+                <h1 class="text-sm font-bold text-white">أحمد علي</h1>
+                <p class="text-[10px] text-slate-400">نشط الآن • مطور واجهات</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button class="p-2 text-slate-400 hover:text-white transition-colors bg-slate-900/60 rounded-xl border border-slate-800">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                </svg>
+            </button>
+            <button class="p-2 text-slate-400 hover:text-white transition-colors bg-slate-900/60 rounded-xl border border-slate-800">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Message List (Feed) -->
+    <main id="chat-feed" class="flex-1 overflow-y-auto px-6 py-6 space-y-6 relative z-10 hide-scrollbar">
+        <!-- Date Divider -->
+        <div class="flex justify-center">
+            <span class="text-[10px] font-medium text-slate-500 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-800/40">اليوم</span>
+        </div>
+
+        <!-- Message: Recipient -->
+        <div class="flex items-end gap-3 max-w-[85%]">
+            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop" class="w-8 h-8 rounded-full object-cover border border-purple-500/20" alt="">
+            <div>
+                <div class="bg-slate-900 border border-slate-800/80 px-4 py-3 rounded-2xl rounded-br-none text-slate-200 text-sm leading-relaxed">
+                    مرحباً! لقد اطلعت على فكرة مشروعك المطروحة على منصة LUMO وأعجبتني جداً. هل أنت متفرغ لمناقشة التفاصيل؟
+                </div>
+                <span class="text-[9px] text-slate-500 mt-1 block mr-2">10:14 ص</span>
+            </div>
+        </div>
+
+        <!-- Message: Sender -->
+        <div class="flex items-end gap-3 max-w-[85%] mr-auto flex-row-reverse">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-purple-500/20">
+                أنت
+            </div>
+            <div>
+                <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white px-4 py-3 rounded-2xl rounded-bl-none text-sm leading-relaxed shadow-lg shadow-purple-900/20">
+                    أهلاً بك أحمد! يسعدني جداً اهتمامك بالفكرة. نعم، بكل تأكيد أنا متفرغ الآن. ما هي الجوانب التي ترغب في البدء بمناقشتها؟
+                </div>
+                <span class="text-[9px] text-slate-500 mt-1 block ml-2 text-left">10:16 ص</span>
+            </div>
+        </div>
+
+        <!-- Message: Recipient with Idea/Card attachment -->
+        <div class="flex items-end gap-3 max-w-[85%]">
+            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop" class="w-8 h-8 rounded-full object-cover border border-purple-500/20" alt="">
+            <div class="space-y-2">
+                <div class="bg-slate-900 border border-slate-800/80 px-4 py-3 rounded-2xl rounded-br-none text-slate-200 text-sm leading-relaxed">
+                    كنت أفكر في تصميم واجهة المستخدم وتجربة المستخدم (UI/UX) لهذا التطبيق. لقد قمت بعمل تصور مبدئي للهيكل الرئيسي:
+                </div>
+                
+                <!-- Shared Project/Design Card -->
+                <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl overflow-hidden shadow-xl max-w-sm">
+                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=400&auto=format&fit=crop" class="w-full h-36 object-cover" alt="تصميم الواجهات">
+                    <div class="p-3">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <span class="px-2 py-0.5 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] font-bold text-purple-400">تصميم واجهة</span>
+                            <span class="text-[9px] text-slate-400">مشروع LUMO</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-white mb-1">واجهة تطبيق LUMO الرئيسية</h4>
+                        <p class="text-[10px] text-slate-400 line-clamp-2">تصميم عصري وجذاب يعتمد على التدرجات اللونية والتأثيرات المضيئة.</p>
+                    </div>
+                </div>
+                <span class="text-[9px] text-slate-500 mt-1 block mr-2">10:19 ص</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Message Input Panel -->
+    <div class="relative z-10 border-t border-slate-900 bg-slate-950/80 backdrop-blur-md px-6 py-4 pb-safe">
+        <form id="chat-form" class="flex items-center gap-3">
+            <!-- Attachment Button -->
+            <button type="button" class="p-2.5 text-slate-400 hover:text-white transition-colors bg-slate-900/60 rounded-2xl border border-slate-800">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                </svg>
+            </button>
+            
+            <!-- Message Input Area -->
+            <div class="flex-1 relative">
+                <input id="message-input" type="text" autocomplete="off" placeholder="اكتب رسالتك هنا..." class="w-full text-right pr-4 pl-12 py-3 bg-slate-900/60 border border-slate-800 rounded-2xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/20 transition-all">
+                <!-- Emoji/Voice Button -->
+                <button type="button" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Send Button -->
+            <button type="submit" class="p-3 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white rounded-2xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/35 active:scale-95 transition-all">
+                <svg class="h-5 w-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <!-- Simple chat animation script -->
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+        const chatFeed = document.getElementById('chat-feed');
+
+        // Scroll to bottom on load
+        chatFeed.scrollTop = chatFeed.scrollHeight;
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            // Get current time
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+            // Create message element
+            const msgDiv = document.createElement('div');
+            msgDiv.className = "flex items-end gap-3 max-w-[85%] mr-auto flex-row-reverse animate-fade-in";
+            msgDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-purple-500/20">
+                    أنت
+                </div>
+                <div>
+                    <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white px-4 py-3 rounded-2xl rounded-bl-none text-sm leading-relaxed shadow-lg shadow-purple-900/20">
+                        ${text}
+                    </div>
+                    <span class="text-[9px] text-slate-500 mt-1 block ml-2 text-left">${timeStr}</span>
+                </div>
+            `;
+
+            chatFeed.appendChild(msgDiv);
+            messageInput.value = '';
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                chatFeed.scrollTo({
+                    top: chatFeed.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 50);
+        });
+    </script>
+</body>
+</html>
