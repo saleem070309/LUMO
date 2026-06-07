@@ -22,16 +22,15 @@
 </head>
 <body class="text-gray-800 min-h-screen flex flex-col" style="background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, rgba(236, 72, 153, 0.04) 90%);">
 
-  <!-- BEGIN: Hero Section -->
-  <section class="relative h-[220px] w-full overflow-hidden" data-purpose="hero-header">
-    <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
+  <!-- BEGIN: Hero Header Area -->
+  <section class="relative h-[200px] w-full overflow-hidden" data-purpose="chats-hero-header">
+    <!-- LUMO Glow Effect Background (same as code.html) -->
     <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
-      <!-- Glowing ambient blobs for depth -->
       <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
       <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
       <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
       
-      <!-- First Glow Layer (Deep Peaks & Valleys) -->
+      <!-- First Glow Layer -->
       <svg class="absolute top-0 left-0 w-full h-[200px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
         <defs>
           <linearGradient id="lumo-glow-grad-1" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -44,7 +43,7 @@
         <path fill="url(#lumo-glow-grad-1)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
       </svg>
 
-      <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
+      <!-- Second Glow Layer -->
       <svg class="absolute top-0 left-0 w-full h-[180px] opacity-80 mix-blend-color-burn" viewBox="0 0 1440 320" preserveAspectRatio="none">
         <defs>
           <linearGradient id="lumo-glow-grad-2" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -57,7 +56,7 @@
       </svg>
     </div>
 
-    <!-- Header Navigation Bar -->
+    <!-- Header Area (Transparent background, overlays glow) -->
     <div class="relative z-10 flex justify-between items-center px-6 mt-3">
       <!-- Right Heart Button -->
       <button class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
@@ -67,7 +66,7 @@
       </button>
 
       <!-- Centered Title -->
-      <h1 class="text-xl font-bold text-slate-900 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent text-center">الرسائل</h1>
+      <h1 class="text-xl font-bold text-slate-900 bg-gradient-to-r from-purple-800 via-pink-700 to-orange-600 bg-clip-text text-transparent text-center filter drop-shadow-[0_1px_2px_rgba(255,255,255,0.7)]">الرسائل</h1>
 
       <!-- Left Notification Button -->
       <button class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
@@ -78,8 +77,8 @@
       </button>
     </div>
 
-    <!-- Search Bar -->
-    <div class="absolute bottom-6 left-0 right-0 px-6 z-20">
+    <!-- Search Bar inside Glow -->
+    <div class="absolute bottom-4 left-0 right-0 px-6 z-20">
       <div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
         <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
@@ -90,7 +89,7 @@
   </section>
 
   <!-- Chats List -->
-  <main class="relative -mt-4 z-30 bg-white rounded-t-[32px] pt-8 px-6 pb-24 shadow-inner flex-grow">
+  <main class="relative -mt-4 bg-white rounded-t-[32px] pt-6 px-6 pb-24 shadow-inner">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-sm font-bold text-slate-800">المحادثات الأخيرة</h2>
       <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">3 رسائل جديدة</span>
