@@ -586,6 +586,13 @@
       // Populate Message Feed
       renderMessages(name);
 
+      // Slide bottom nav down offscreen
+      const bottomNav = document.querySelector('nav');
+      if (bottomNav) {
+        bottomNav.classList.remove('translate-y-0');
+        bottomNav.classList.add('translate-y-full');
+      }
+
       // Prevent page-level scrolling
       document.body.classList.add('overflow-hidden', 'h-screen');
 
@@ -599,6 +606,13 @@
 
     function closeChat() {
       activeChatUser = null;
+
+      // Restore bottom navigation bar
+      const bottomNav = document.querySelector('nav');
+      if (bottomNav) {
+        bottomNav.classList.remove('translate-y-full');
+        bottomNav.classList.add('translate-y-0');
+      }
 
       // Restore page-level scrolling
       document.body.classList.remove('overflow-hidden', 'h-screen');
