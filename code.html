@@ -88,15 +88,10 @@
       <section class="relative h-[300px] w-full overflow-hidden" data-purpose="hero-header">
         <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
         <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
-          <!-- Subtle dot grid pattern for depth -->
-          <svg class="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="dot-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1" fill="rgba(168, 85, 247, 0.2)" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#dot-grid)" />
-          </svg>
+          <!-- Glowing ambient blobs for depth -->
+          <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+          <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+          <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
           
           <!-- First Glow Layer (Deep Peaks & Valleys) -->
           <svg class="absolute top-0 left-0 w-full h-[280px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -107,15 +102,8 @@
                 <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
                 <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
               </linearGradient>
-              <linearGradient id="lumo-stroke-grad-1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#a855f7" />
-                <stop offset="50%" stop-color="#ec4899" />
-                <stop offset="100%" stop-color="#f97316" />
-              </linearGradient>
             </defs>
             <path fill="url(#lumo-glow-grad-1)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-            <!-- Neon gradient stroke tracing the mountain peak -->
-            <path d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256" fill="none" stroke="url(#lumo-stroke-grad-1)" stroke-width="2.5"></path>
           </svg>
 
           <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
@@ -280,15 +268,10 @@
       <section id="chats-hero" class="relative w-full overflow-hidden pb-10">
         <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
         <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
-          <!-- Subtle dot grid pattern for depth -->
-          <svg class="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="dot-grid-chats" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1" fill="rgba(168, 85, 247, 0.2)" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#dot-grid-chats)" />
-          </svg>
+          <!-- Glowing ambient blobs for depth -->
+          <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+          <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+          <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
           
           <!-- First Glow Layer (Deep Peaks & Valleys) -->
           <svg class="absolute top-0 left-0 w-full h-[240px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -299,15 +282,8 @@
                 <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
                 <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
               </linearGradient>
-              <linearGradient id="lumo-stroke-grad-2" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#a855f7" />
-                <stop offset="50%" stop-color="#ec4899" />
-                <stop offset="100%" stop-color="#f97316" />
-              </linearGradient>
             </defs>
             <path fill="url(#lumo-glow-grad-3)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-            <!-- Neon gradient stroke tracing the mountain peak -->
-            <path d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256" fill="none" stroke="url(#lumo-stroke-grad-2)" stroke-width="2.5"></path>
           </svg>
 
           <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
@@ -433,35 +409,22 @@
           
           <!-- Chat Window Header -->
           <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
+            <!-- Contact Details -->
             <div class="flex items-center space-x-3 space-x-reverse">
-              <!-- Back button -->
-              <button onclick="closeChat()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2 bg-slate-50 rounded-full">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              </button>
-              
-              <!-- Contact Details -->
-              <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="relative">
-                  <img id="active-chat-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
-                  <span id="active-chat-status-dot" class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-white"></span>
-                </div>
-                <div>
-                  <h3 id="active-chat-name" class="text-sm font-bold text-slate-900">سارة حسن</h3>
-                  <span id="active-chat-status-text" class="text-[10px] text-green-500 font-medium">نشط الآن</span>
-                </div>
+              <div class="relative flex-shrink-0">
+                <img id="active-chat-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+              </div>
+              <div>
+                <h3 id="active-chat-name" class="text-sm font-bold text-slate-900">سارة حسن</h3>
               </div>
             </div>
 
-            <!-- Call/Option Actions -->
-            <div class="flex items-center space-x-1 space-x-reverse">
-              <button class="p-2 hover:bg-slate-50 rounded-full text-slate-600 transition-colors">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                </svg>
-              </button>
-            </div>
+            <!-- Back button (placed on the left side) -->
+            <button onclick="closeChat()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2 bg-slate-50 rounded-full">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
           </div>
 
           <!-- Chat Messages Feed Area -->
@@ -718,20 +681,15 @@
 
       // Trigger automatic typing reply simulator
       const typingIndicator = document.getElementById('active-typing-indicator');
-      const statusText = document.getElementById('active-chat-status-text');
 
       setTimeout(() => {
         // Show typing indicator in UI
         typingIndicator.classList.remove('hidden');
-        statusText.textContent = 'يكتب الآن...';
-        statusText.className = 'text-[10px] text-purple-600 font-bold';
         scrollToBottom();
 
         // Simulate reply from contact
         setTimeout(() => {
           typingIndicator.classList.add('hidden');
-          statusText.textContent = 'نشط الآن';
-          statusText.className = 'text-[10px] text-green-500 font-medium';
 
           const replyText = botResponses[responseIndex % botResponses.length];
           responseIndex++;
