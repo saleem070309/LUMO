@@ -2,8 +2,10 @@
 <html dir="rtl" lang="ar">
 <head>
   <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
   <title>LUMO</title>
+  <!-- PWA Manifest Link -->
+  <link rel="manifest" href="manifest.json">
   <!-- Tailwind CSS v3 with Plugins -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <!-- Font Setup: Using a readable Arabic sans-serif stack -->
@@ -12,6 +14,27 @@
   <style data-purpose="custom-typography">
     body {
       font-family: 'Noto Sans Arabic', sans-serif;
+      touch-action: manipulation;
+    }
+    html {
+      touch-action: manipulation;
+    }
+    
+    /* Disable Text Copying & Selection globally */
+    *, *::before, *::after {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -ms-user-select: none !important;
+      -moz-user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    /* Allow selection inside inputs/textareas */
+    input, textarea, [contenteditable="true"] {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -ms-user-select: text !important;
+      -moz-user-select: text !important;
     }
   </style>
 
@@ -730,6 +753,30 @@
           item.style.display = 'none';
         }
       });
+    });
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker Registered Successfully!', reg))
+          .catch(err => console.log('Service Worker registration failed: ', err));
+      });
+    }
+
+    // Prevent copying text
+    document.addEventListener('copy', (e) => e.preventDefault());
+
+    // Prevent right-click / context menu (except on inputs)
+    document.addEventListener('contextmenu', (e) => {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+      }
+    });
+
+    // Prevent pinch zoom gestures on iOS devices
+    document.addEventListener('gesturestart', (e) => {
+      e.preventDefault();
     });
   </script>
 </body>
