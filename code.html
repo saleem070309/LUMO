@@ -72,11 +72,13 @@
     .chats-list-box-expanded {
       margin-top: 0px !important;
       border-radius: 0px !important;
-      padding-top: 24px !important;
-      padding-bottom: 24px !important;
+      padding-top: 16px !important;
+      padding-bottom: 16px !important;
       height: 100vh !important;
       min-height: 100vh !important;
       overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
     }
   </style>
 </head>
@@ -431,7 +433,7 @@
           </div>
 
           <!-- Chat Messages Feed Area -->
-          <div id="active-chat-feed" class="flex-grow overflow-y-auto space-y-4 pr-1 pl-1 pb-4 hide-scrollbar flex flex-col h-[calc(100vh-210px)]">
+          <div id="active-chat-feed" class="flex-grow overflow-y-auto space-y-4 pr-1 pl-1 pb-4 hide-scrollbar flex flex-col">
             <!-- Messages injected dynamically by JavaScript -->
           </div>
 
