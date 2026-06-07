@@ -106,9 +106,9 @@
 </div>
 </div>
 </section>
-<!-- END: Hero Section -->
+
 <!-- BEGIN: Main Content Area -->
-<main class="relative -mt-4 bg-white rounded-t-[32px] pt-8 pb-32 px-6 min-h-screen">
+<main id="main-content" class="relative -mt-4 bg-white rounded-t-[32px] pt-8 pb-32 px-6 min-h-screen">
 <!-- Nearby Camp Card -> Idea Card -->
 <section class="bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200/50 rounded-3xl p-5 mb-8 flex justify-between items-center relative overflow-hidden" data-purpose="nearby-camp">
 <div class="z-10 max-w-[65%]">
@@ -205,21 +205,114 @@
 </section>
 </main>
 <!-- END: Main Content Area -->
+
+<!-- BEGIN: Chat Screen Area -->
+<div id="chat-screen" class="hidden relative -mt-4 bg-white rounded-t-[32px] pt-6 pb-32 px-4 min-h-[calc(100vh-200px)] flex flex-col">
+  <!-- Chat User Header -->
+  <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
+    <div class="flex items-center space-x-3 space-x-reverse">
+      <!-- User Avatar Status -->
+      <div class="relative w-12 h-12 rounded-2xl overflow-hidden border-2 border-purple-100">
+        <img id="chat-active-avatar" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop" alt="Active user">
+        <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></span>
+      </div>
+      <!-- User Info -->
+      <div>
+        <h3 id="chat-active-name" class="text-sm font-bold text-slate-800">سارة حسن</h3>
+        <p class="text-[10px] text-emerald-600 font-medium">نشط الآن</p>
+      </div>
+    </div>
+    <!-- Actions -->
+    <div class="flex items-center space-x-1 space-x-reverse">
+      <button class="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+      </button>
+      <button class="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages List Area -->
+  <div id="chat-messages-container" class="flex-grow space-y-4 overflow-y-auto max-h-[420px] px-2 py-4 hide-scrollbar">
+    <!-- Day divider -->
+    <div class="flex justify-center my-2">
+      <span class="text-[10px] bg-slate-100 text-slate-400 px-3 py-1 rounded-full">اليوم</span>
+    </div>
+
+    <!-- Message 1 (Received) -->
+    <div class="flex items-end space-x-2 space-x-reverse max-w-[85%]">
+      <div class="w-8 h-8 rounded-xl overflow-hidden flex-shrink-0 border border-purple-100">
+        <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop" alt="avatar">
+      </div>
+      <div>
+        <div class="bg-slate-100 text-slate-800 text-xs p-3 rounded-2xl rounded-tr-none shadow-sm leading-relaxed">
+          مرحباً! أعجبني جداً تصميمك الأخير لمشروع تطبيق التوصيل. هل أنت متفرغ للعمل على تصميم واجهة لوحة التحكم؟ 🎨
+        </div>
+        <span class="text-[9px] text-slate-400 mt-1 block mr-2">10:30 ص</span>
+      </div>
+    </div>
+
+    <!-- Message 2 (Sent) -->
+    <div class="flex items-end space-x-2 space-x-reverse max-w-[85%] mr-auto flex-row-reverse">
+      <div class="w-8 h-8 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white text-[10px] font-bold">
+        أنا
+      </div>
+      <div>
+        <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white text-xs p-3 rounded-2xl rounded-tl-none shadow-md shadow-purple-500/10 leading-relaxed">
+          أهلاً سارة! شكراً جزيلاً لكِ. يسعدني جداً سماع ذلك. نعم، أنا متفرغ ومتحمس للعمل على لوحة التحكم. هل تملكين ملف تجربة المستخدم (Wireframes)؟
+        </div>
+        <span class="text-[9px] text-slate-400 mt-1 block ml-2 text-left">10:32 ص</span>
+      </div>
+    </div>
+
+    <!-- Message 3 (Received) -->
+    <div class="flex items-end space-x-2 space-x-reverse max-w-[85%]">
+      <div class="w-8 h-8 rounded-xl overflow-hidden flex-shrink-0 border border-purple-100">
+        <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop" alt="avatar">
+      </div>
+      <div>
+        <div class="bg-slate-100 text-slate-800 text-xs p-3 rounded-2xl rounded-tr-none shadow-sm leading-relaxed">
+          رائع! نعم، لقد قمت برسم المخطط المبدئي وسأرسله لك الآن. هل تفضل مناقشته هنا أم عبر اتصال سريع؟ 📞
+        </div>
+        <span class="text-[9px] text-slate-400 mt-1 block mr-2">10:35 ص</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message Input Area -->
+  <div class="mt-4 pt-3 border-t border-gray-100">
+    <div class="relative flex items-center bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5">
+      <!-- Attachment Clip -->
+      <button class="p-1.5 text-slate-400 hover:text-purple-600 transition-colors">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+      </button>
+      <!-- Input Field -->
+      <input id="chat-input-field" type="text" placeholder="اكتب رسالتك هنا..." class="flex-grow bg-transparent border-none focus:ring-0 text-right text-xs text-slate-700 placeholder-slate-400 px-2">
+      <!-- Send Button -->
+      <button id="chat-send-btn" class="bg-gradient-to-tr from-purple-600 to-pink-600 p-2 rounded-xl text-white shadow-md shadow-purple-500/10 hover:shadow-purple-500/20 active:scale-95 transition-all">
+        <svg class="h-4 w-4 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- END: Chat Screen Area -->
+
 <!-- BEGIN: Bottom Navigation -->
 <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-1.5 flex justify-between items-center pb-safe z-50" data-purpose="bottom-navigation">
 <!-- Home -->
-<div class="flex flex-col items-center">
-<svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<div id="nav-home" class="flex flex-col items-center cursor-pointer">
+<svg class="h-6 w-6 text-purple-600 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
 </svg>
-<span class="text-[10px] mt-1 font-bold text-purple-600">الرئيسية</span>
+<span class="text-[10px] mt-1 font-bold text-purple-600 transition-colors">الرئيسية</span>
 </div>
 <!-- Gallery -->
-<div class="flex flex-col items-center">
-<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<div id="nav-gallery" class="flex flex-col items-center cursor-pointer">
+<svg class="h-6 w-6 text-gray-400 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
 </svg>
-<span class="text-[10px] mt-1 text-gray-400">المعرض</span>
+<span class="text-[10px] mt-1 text-gray-400 transition-colors">المعرض</span>
 </div>
 <!-- Add FAB -->
 <div class="relative -top-0.5">
@@ -230,20 +323,123 @@
 </div>
 </div>
 <!-- Chat -->
-<a href="chat.html" class="flex flex-col items-center cursor-pointer hover:scale-105 active:scale-95 transition-all">
-<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<div id="nav-chat" class="flex flex-col items-center cursor-pointer">
+<svg class="h-6 w-6 text-gray-400 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
 </svg>
-<span class="text-[10px] mt-1 text-gray-400">الدردشة</span>
-</a>
+<span class="text-[10px] mt-1 text-gray-400 transition-colors">الدردشة</span>
+</div>
 <!-- Settings -->
-<div class="flex flex-col items-center">
-<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<div id="nav-settings" class="flex flex-col items-center cursor-pointer">
+<svg class="h-6 w-6 text-gray-400 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
 <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
 </svg>
-<span class="text-[10px] mt-1 text-gray-400">الإعدادات</span>
+<span class="text-[10px] mt-1 text-gray-400 transition-colors">الإعدادات</span>
 </div>
 </nav>
 <!-- END: Bottom Navigation -->
-</body></html>
+
+<script>
+  // Simple Tab Switching Logic
+  const navHome = document.getElementById('nav-home');
+  const navChat = document.getElementById('nav-chat');
+  const mainContent = document.getElementById('main-content');
+  const chatScreen = document.getElementById('chat-screen');
+
+  function setActiveTab(tab) {
+    // Reset all tabs
+    [navHome, navChat].forEach(el => {
+      const svg = el.querySelector('svg');
+      const span = el.querySelector('span');
+      svg.classList.remove('text-purple-600');
+      svg.classList.add('text-gray-400');
+      span.classList.remove('text-purple-600', 'font-bold');
+      span.classList.add('text-gray-400');
+    });
+
+    // Set active tab styling
+    const activeSvg = tab.querySelector('svg');
+    const activeSpan = tab.querySelector('span');
+    activeSvg.classList.remove('text-gray-400');
+    activeSvg.classList.add('text-purple-600');
+    activeSpan.classList.remove('text-gray-400');
+    activeSpan.classList.add('text-purple-600', 'font-bold');
+  }
+
+  navHome.addEventListener('click', () => {
+    setActiveTab(navHome);
+    mainContent.classList.remove('hidden');
+    chatScreen.classList.add('hidden');
+  });
+
+  navChat.addEventListener('click', () => {
+    setActiveTab(navChat);
+    mainContent.classList.add('hidden');
+    chatScreen.classList.remove('hidden');
+    // Scroll to bottom of chat messages
+    const msgsContainer = document.getElementById('chat-messages-container');
+    msgsContainer.scrollTop = msgsContainer.scrollHeight;
+  });
+
+  // Sending Message Logic
+  const chatInputField = document.getElementById('chat-input-field');
+  const chatSendBtn = document.getElementById('chat-send-btn');
+  const chatMessagesContainer = document.getElementById('chat-messages-container');
+
+  function sendMessage() {
+    const text = chatInputField.value.trim();
+    if (!text) return;
+
+    // Create Sent Message Element
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'flex items-end space-x-2 space-x-reverse max-w-[85%] mr-auto flex-row-reverse';
+    
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+    msgDiv.innerHTML = `
+      <div class="w-8 h-8 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white text-[10px] font-bold">
+        أنا
+      </div>
+      <div>
+        <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white text-xs p-3 rounded-2xl rounded-tl-none shadow-md shadow-purple-500/10 leading-relaxed break-words">
+          ${text}
+        </div>
+        <span class="text-[9px] text-slate-400 mt-1 block ml-2 text-left">${timeStr}</span>
+      </div>
+    `;
+
+    chatMessagesContainer.appendChild(msgDiv);
+    chatInputField.value = '';
+    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+
+    // Simulated Auto Reply
+    setTimeout(() => {
+      const replyDiv = document.createElement('div');
+      replyDiv.className = 'flex items-end space-x-2 space-x-reverse max-w-[85%]';
+      replyDiv.innerHTML = `
+        <div class="w-8 h-8 rounded-xl overflow-hidden flex-shrink-0 border border-purple-100">
+          <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop" alt="avatar">
+        </div>
+        <div>
+          <div class="bg-slate-100 text-slate-800 text-xs p-3 rounded-2xl rounded-tr-none shadow-sm leading-relaxed">
+            شكراً لرسالتك! سأقوم بمراجعة التفاصيل والرد عليك في أقرب وقت ممكن. 👍✨
+          </div>
+          <span class="text-[9px] text-slate-400 mt-1 block mr-2">${new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+      `;
+      chatMessagesContainer.appendChild(replyDiv);
+      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    }, 1500);
+  }
+
+  chatSendBtn.addEventListener('click', sendMessage);
+  chatInputField.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+</script>
+</body>
+</html>
