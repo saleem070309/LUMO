@@ -402,7 +402,7 @@
         </div>
 
         <!-- ACTIVE CHAT WINDOW (Slides up from bottom overlay) -->
-        <div id="active-chat-window" class="fixed inset-0 bg-white z-[60] flex flex-col px-6 pt-4 pb-4 pb-safe transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
+        <div id="active-chat-window" class="fixed inset-0 bg-white z-[60] flex flex-col px-6 pt-4 pb-0 h-[100dvh] transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
           
           <!-- Chat Window Header -->
           <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
@@ -440,7 +440,7 @@
           </div>
 
           <!-- Message Input Footer inside Box -->
-          <div class="border-t border-gray-100 pt-3 bg-white mt-auto">
+          <div class="border-t border-gray-100 pt-3 pb-6 pb-safe bg-white mt-auto">
             <div class="flex items-center space-x-2 space-x-reverse">
               <button class="p-2 hover:bg-slate-50 text-slate-400 hover:text-slate-600 rounded-xl transition-all">
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
