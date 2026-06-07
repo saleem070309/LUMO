@@ -260,7 +260,7 @@
 
 
     <!-- PAGE 2: CHATS -->
-    <div id="page-chats" class="w-full min-h-screen absolute top-0 left-0 page-left hidden">
+    <div id="page-chats" class="w-full min-h-screen absolute top-0 left-0 page-left hidden flex flex-col">
       <!-- BEGIN: Hero Section / Top Area -->
       <section id="chats-hero" class="relative h-[220px] w-full overflow-hidden transition-all duration-300">
         <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
@@ -329,7 +329,7 @@
       </section>
 
       <!-- Chats List Container -->
-      <main id="chats-list-box" class="flex-grow bg-white rounded-t-[32px] -mt-4 pt-8 px-6 pb-24 shadow-inner relative z-20 min-h-[calc(100vh-204px)]">
+      <main id="chats-list-box" class="flex-grow bg-white rounded-t-[32px] -mt-4 pt-8 px-6 pb-20 shadow-inner relative z-20">
         
         <!-- Recents List Content -->
         <div id="chats-recents-list" class="transition-all duration-300">
@@ -559,7 +559,7 @@
 
       if (pageId === 'home') {
         pageHome.className = "w-full min-h-screen relative page-active";
-        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-left";
+        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
 
         // Hide inactive page after transition ends (450ms)
         setTimeout(() => {
@@ -576,7 +576,7 @@
         navChat.querySelector('span').className = "text-[10px] mt-1 text-gray-400";
       } else if (pageId === 'chats') {
         pageHome.className = "w-full min-h-screen relative page-right";
-        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-active";
+        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-active flex flex-col";
 
         // Hide inactive page after transition ends (450ms)
         setTimeout(() => {
