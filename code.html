@@ -74,6 +74,9 @@
       border-radius: 0px !important;
       padding-top: 24px !important;
       padding-bottom: 24px !important;
+      height: 100vh !important;
+      min-height: 100vh !important;
+      overflow: hidden !important;
     }
   </style>
 </head>
@@ -597,6 +600,10 @@
       // Lift List Box up to top of screen
       document.getElementById('chats-list-box').classList.add('chats-list-box-expanded');
 
+      // Prevent page-level scrolling
+      document.body.classList.add('overflow-hidden', 'h-screen');
+      document.getElementById('page-chats').classList.add('h-screen', 'overflow-hidden');
+
       // Transition layouts inside the box
       document.getElementById('chats-recents-list').classList.add('hidden');
       const activeChatWin = document.getElementById('active-chat-window');
@@ -618,6 +625,10 @@
 
       // Lower List Box back to default margin
       document.getElementById('chats-list-box').classList.remove('chats-list-box-expanded');
+
+      // Restore page-level scrolling
+      document.body.classList.remove('overflow-hidden', 'h-screen');
+      document.getElementById('page-chats').classList.remove('h-screen', 'overflow-hidden');
 
       // Transition layouts back
       document.getElementById('chats-recents-list').classList.remove('hidden');
