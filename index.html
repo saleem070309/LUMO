@@ -532,15 +532,16 @@
         // Handle Unified Login Form
         function handleLogin(event) {
             event.preventDefault();
-            const identifier = document.getElementById('login-identifier').value;
-            const password = document.getElementById('login-password').value;
+            const identifier = document.getElementById('login-identifier').value.trim();
+            const password = document.getElementById('login-password').value.trim();
 
-            // Simple client-side mock authentication
-            const isEmail = identifier.includes('@');
-            if (isEmail) {
-                showAlert(`تم تسجيل الدخول بنجاح للبريد الإلكتروني: ${identifier}`, 'success');
+            if (identifier === '1' && password === '1') {
+                showAlert('تم تسجيل الدخول بنجاح! جاري تحويلك إلى المنصة...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'code.html';
+                }, 800);
             } else {
-                showAlert(`تم تسجيل الدخول بنجاح لرقم الهاتف: ${identifier}`, 'success');
+                showAlert('رقم الهاتف/البريد الإلكتروني أو كلمة السر غير صحيحة! (استخدم 1 و 1 للدخول)', 'error');
             }
         }
 
