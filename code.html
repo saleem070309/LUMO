@@ -262,7 +262,7 @@
     <!-- PAGE 2: CHATS -->
     <div id="page-chats" class="w-full min-h-screen absolute top-0 left-0 page-left">
       <!-- BEGIN: Hero Section / Top Area -->
-      <section id="chats-hero" class="relative w-full overflow-hidden pb-10">
+      <section id="chats-hero" class="relative h-[220px] w-full overflow-hidden transition-all duration-300">
         <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
         <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
           <!-- Glowing ambient blobs for depth -->
@@ -318,7 +318,7 @@
         </div>
 
         <!-- Search Bar -->
-        <div class="relative z-10 px-6 mt-4">
+        <div class="absolute bottom-6 left-0 right-0 px-6 z-20">
           <div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
             <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
@@ -329,7 +329,7 @@
       </section>
 
       <!-- Chats List Container -->
-      <main id="chats-list-box" class="flex-grow bg-white rounded-t-[32px] -mt-6 pt-8 px-6 pb-32 shadow-inner relative z-20 min-h-screen">
+      <main id="chats-list-box" class="flex-grow bg-white rounded-t-[32px] -mt-4 pt-8 px-6 pb-32 shadow-inner relative z-20 min-h-screen">
         
         <!-- Recents List Content -->
         <div id="chats-recents-list" class="transition-all duration-300">
