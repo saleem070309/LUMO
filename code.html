@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>تطبيق التخييم - أوريلي</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Font Setup: Using a readable Arabic sans-serif stack -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="custom-typography">
+    body {
+      font-family: 'Noto Sans Arabic', sans-serif;
+    }
+  </style>
+<style data-purpose="custom-layout">
+    /* Hide scrollbar for category list while allowing horizontal scroll */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Fixed bottom bar safe area for iOS */
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    /* Fade out edges for horizontal scroll containers */
+    .fade-scroll-edges {
+      mask-image: linear-gradient(to left, transparent, black 20px, black calc(100% - 20px), transparent);
+      -webkit-mask-image: linear-gradient(to left, transparent, black 20px, black calc(100% - 20px), transparent);
+    }
+  </style>
+</head>
+<body class="text-gray-800" style="background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, rgba(236, 72, 153, 0.04) 90%);">
+<!-- BEGIN: Hero Section -->
+<section class="relative h-[300px] w-full overflow-hidden" data-purpose="hero-header">
+<!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
+<div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
+  <!-- Glowing ambient blobs for depth -->
+  <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+  <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+  <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
+  
+  <!-- First Glow Layer (Deep Peaks & Valleys) -->
+  <svg class="absolute top-0 left-0 w-full h-[280px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="lumo-glow-grad-1" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#a855f7" stop-opacity="0.95"/>
+        <stop offset="45%" stop-color="#ec4899" stop-opacity="0.75"/>
+        <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#lumo-glow-grad-1)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+  </svg>
+
+  <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
+  <svg class="absolute top-0 left-0 w-full h-[260px] opacity-80 mix-blend-color-burn" viewBox="0 0 1440 320" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="lumo-glow-grad-2" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899" stop-opacity="0.95"/>
+        <stop offset="55%" stop-color="#f97316" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#lumo-glow-grad-2)" d="M0,128L60,112C120,96,240,64,360,80C480,96,600,160,720,170.7C840,181,960,139,1080,128C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+  </svg>
+</div>
+
+<!-- Header Navigation Bar -->
+<div class="relative z-10 flex justify-between items-center px-6 mt-3">
+  <!-- Heart Icon on the Right (First in RTL) -->
+  <button class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+    </svg>
+  </button>
+
+  <!-- Logo (Centered) -->
+  <div class="flex justify-center items-center">
+    <img src="assets/logo_compressed_800.png" alt="LUMO Logo" class="h-14 w-auto object-contain filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]" style="transform: scaleX(1.12);" decoding="async" fetchpriority="high">
+  </div>
+
+  <!-- Notification Icon on the Left (Last in RTL) -->
+  <button class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+    </svg>
+    <span class="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-purple-600 ring-1 ring-white animate-pulse"></span>
+  </button>
+</div>
+<!-- Search Bar -->
+<div class="absolute bottom-6 left-0 right-0 px-6 z-20">
+<div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
+<svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<input class="w-full border-none focus:ring-0 text-right bg-transparent placeholder-gray-400 text-sm" placeholder="ابحث عن طالب أو مشروع" type="text"/>
+<button class="p-1">
+<svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 6h16M4 12h10M4 18h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</section>
+<!-- END: Hero Section -->
+<!-- BEGIN: Main Content Area -->
+<main class="relative -mt-4 bg-white rounded-t-[32px] pt-8 pb-32 px-6 min-h-screen">
+<!-- Nearby Camp Card -> Idea Card -->
+<section class="bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200/50 rounded-3xl p-5 mb-8 flex justify-between items-center relative overflow-hidden" data-purpose="nearby-camp">
+<div class="z-10 max-w-[65%]">
+<h2 class="text-lg font-bold text-gray-900 mb-1">هل لديك فكرة؟</h2>
+<p class="text-xs text-gray-700 mb-4 leading-relaxed">شاركنا رؤيتك الإبداعية، وانقل مشروعك من مرحلة الفكرة إلى النور!</p>
+<button class="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white flex items-center px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-purple-500/10 hover:shadow-purple-500/20 active:scale-[0.98] transition-all">
+<svg class="h-4 w-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+</svg>
+          انشر فكرتك الآن
+        </button>
+</div>
+<div class="relative z-10 w-24 h-24 flex-shrink-0 flex items-center justify-center">
+  <img src="assets/lamp.png" alt="Lamp" class="h-20 w-auto object-contain filter drop-shadow-[0_8px_16px_rgba(168,85,247,0.35)]" decoding="async">
+</div>
+</section>
+<!-- Categories / Cities Section -->
+<section class="mb-8" data-purpose="city-categories">
+<!-- Section Header -->
+<div class="flex justify-between items-center mb-4">
+  <h2 class="text-base font-bold text-gray-900">أفضل الطلاب</h2>
+  <a href="#" class="text-xs font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent hover:opacity-80 transition-opacity">عرض الكل</a>
+</div>
+<div class="flex overflow-x-auto hide-scrollbar space-x-6 space-x-reverse py-2 fade-scroll-edges">
+<!-- Item 1 -->
+<div class="flex flex-col items-center min-w-[70px]">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-purple-100 shadow-sm">
+<img alt="أحمد علي" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop"/>
+</div>
+<span class="text-xs font-medium text-gray-600">أحمد علي</span>
+</div>
+<!-- Item 2 -->
+<div class="flex flex-col items-center min-w-[70px]">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-purple-100 shadow-sm">
+<img alt="سارة حسن" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop"/>
+</div>
+<span class="text-xs font-medium text-gray-600">سارة حسن</span>
+</div>
+<!-- Item 3 -->
+<div class="flex flex-col items-center min-w-[70px]">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-purple-100 shadow-sm">
+<img alt="خالد عمر" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop"/>
+</div>
+<span class="text-xs font-medium text-gray-600">خالد عمر</span>
+</div>
+<!-- Item 4 -->
+<div class="flex flex-col items-center min-w-[70px]">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-purple-100 shadow-sm">
+<img alt="ديما يوسف" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&auto=format&fit=crop"/>
+</div>
+<span class="text-xs font-medium text-gray-600">ديما يوسف</span>
+</div>
+</div>
+</section>
+<!-- Search Categories Section (ما الذي تبحث عنه؟) -->
+<section class="mb-8" data-purpose="search-categories">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-base font-bold text-gray-900">ما الذي تبحث عنه؟</h2>
+    <a href="#" class="text-xs font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent hover:opacity-80 transition-opacity">عرض الكل</a>
+  </div>
+  
+  <!-- Grid of 3 Cards -->
+  <div class="grid grid-cols-3 gap-3">
+    <!-- Card 1: تصاميم -->
+    <div class="flex flex-col items-center justify-center p-3 rounded-2xl bg-purple-50 border border-purple-100 hover:border-purple-200 active:scale-95 transition-all cursor-pointer shadow-sm">
+      <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 mb-2">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <span class="text-xs font-bold text-slate-800">تصاميم</span>
+    </div>
+
+    <!-- Card 2: مواقع -->
+    <div class="flex flex-col items-center justify-center p-3 rounded-2xl bg-pink-50 border border-pink-100 hover:border-pink-200 active:scale-95 transition-all cursor-pointer shadow-sm">
+      <div class="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center text-pink-600 mb-2">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <span class="text-xs font-bold text-slate-800">مواقع</span>
+    </div>
+
+    <!-- Card 3: مدير مالية -->
+    <div class="flex flex-col items-center justify-center p-3 rounded-2xl bg-orange-50 border border-orange-100 hover:border-orange-200 active:scale-95 transition-all cursor-pointer shadow-sm">
+      <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 mb-2">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+        </svg>
+      </div>
+      <span class="text-[10px] font-bold text-slate-800 text-center leading-tight">مدير مالية</span>
+    </div>
+  </div>
+</section>
+</main>
+<!-- END: Main Content Area -->
+<!-- BEGIN: Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-1.5 flex justify-between items-center pb-safe z-50" data-purpose="bottom-navigation">
+<!-- Home -->
+<div class="flex flex-col items-center">
+<svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] mt-1 font-bold text-purple-600">الرئيسية</span>
+</div>
+<!-- Gallery -->
+<div class="flex flex-col items-center">
+<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] mt-1 text-gray-400">المعرض</span>
+</div>
+<!-- Add FAB -->
+<div class="relative -top-0.5">
+<div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 p-3.5 rounded-full shadow-md shadow-purple-500/20 border-[3px] border-white hover:scale-105 active:scale-95 transition-all cursor-pointer">
+<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- Chat -->
+<div class="flex flex-col items-center">
+<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] mt-1 text-gray-400">الدردشة</span>
+</div>
+<!-- Settings -->
+<div class="flex flex-col items-center">
+<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] mt-1 text-gray-400">الإعدادات</span>
+</div>
+</nav>
+<!-- END: Bottom Navigation -->
+</body></html>
