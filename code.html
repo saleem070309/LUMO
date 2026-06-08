@@ -489,6 +489,132 @@
       </main>
     </div>
 
+    <!-- PAGE 3: GALLERY -->
+    <div id="page-gallery" class="w-full min-h-screen absolute top-0 left-0 page-left flex flex-col">
+      <!-- BEGIN: Hero Section -->
+      <section class="relative h-[220px] w-full overflow-hidden transition-all duration-300">
+        <!-- LUMO Glow Effect Background -->
+        <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
+          <!-- Glowing ambient blobs for depth -->
+          <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+          <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+          <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
+          
+          <!-- Glow SVG Layers -->
+          <svg class="absolute top-0 left-0 w-full h-[240px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-5" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#a855f7" stop-opacity="0.95"/>
+                <stop offset="45%" stop-color="#ec4899" stop-opacity="0.75"/>
+                <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-5)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+          </svg>
+        </div>
+
+        <!-- Header Area -->
+        <div class="relative z-10 px-6 py-4 flex justify-between items-center">
+          <!-- Right Heart Button -->
+          <button class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </button>
+
+          <!-- Centered Title -->
+          <h1 class="text-xl font-bold text-slate-900 text-center filter drop-shadow-[0_1px_4px_rgba(255,255,255,0.4)]">معرض الأعمال</h1>
+
+          <!-- Left Notification Button -->
+          <button class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <span class="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-purple-600 ring-1 ring-white animate-pulse"></span>
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="absolute bottom-6 left-0 right-0 px-6 z-20">
+          <div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
+            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            <input id="search-projects" oninput="filterProjects()" class="w-full border-none focus:ring-0 text-right bg-transparent placeholder-gray-400 text-sm" placeholder="البحث عن مشاريع الطلاب..." type="text"/>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Gallery Area -->
+      <main class="flex-grow bg-white rounded-t-[32px] -mt-4 pt-6 px-6 pb-24 shadow-inner relative z-20 overflow-y-auto">
+        <!-- Horizontal Scrollable Category Filter -->
+        <div class="flex overflow-x-auto hide-scrollbar space-x-3 space-x-reverse py-2 mb-6 fade-scroll-edges" id="gallery-categories-filter">
+          <button onclick="selectGalleryCategory('all')" id="cat-all" class="px-4 py-2 rounded-full text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-500/10 transition-all flex-shrink-0">الكل</button>
+          <button onclick="selectGalleryCategory('dev')" id="cat-dev" class="px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all flex-shrink-0">برمجة وتطوير</button>
+          <button onclick="selectGalleryCategory('design')" id="cat-design" class="px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all flex-shrink-0">تصاميم وفنون</button>
+          <button onclick="selectGalleryCategory('ai')" id="cat-ai" class="px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all flex-shrink-0">ذكاء اصطناعي</button>
+          <button onclick="selectGalleryCategory('eng')" id="cat-eng" class="px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all flex-shrink-0">هندسة وشبكات</button>
+        </div>
+
+        <!-- Grid of Projects -->
+        <div class="grid grid-cols-1 gap-6" id="projects-grid">
+          <!-- Projects dynamically populated by JavaScript -->
+        </div>
+
+        <!-- PROJECT DETAILS SLIDE-UP OVERLAY -->
+        <div id="project-details-window" class="fixed inset-0 bg-white z-[60] flex flex-col h-[100dvh] transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
+          <!-- Close details button overlay -->
+          <div class="absolute top-4 left-4 z-50">
+            <button onclick="closeProjectDetails()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2.5 bg-white/85 backdrop-blur-md rounded-full shadow-md border border-gray-100">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Slide-up scrollable content -->
+          <div class="flex-grow overflow-y-auto hide-scrollbar flex flex-col pb-safe">
+            <!-- Project Cover Image -->
+            <div class="relative w-full h-[240px] bg-slate-100 flex-shrink-0">
+              <img id="detail-project-cover" src="" alt="Project Cover" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              <div class="absolute bottom-6 right-6 left-6 text-right">
+                <span id="detail-project-badge" class="bg-purple-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-md">برمجة</span>
+                <h2 id="detail-project-title" class="text-xl font-bold text-white mt-2 leading-tight">عنوان المشروع هنا</h2>
+              </div>
+            </div>
+
+            <!-- Project Details Text -->
+            <div class="px-6 py-6 flex-grow">
+              <h3 class="text-sm font-bold text-slate-900 mb-2.5">عن المشروع</h3>
+              <p id="detail-project-desc" class="text-xs text-slate-600 leading-relaxed mb-6">هذا النص هو وصف للمشروع الإبداعي الذي قام الطالب بتطويره باستخدام أحدث تقنيات BTEC المهنية.</p>
+
+              <h3 class="text-sm font-bold text-slate-900 mb-2.5">التقنيات المستخدمة</h3>
+              <div id="detail-project-techs" class="flex flex-wrap gap-2 mb-8">
+                <!-- Injected dynamically -->
+              </div>
+
+              <!-- Student Developer Card Info -->
+              <div class="bg-gradient-to-tr from-purple-50 via-pink-50/30 to-slate-50 border border-purple-100 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                  <img id="detail-student-avatar" src="" alt="Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-purple-200">
+                  <div>
+                    <h4 id="detail-student-name" class="text-sm font-bold text-slate-900">أحمد علي</h4>
+                    <span id="detail-student-title" class="text-[10px] text-purple-600 font-semibold block mt-0.5">مطور تطبيقات ويب</span>
+                  </div>
+                </div>
+                <!-- Contact Button -->
+                <button id="contact-student-btn" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-purple-500/10 active:scale-95 transition-all">
+                  تواصل الآن
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
   </div>
 
   <!-- BEGIN: Bottom Navigation -->
@@ -501,7 +627,7 @@
       <span class="text-[10px] mt-1 font-bold text-purple-600">الرئيسية</span>
     </a>
     <!-- Gallery -->
-    <a href="#" class="flex flex-col items-center cursor-pointer hover:opacity-80 transition-all">
+    <a href="javascript:void(0)" id="nav-gallery" onclick="showPage('gallery')" class="flex flex-col items-center cursor-pointer hover:opacity-80 transition-all">
       <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
       </svg>
@@ -564,39 +690,252 @@
     let activeChatUser = null;
     let activeChatAvatar = "";
 
+    // 1.5 Database of Student Projects
+    const projects = [
+      {
+        id: 1,
+        title: "منصة التوظيف الذكية لطلاب BTEC",
+        category: "dev",
+        categoryLabel: "برمجة وتطوير",
+        cover: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400&auto=format&fit=crop",
+        desc: "نظام ويب ذكي يهدف لربط المهارات الفنية لطلاب BTEC بالشركات الأردنية المحلية، ويوفر ملفات شخصية تفاعلية ومحاكاة لمقابلات العمل الفنية المدعومة بالذكاء الاصطناعي.",
+        techs: ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Node.js"],
+        likes: 124,
+        views: 890,
+        studentName: "أحمد علي",
+        studentAvatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150",
+        studentTitle: "مطور تطبيقات ويب"
+      },
+      {
+        id: 2,
+        title: "تصميم الهوية البصرية لتطبيق LUMO",
+        category: "design",
+        categoryLabel: "تصاميم وفنون",
+        cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400&auto=format&fit=crop",
+        desc: "تصميم متكامل لواجهات وتجربة مستخدم تطبيق LUMO للهواتف المحمولة، مع وضع دليل الألوان، الشعار التفاعلي، ورسم المكونات البصرية الفريدة التي تجمع بين الفخامة والبساطة.",
+        techs: ["Figma", "UI/UX Design", "Adobe Illustrator", "Color Theory"],
+        likes: 98,
+        views: 654,
+        studentName: "سارة حسن",
+        studentAvatar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=150",
+        studentTitle: "مصممة واجهات ومستخدم"
+      },
+      {
+        id: 3,
+        title: "نظام تحليل البيانات العقارية بالذكاء الاصطناعي",
+        category: "ai",
+        categoryLabel: "ذكاء اصطناعي",
+        cover: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=400&auto=format&fit=crop",
+        desc: "نموذج ذكاء اصطناعي يقوم بتحليل وتوقع تقلبات أسعار العقارات في السوق الأردني بناءً على بيانات جغرافية واقتصادية وتاريخية ممتدة على مدار عشر سنوات.",
+        techs: ["Python", "TensorFlow", "Pandas", "Data Analytics"],
+        likes: 156,
+        views: 1205,
+        studentName: "خالد عمر",
+        studentAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150",
+        studentTitle: "مطور ذكاء اصطناعي"
+      },
+      {
+        id: 4,
+        title: "بوابة التعليم الذاتي التفاعلية للأطفال",
+        category: "dev",
+        categoryLabel: "برمجة وتطوير",
+        cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=400&auto=format&fit=crop",
+        desc: "منصة تعليمية تقدم دروساً تفاعلية وألعاباً منطقية لتعليم الأطفال التفكير الخوارزمي وأساسيات البرمجة من خلال واجهات رسومية ملونة وجذابة بالكامل.",
+        techs: ["Vue.js", "Tailwind CSS", "Firebase", "Web Animation"],
+        likes: 112,
+        views: 742,
+        studentName: "ديما يوسف",
+        studentAvatar: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=150",
+        studentTitle: "مطور واجهات أمامية"
+      }
+    ];
+
+    let currentGalleryCategory = "all";
+
     // 2. Page Navigation Switcher with Slide Animations
     function showPage(pageId) {
       window.scrollTo(0, 0);
       const pageHome = document.getElementById('page-home');
       const pageChats = document.getElementById('page-chats');
+      const pageGallery = document.getElementById('page-gallery');
+      
       const navHome = document.getElementById('nav-home');
       const navChat = document.getElementById('nav-chat');
+      const navGallery = document.getElementById('nav-gallery');
 
       // If in active chat, close it first when switching page
       if (activeChatUser) {
         closeChat();
       }
+      closeProjectDetails();
+
+      // Reset bottom nav active states
+      [navHome, navChat, navGallery].forEach(nav => {
+        if (nav) {
+          nav.querySelector('svg').className.baseVal = "h-6 w-6 text-gray-400";
+          nav.querySelector('span').className = "text-[10px] mt-1 text-gray-400";
+        }
+      });
 
       if (pageId === 'home') {
         pageHome.className = "w-full min-h-screen relative page-active";
         pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
+        pageGallery.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
 
-        // Navigation indicators
         navHome.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
         navHome.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
-
-        navChat.querySelector('svg').className.baseVal = "h-6 w-6 text-gray-400";
-        navChat.querySelector('span').className = "text-[10px] mt-1 text-gray-400";
       } else if (pageId === 'chats') {
         pageHome.className = "w-full min-h-screen absolute top-0 left-0 page-right";
         pageChats.className = "w-full min-h-screen relative page-active flex flex-col";
+        pageGallery.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
 
-        // Navigation indicators
         navChat.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
         navChat.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
+      } else if (pageId === 'gallery') {
+        pageHome.className = "w-full min-h-screen absolute top-0 left-0 page-right";
+        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-right flex flex-col";
+        pageGallery.className = "w-full min-h-screen relative page-active flex flex-col";
 
-        navHome.querySelector('svg').className.baseVal = "h-6 w-6 text-gray-400";
-        navHome.querySelector('span').className = "text-[10px] mt-1 text-gray-400";
+        navGallery.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
+        navGallery.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
+
+        // Initial projects load
+        renderProjects();
+      }
+    }
+
+    // 2.5 Projects Gallery Logics
+    function renderProjects() {
+      const grid = document.getElementById('projects-grid');
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      const query = document.getElementById('search-projects').value.trim().toLowerCase();
+
+      const filtered = projects.filter(p => {
+        const matchesCategory = (currentGalleryCategory === "all" || p.category === currentGalleryCategory);
+        const matchesQuery = p.title.toLowerCase().includes(query) || p.studentName.toLowerCase().includes(query);
+        return matchesCategory && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+            <svg class="h-12 w-12 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            <span class="text-xs font-semibold">لم نجد أي مشاريع تطابق بحثك</span>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = "bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col";
+        card.innerHTML = `
+          <div class="relative w-full h-[160px] bg-slate-100 flex-shrink-0">
+            <img src="${p.cover}" alt="${p.title}" class="w-full h-full object-cover">
+            <span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-lg shadow-sm border border-purple-50">${p.categoryLabel}</span>
+          </div>
+          <div class="p-4 flex-grow flex flex-col">
+            <h4 class="text-sm font-bold text-slate-900 leading-snug line-clamp-2 mb-3">${p.title}</h4>
+            
+            <div class="flex items-center justify-between mb-4 border-t border-slate-50 pt-3 flex-shrink-0">
+              <div class="flex items-center space-x-2 space-x-reverse">
+                <img src="${p.studentAvatar}" alt="${p.studentName}" class="w-7 h-7 rounded-full object-cover border border-purple-100">
+                <span class="text-[11px] font-bold text-slate-700">${p.studentName}</span>
+              </div>
+              <div class="flex items-center space-x-2.5 space-x-reverse text-[10px] text-slate-400">
+                <span class="flex items-center">
+                  <svg class="h-3.5 w-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                  ${p.likes}
+                </span>
+                <span class="flex items-center">
+                  <svg class="h-3.5 w-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  ${p.views}
+                </span>
+              </div>
+            </div>
+
+            <button onclick="openProjectDetails(${p.id})" class="w-full bg-slate-50 hover:bg-purple-50 text-slate-800 hover:text-purple-600 py-2 rounded-xl text-xs font-bold border border-slate-100 hover:border-purple-200 active:scale-95 transition-all text-center flex-shrink-0">
+              عرض التفاصيل
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function selectGalleryCategory(category) {
+      currentGalleryCategory = category;
+      
+      const filterBox = document.getElementById('gallery-categories-filter');
+      if (filterBox) {
+        filterBox.querySelectorAll('button').forEach(btn => {
+          btn.className = "px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all flex-shrink-0";
+        });
+        const activeBtn = document.getElementById(`cat-${category}`);
+        if (activeBtn) {
+          activeBtn.className = "px-4 py-2 rounded-full text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-500/10 transition-all flex-shrink-0";
+        }
+      }
+      renderProjects();
+    }
+
+    function filterProjects() {
+      renderProjects();
+    }
+
+    function openProjectDetails(projectId) {
+      const project = projects.find(p => p.id === projectId);
+      if (!project) return;
+
+      document.getElementById('detail-project-cover').src = project.cover;
+      document.getElementById('detail-project-badge').textContent = project.categoryLabel;
+      document.getElementById('detail-project-title').textContent = project.title;
+      document.getElementById('detail-project-desc').textContent = project.desc;
+      document.getElementById('detail-student-avatar').src = project.studentAvatar;
+      document.getElementById('detail-student-name').textContent = project.studentName;
+      document.getElementById('detail-student-title').textContent = project.studentTitle;
+
+      const techContainer = document.getElementById('detail-project-techs');
+      techContainer.innerHTML = "";
+      project.techs.forEach(t => {
+        const badge = document.createElement('span');
+        badge.className = "bg-slate-50 border border-slate-200/60 text-slate-700 text-[9px] font-bold px-2.5 py-1 rounded-lg";
+        badge.textContent = t;
+        techContainer.appendChild(badge);
+      });
+
+      // Bind contact button click
+      const contactBtn = document.getElementById('contact-student-btn');
+      contactBtn.onclick = function() {
+        closeProjectDetails();
+        showPage('chats');
+        openChat(project.studentName, project.studentAvatar, project.studentTitle);
+      };
+
+      // Disable page-level scrolling
+      document.body.classList.add('overflow-hidden', 'h-screen');
+
+      // Slide project details overlay up
+      const detailWin = document.getElementById('project-details-window');
+      detailWin.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      detailWin.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+
+    function closeProjectDetails() {
+      // Restore page-level scrolling
+      if (!activeChatUser) {
+        document.body.classList.remove('overflow-hidden', 'h-screen');
+      }
+
+      // Slide project details overlay down
+      const detailWin = document.getElementById('project-details-window');
+      if (detailWin) {
+        detailWin.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        detailWin.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
       }
     }
 
