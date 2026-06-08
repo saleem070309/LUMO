@@ -101,6 +101,57 @@
             backface-visibility: hidden;
             perspective: 1000px;
         }
+
+        /* --- Glow Effect Custom Animations and Transitions --- */
+        :root {
+            --glow-speed: 15s;
+            --glow-play-state: running;
+        }
+
+        @keyframes spinGlow {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .animate-glow-spin {
+            animation: spinGlow var(--glow-speed, 15s) linear infinite;
+            animation-play-state: var(--glow-play-state, running);
+            will-change: transform;
+        }
+
+        .pulse-ambient {
+            animation: pulseAmbient 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseAmbient {
+            0% {
+                opacity: 0.85;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.015);
+            }
+        }
+
+        #glow-blur-layer-container,
+        #glow-border-layer-container {
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Deactivation state when user interacts with the card */
+        .glow-deactivated #glow-blur-layer-container {
+            opacity: 0 !important;
+            filter: blur(0px) !important;
+        }
+
+        .glow-deactivated #glow-border-layer-container {
+            opacity: 0 !important;
+        }
     </style>
 </head>
 
@@ -116,9 +167,27 @@
         <div class="absolute top-[40%] right-[-5%] w-[200px] h-[200px] rounded-full bg-green-400/10 blur-[60px]"></div>
     </div>
 
-    <!-- Main Card Container -->
-    <div id="main-card"
-        class="w-full max-w-md bg-white/90 backdrop-blur-md rounded-3xl pt-5 pb-6 px-6 sm:pt-6 sm:pb-8 sm:px-8 custom-shadow border border-slate-100 z-10 transition-all duration-300">
+    <!-- Main Card Wrapper with Glow -->
+    <div id="main-card-wrapper" class="relative w-full max-w-md z-10 transition-all duration-500 ease-out">
+        
+        <!-- 1. Ambient Rectangular Soft Glow -->
+        <div id="glow-blur-layer-container" class="absolute -z-20 pointer-events-none pulse-ambient overflow-hidden"
+             style="inset: -5px; border-radius: 29px; filter: blur(15px); opacity: 0.8;">
+            <div id="glow-blur-layer" class="absolute top-1/2 left-1/2 w-[250%] h-[250%] rounded-full animate-glow-spin" 
+                 style="background: conic-gradient(from 0deg, #7B2CBF, #E60067, #FF9F1C, #00C897, #00B4D8, #7B2CBF);">
+            </div>
+        </div>
+
+        <!-- 2. Precise Border Glow -->
+        <div id="glow-border-layer-container" class="absolute inset-0 rounded-[24px] p-[1.5px] overflow-hidden -z-10 pointer-events-none">
+            <div class="absolute top-1/2 left-1/2 w-[220%] h-[220%] rounded-full animate-glow-spin" id="glow-border-layer"
+                 style="background: conic-gradient(from 0deg, #7B2CBF, #E60067, #FF9F1C, #00C897, #00B4D8, #7B2CBF);">
+            </div>
+        </div>
+
+        <!-- Main Card Container -->
+        <div id="main-card"
+            class="w-full bg-white/90 backdrop-blur-md rounded-3xl pt-5 pb-6 px-6 sm:pt-6 sm:pb-8 sm:px-8 custom-shadow border border-slate-100 relative z-10 transition-all duration-300">
 
         <!-- Header: Logo & Slogan -->
         <div class="text-center mb-5">
@@ -372,6 +441,7 @@
         </p>
 
     </div>
+</div>
 
     <!-- Script file containing page logic -->
     <script>
@@ -600,6 +670,29 @@
         document.addEventListener('gesturestart', (e) => {
             e.preventDefault();
         });
+
+        // --- Interactive Glow Deactivation on User Activity ---
+        function deactivateGlow() {
+            const wrapper = document.getElementById('main-card-wrapper');
+            if (wrapper && !wrapper.classList.contains('glow-deactivated')) {
+                wrapper.classList.add('glow-deactivated');
+                // Optimization: Pause glow rotation animation after fade out is complete to save CPU/GPU cycles
+                setTimeout(() => {
+                    document.documentElement.style.setProperty('--glow-play-state', 'paused');
+                }, 800);
+            }
+        }
+
+        // Detect interaction on key/mouse events inside the card
+        const mainCard = document.getElementById('main-card');
+        if (mainCard) {
+            // Deactivate glow on typing
+            mainCard.addEventListener('input', deactivateGlow, { once: true });
+            // Deactivate glow on clicks (buttons, tabs, fields)
+            mainCard.addEventListener('click', deactivateGlow, { once: true });
+            // Deactivate glow on element focus
+            mainCard.addEventListener('focusin', deactivateGlow, { once: true });
+        }
     </script>
 </body>
 
