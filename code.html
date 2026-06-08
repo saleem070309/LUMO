@@ -871,6 +871,14 @@
     let activePageId = 'home';
     let transitionTimeout = null;
 
+    // Page index mapping based on right-to-left bottom navigation order
+    const pageIndices = {
+      'home': 0,
+      'gallery': 1,
+      'chats': 2,
+      'profile': 3
+    };
+
     // 2. Page Navigation Switcher with Slide Animations
     function showPage(pageId) {
       window.scrollTo(0, 0);
@@ -905,46 +913,58 @@
         }
       });
 
-      // 1. Instantly set ALL pages to absolute and trigger their slide class transition
+      // 1. Instantly set ALL pages to absolute and trigger their slide class transition based on relative indices
+      const targetIndex = pageIndices[pageId];
+
+      // Setup pageHome
       if (pageId === 'home') {
         pageHome.className = "w-full min-h-screen absolute top-0 left-0 page-active";
-        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
-        pageGallery.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
-        pageProfile.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
+      } else {
+        const idx = pageIndices['home'];
+        pageHome.className = `w-full min-h-screen absolute top-0 left-0 ${idx < targetIndex ? 'page-right' : 'page-left'}`;
+      }
 
+      // Setup pageGallery
+      if (pageId === 'gallery') {
+        pageGallery.className = "w-full min-h-screen absolute top-0 left-0 page-active flex flex-col";
+      } else {
+        const idx = pageIndices['gallery'];
+        pageGallery.className = `w-full min-h-screen absolute top-0 left-0 ${idx < targetIndex ? 'page-right' : 'page-left'} flex flex-col`;
+      }
+
+      // Setup pageChats
+      if (pageId === 'chats') {
+        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-active flex flex-col";
+      } else {
+        const idx = pageIndices['chats'];
+        pageChats.className = `w-full min-h-screen absolute top-0 left-0 ${idx < targetIndex ? 'page-right' : 'page-left'} flex flex-col`;
+      }
+
+      // Setup pageProfile
+      if (pageId === 'profile') {
+        pageProfile.className = "w-full min-h-screen absolute top-0 left-0 page-active flex flex-col";
+      } else {
+        const idx = pageIndices['profile'];
+        pageProfile.className = `w-full min-h-screen absolute top-0 left-0 ${idx < targetIndex ? 'page-right' : 'page-left'} flex flex-col`;
+      }
+
+      // Active tab navigation indicators update
+      if (pageId === 'home') {
         navHome.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
         navHome.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
-      } else if (pageId === 'chats') {
-        pageHome.className = "w-full min-h-screen absolute top-0 left-0 page-right";
-        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-active flex flex-col";
-        pageGallery.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
-        pageProfile.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
-
-        navChat.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
-        navChat.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
       } else if (pageId === 'gallery') {
-        pageHome.className = "w-full min-h-screen absolute top-0 left-0 page-right";
-        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-right flex flex-col";
-        pageGallery.className = "w-full min-h-screen absolute top-0 left-0 page-active flex flex-col";
-        pageProfile.className = "w-full min-h-screen absolute top-0 left-0 page-left flex flex-col";
-
         navGallery.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
         navGallery.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
-
-        // Initial projects load
         renderProjects();
+      } else if (pageId === 'chats') {
+        navChat.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
+        navChat.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
       } else if (pageId === 'profile') {
-        pageHome.className = "w-full min-h-screen absolute top-0 left-0 page-right";
-        pageChats.className = "w-full min-h-screen absolute top-0 left-0 page-right flex flex-col";
-        pageGallery.className = "w-full min-h-screen absolute top-0 left-0 page-right flex flex-col";
-        pageProfile.className = "w-full min-h-screen absolute top-0 left-0 page-active flex flex-col";
-
         navProfile.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
         navProfile.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
       }
 
       // 2. After transition completes (450ms), restore 'relative' layout to the active page
-      // so it scrolls properly and doesn't get cut off.
       transitionTimeout = setTimeout(() => {
         if (activePageId === 'home') {
           pageHome.className = "w-full min-h-screen relative page-active";
