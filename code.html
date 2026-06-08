@@ -77,6 +77,10 @@
       opacity: 0;
       pointer-events: none;
     }
+    .no-transition {
+      transition: none !important;
+    }
+
 
     /* Dynamic UI Collapse Transitions */
     #chats-hero {
@@ -870,16 +874,14 @@
     let currentGalleryCategory = "all";
     let activePageId = 'home';
     let transitionTimeout = null;
-    let slideFromRight = true; // Alternating direction: right-to-left, then left-to-right periodically
+    let transitionCount = 0; // Counts the transitions to alternate directions cyclically
 
     // 2. Page Navigation Switcher with Slide Animations
     function showPage(pageId) {
-      if (activePageId === pageId) return;
-      const prevPageId = activePageId;
-      activePageId = pageId;
+      if (pageId === activePageId) return;
 
       window.scrollTo(0, 0);
-      
+
       const pageHome = document.getElementById('page-home');
       const pageChats = document.getElementById('page-chats');
       const pageGallery = document.getElementById('page-gallery');
@@ -909,92 +911,79 @@
         }
       });
 
-      // Map of page elements
-      const pages = {
-        'home': pageHome,
-        'chats': pageChats,
-        'gallery': pageGallery,
-        'profile': pageProfile
+      // Highlight active nav tab
+      const activeNavId = 'nav-' + (pageId === 'chats' ? 'chat' : pageId);
+      const activeNav = document.getElementById(activeNavId);
+      if (activeNav) {
+        activeNav.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
+        activeNav.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
+      }
+
+      // Determine transition direction (alternate cyclically)
+      const isRTL = (transitionCount % 2 === 0);
+      transitionCount++;
+
+      const getBaseClasses = (id, stateClass) => {
+        const isFlex = id !== 'home';
+        return `w-full min-h-screen absolute top-0 left-0 ${stateClass}${isFlex ? ' flex flex-col' : ''}`;
       };
 
-      const prevPage = pages[prevPageId];
-      const newPage = pages[pageId];
+      const newPage = document.getElementById('page-' + pageId);
+      const oldPage = document.getElementById('page-' + activePageId);
 
-      const newIsFlex = (pageId !== 'home') ? ' flex flex-col' : '';
-      const prevIsFlex = (prevPageId !== 'home') ? ' flex flex-col' : '';
-
-      // Set initial state of new page instantly (without transition) so it's ready to slide in from the correct direction
-      newPage.style.transition = 'none';
-      if (slideFromRight) {
-        newPage.className = `w-full min-h-screen absolute top-0 left-0 page-right${newIsFlex}`;
-      } else {
-        newPage.className = `w-full min-h-screen absolute top-0 left-0 page-left${newIsFlex}`;
+      if (newPage && oldPage) {
+        // 1. Prepare target page offscreen instantly
+        const startState = isRTL ? 'page-right' : 'page-left';
+        newPage.className = getBaseClasses(pageId, startState) + ' no-transition';
+        
+        // Also ensure old page is absolute for transition
+        oldPage.className = getBaseClasses(activePageId, 'page-active');
+        
+        // Force layout reflow
+        newPage.offsetHeight;
+        
+        // 2. Trigger the transition in the next tick
+        setTimeout(() => {
+          newPage.classList.remove('no-transition');
+          
+          // Transition old page out
+          const oldEndState = isRTL ? 'page-left' : 'page-right';
+          oldPage.className = getBaseClasses(activePageId, oldEndState);
+          
+          // Transition new page in
+          newPage.className = getBaseClasses(pageId, 'page-active');
+          
+          // Clean up other pages to avoid overlap
+          const pages = ['home', 'chats', 'gallery', 'profile'];
+          pages.forEach(pId => {
+            if (pId !== activePageId && pId !== pageId) {
+              const pElem = document.getElementById('page-' + pId);
+              if (pElem) {
+                // Position other pages offscreen instantly
+                const state = isRTL ? 'page-left' : 'page-right';
+                pElem.className = getBaseClasses(pId, state);
+              }
+            }
+          });
+          
+          activePageId = pageId;
+        }, 20);
       }
-      
-      // Force reflow to apply the styling instantly without transition
-      newPage.offsetHeight;
-      
-      // Restore transition property
-      newPage.style.transition = '';
 
-      // Trigger the animations:
-      // The new page slides to active
-      newPage.className = `w-full min-h-screen absolute top-0 left-0 page-active${newIsFlex}`;
-
-      // The old page slides out to the opposite side
-      if (slideFromRight) {
-        prevPage.className = `w-full min-h-screen absolute top-0 left-0 page-left${prevIsFlex}`;
-      } else {
-        prevPage.className = `w-full min-h-screen absolute top-0 left-0 page-right${prevIsFlex}`;
-      }
-
-      // Keep other pages in their offscreen positions silently
-      Object.keys(pages).forEach(pId => {
-        if (pId !== pageId && pId !== prevPageId) {
-          const p = pages[pId];
-          const isF = (pId !== 'home') ? ' flex flex-col' : '';
-          p.style.transition = 'none';
-          if (slideFromRight) {
-            p.className = `w-full min-h-screen absolute top-0 left-0 page-left${isF}`;
-          } else {
-            p.className = `w-full min-h-screen absolute top-0 left-0 page-right${isF}`;
-          }
-          p.offsetHeight;
-          p.style.transition = '';
-        }
-      });
-
-      // Toggle slide direction for the next transition
-      slideFromRight = !slideFromRight;
-
-      // Active tab navigation indicators update
-      if (pageId === 'home') {
-        navHome.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
-        navHome.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
-      } else if (pageId === 'gallery') {
-        navGallery.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
-        navGallery.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
+      // Initial projects load if switching to gallery
+      if (pageId === 'gallery') {
         renderProjects();
-      } else if (pageId === 'chats') {
-        navChat.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
-        navChat.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
-      } else if (pageId === 'profile') {
-        navProfile.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
-        navProfile.querySelector('span').className = "text-[10px] mt-1 font-bold text-purple-600";
       }
 
-      // 2. After transition completes (450ms), restore 'relative' layout to the active page
+      // 3. After transition completes (450ms), restore 'relative' layout to the active page
+      // so it scrolls properly and doesn't get cut off.
       transitionTimeout = setTimeout(() => {
-        if (activePageId === 'home') {
-          pageHome.className = "w-full min-h-screen relative page-active";
-        } else if (activePageId === 'chats') {
-          pageChats.className = "w-full min-h-screen relative page-active flex flex-col";
-        } else if (activePageId === 'gallery') {
-          pageGallery.className = "w-full min-h-screen relative page-active flex flex-col";
-        } else if (activePageId === 'profile') {
-          pageProfile.className = "w-full min-h-screen relative page-active flex flex-col";
+        const activeElem = document.getElementById('page-' + activePageId);
+        if (activeElem) {
+          const isFlex = activePageId !== 'home';
+          activeElem.className = `w-full min-h-screen relative page-active${isFlex ? ' flex flex-col' : ''}`;
         }
-      }, 450);
+      }, 470);
     }
 
     // 2.7 Logout Handler
