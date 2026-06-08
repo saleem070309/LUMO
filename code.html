@@ -1,0 +1,3020 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+  <title>LUMO</title>
+  <!-- PWA Manifest Link -->
+  <link rel="manifest" href="manifest.json">
+  <!-- Tailwind CSS v3 with Plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Font Setup: Using a readable Arabic sans-serif stack -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+  
+  <style data-purpose="custom-typography">
+    html, body {
+      font-family: 'Noto Sans Arabic', sans-serif;
+      touch-action: manipulation;
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+    }
+    
+    /* Disable Text Copying & Selection globally */
+    *, *::before, *::after {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -ms-user-select: none !important;
+      -moz-user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    /* Allow selection inside inputs/textareas */
+    input, textarea, [contenteditable="true"] {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -ms-user-select: text !important;
+      -moz-user-select: text !important;
+    }
+  </style>
+
+  <style data-purpose="custom-layout">
+    /* Hide scrollbar for category list while allowing horizontal scroll */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Fixed bottom bar safe area for iOS */
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    /* Fade out edges for horizontal scroll containers */
+    .fade-scroll-edges {
+      mask-image: linear-gradient(to left, transparent, black 20px, black calc(100% - 20px), transparent);
+      -webkit-mask-image: linear-gradient(to left, transparent, black 20px, black calc(100% - 20px), transparent);
+    }
+
+    /* Page Slide Transitions */
+    #page-home, #page-chats, #page-gallery, #page-profile {
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform, opacity;
+    }
+    .page-active {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .page-left {
+      transform: translateX(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .page-right {
+      transform: translateX(100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Dynamic UI Collapse Transitions */
+    #chats-hero {
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease-in-out;
+      max-height: 250px;
+    }
+    .chats-hero-collapsed {
+      max-height: 0px !important;
+      padding-bottom: 0px !important;
+      opacity: 0 !important;
+      overflow: hidden;
+    }
+    #chats-list-box {
+      transition: margin 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .chats-list-box-expanded {
+      /* Keep list box unchanged to avoid layout shifts */
+    }
+  </style>
+</head>
+<body class="text-gray-800 overflow-x-hidden min-h-screen flex flex-col" style="background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, rgba(236, 72, 153, 0.04) 90%);">
+
+  <!-- Main Pages Wrapper -->
+  <div class="relative overflow-hidden w-full flex-grow">
+
+    <!-- PAGE 1: HOME -->
+    <div id="page-home" class="w-full min-h-screen relative page-active">
+      <!-- BEGIN: Hero Section -->
+      <section class="relative h-[300px] w-full overflow-hidden" data-purpose="hero-header">
+        <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
+        <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
+          <!-- Glowing ambient blobs for depth -->
+          <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+          <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+          <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
+          
+          <!-- First Glow Layer (Deep Peaks & Valleys) -->
+          <svg class="absolute top-0 left-0 w-full h-[280px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-1" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#a855f7" stop-opacity="0.95"/>
+                <stop offset="45%" stop-color="#ec4899" stop-opacity="0.75"/>
+                <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-1)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+          </svg>
+
+          <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
+          <svg class="absolute top-0 left-0 w-full h-[260px] opacity-80 mix-blend-color-burn" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ec4899" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#f97316" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-2)" d="M0,128L60,112C120,96,240,64,360,80C480,96,600,160,720,170.7C840,181,960,139,1080,128C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+          </svg>
+        </div>
+
+        <!-- Header Navigation Bar -->
+        <div class="relative z-10 flex justify-between items-center px-6 mt-3">
+          <!-- Heart Icon on the Right (First in RTL) -->
+          <button onclick="toggleFavorites(true)" class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </button>
+
+          <!-- Logo (Centered) -->
+          <div class="flex justify-center items-center">
+            <img src="assets/logo_compressed_800.png" alt="LUMO Logo" class="h-14 w-auto object-contain filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]" style="transform: scaleX(1.12);" decoding="async" fetchpriority="high">
+          </div>
+
+          <!-- Notification Icon on the Left (Last in RTL) -->
+          <button onclick="toggleNotifications(true)" class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <span id="unread-badge-home" class="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-purple-600 ring-1 ring-white animate-pulse"></span>
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="absolute bottom-6 left-0 right-0 px-6 z-20">
+          <div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
+            <button id="home-search-btn" onclick="triggerHomeSearch()" class="text-gray-400 hover:text-purple-600 transition-colors mr-2 active:scale-90">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+            </button>
+            <input id="home-search-input" oninput="updateHomeSearchBtnColor()" onkeydown="handleHomeSearchKey(event)" class="w-full border-none focus:ring-0 text-right bg-transparent placeholder-gray-400 text-sm" placeholder="ابحث عن طالب أو مشروع" type="text"/>
+            <button id="home-filter-btn" onclick="toggleHomeFilterMenu(event)" class="p-1 hover:text-purple-600 transition-colors">
+              <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6h16M4 12h10M4 18h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+      <!-- END: Hero Section -->
+
+      <!-- BEGIN: Main Content Area -->
+      <main class="relative -mt-4 bg-white rounded-t-[32px] pt-8 pb-32 px-6 min-h-screen shadow-inner z-20">
+        <!-- Nearby Camp Card -> Idea Card -->
+        <section class="bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200/50 rounded-3xl p-5 mb-8 flex justify-between items-center relative overflow-hidden" data-purpose="nearby-camp">
+          <div class="z-10 max-w-[65%]">
+            <h2 class="text-lg font-bold text-gray-900 mb-1">هل لديك فكرة؟</h2>
+            <p class="text-xs text-gray-700 mb-4 leading-relaxed">شاركنا رؤيتك الإبداعية، وانقل مشروعك من مرحلة الفكرة إلى النور!</p>
+            <button onclick="openManageJobs(); showAddNewJobForm(true, true);" class="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white flex items-center px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-purple-500/10 hover:shadow-purple-500/20 active:scale-[0.98] transition-all">
+              <svg class="h-4 w-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+              انشر فكرتك الآن
+            </button>
+          </div>
+          <div class="relative z-10 w-24 h-24 flex-shrink-0 flex items-center justify-center">
+            <img src="assets/lamp.png" alt="Lamp" class="h-20 w-auto object-contain filter drop-shadow-[0_8px_16px_rgba(168,85,247,0.35)]" decoding="async">
+          </div>
+        </section>
+
+        <!-- Categories / Cities Section -->
+        <section class="mb-8" data-purpose="city-categories">
+          <!-- Section Header -->
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-base font-bold text-gray-900">أفضل الطلاب</h2>
+            <a href="javascript:void(0)" onclick="showPage('gallery')" class="text-xs font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent hover:opacity-80 transition-opacity">عرض الكل</a>
+          </div>
+          <div class="flex overflow-x-auto hide-scrollbar space-x-6 space-x-reverse py-2 fade-scroll-edges">
+            <!-- Item 1 -->
+            <div onclick="openVisitedProfile('أحمد علي')" class="flex flex-col items-center min-w-[70px] cursor-pointer hover:scale-105 active:scale-95 transition-all">
+              <div class="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-purple-100 shadow-sm">
+                <img alt="أحمد علي" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop"/>
+              </div>
+              <span class="text-xs font-medium text-gray-600">أحمد علي</span>
+            </div>
+            <!-- Item 2 -->
+            <div onclick="openVisitedProfile('سارة حسن')" class="flex flex-col items-center min-w-[70px] cursor-pointer hover:scale-105 active:scale-95 transition-all">
+              <div class="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-purple-100 shadow-sm">
+                <img alt="سارة حسن" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=150&auto=format&fit=crop"/>
+              </div>
+              <span class="text-xs font-medium text-gray-600">سارة حسن</span>
+            </div>
+            <!-- Item 3 -->
+            <div onclick="openVisitedProfile('خالد عمر')" class="flex flex-col items-center min-w-[70px] cursor-pointer hover:scale-105 active:scale-95 transition-all">
+              <div class="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-purple-100 shadow-sm">
+                <img alt="خالد عمر" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop"/>
+              </div>
+              <span class="text-xs font-medium text-gray-600">خالد عمر</span>
+            </div>
+            <!-- Item 4 -->
+            <div onclick="openVisitedProfile('ديما يوسف')" class="flex flex-col items-center min-w-[70px] cursor-pointer hover:scale-105 active:scale-95 transition-all">
+              <div class="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-purple-100 shadow-sm">
+                <img alt="ديما يوسف" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=150&auto=format&fit=crop"/>
+              </div>
+              <span class="text-xs font-medium text-gray-600">ديما يوسف</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Search Categories Section (ما الذي تبحث عنه؟) -->
+        <section class="mb-8" data-purpose="search-categories">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-base font-bold text-gray-900">ما الذي تبحث عنه؟</h2>
+            <a href="javascript:void(0)" onclick="showPage('gallery')" class="text-xs font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent hover:opacity-80 transition-opacity">عرض الكل</a>
+          </div>
+          
+          <!-- Grid of 3 Cards -->
+          <div class="grid grid-cols-3 gap-3">
+            <!-- Card 1: تصاميم -->
+            <div onclick="selectHomeCardCategory('design', '', event)" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-purple-50 border border-purple-100 hover:border-purple-200 active:scale-95 transition-all cursor-pointer shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 mb-2">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <span class="text-xs font-bold text-slate-800">تصاميم</span>
+            </div>
+
+            <!-- Card 2: مواقع -->
+            <div onclick="selectHomeCardCategory('dev', '', event)" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-pink-50 border border-pink-100 hover:border-pink-200 active:scale-95 transition-all cursor-pointer shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center text-pink-600 mb-2">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <span class="text-xs font-bold text-slate-800">مواقع</span>
+            </div>
+
+            <!-- Card 3: مدير مالية -->
+            <div onclick="selectHomeCardCategory('all', 'مالي', event)" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-orange-50 border border-orange-100 hover:border-orange-200 active:scale-95 transition-all cursor-pointer shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 mb-2">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 102-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                </svg>
+              </div>
+              <span class="text-[10px] font-bold text-slate-800 text-center leading-tight">مدير مالية</span>
+            </div>
+          </div>
+        </section>
+      </main>
+      <!-- END: Main Content Area -->
+    </div>
+
+
+    <!-- PAGE 2: CHATS -->
+    <div id="page-chats" class="w-full min-h-screen absolute top-0 left-0 page-left flex flex-col">
+      <!-- BEGIN: Hero Section / Top Area -->
+      <section id="chats-hero" class="relative h-[220px] w-full overflow-hidden transition-all duration-300">
+        <!-- LUMO Glow Effect Background (Dense at top, irregular peaks/valleys fading down) -->
+        <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
+          <!-- Glowing ambient blobs for depth -->
+          <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+          <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+          <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
+          
+          <!-- First Glow Layer (Deep Peaks & Valleys) -->
+          <svg class="absolute top-0 left-0 w-full h-[240px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-3" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#a855f7" stop-opacity="0.95"/>
+                <stop offset="45%" stop-color="#ec4899" stop-opacity="0.75"/>
+                <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-3)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+          </svg>
+
+          <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
+          <svg class="absolute top-0 left-0 w-full h-[220px] opacity-80 mix-blend-color-burn" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-4" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ec4899" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#f97316" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-4)" d="M0,128L60,112C120,96,240,64,360,80C480,96,600,160,720,170.7C840,181,960,139,1080,128C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+          </svg>
+        </div>
+
+        <!-- Header Area -->
+        <div class="relative z-10 px-6 py-4 flex justify-between items-center">
+          <!-- Right Heart Button -->
+          <button onclick="toggleFavorites(true)" class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </button>
+
+          <!-- Centered Title -->
+          <h1 class="text-xl font-bold text-white text-center filter drop-shadow-[0_1px_4px_rgba(0,0,0,0.25)]">الرسائل</h1>
+
+          <!-- Left Notification Button -->
+          <button onclick="toggleNotifications(true)" class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <span id="unread-badge-chats" class="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-purple-600 ring-1 ring-white animate-pulse"></span>
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="absolute bottom-6 left-0 right-0 px-6 z-20">
+          <div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
+            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            <input id="search-chats" class="w-full border-none focus:ring-0 text-right bg-transparent placeholder-gray-400 text-sm" placeholder="البحث في المحادثات..." type="text"/>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chats List Container -->
+      <main id="chats-list-box" class="flex-grow bg-white rounded-t-[32px] -mt-4 pt-8 px-6 pb-24 shadow-inner relative z-20">
+        
+        <!-- Recents List Content -->
+        <div id="chats-recents-list" class="transition-all duration-300">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-sm font-bold text-slate-800">المحادثات الأخيرة</h2>
+            <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">3 رسائل جديدة</span>
+          </div>
+
+          <div class="space-y-4" id="chats-list-container">
+            <!-- Conversation Item 1 -->
+            <a href="javascript:void(0)" onclick="openChat('سارة حسن', 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=150', 'مصممة')" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item" data-name="سارة حسن">
+              <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
+                <div class="flex-shrink-0">
+                  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=150" alt="سارة حسن" class="w-12 h-12 rounded-full object-cover">
+                </div>
+                <div class="overflow-hidden">
+                  <div class="flex items-center space-x-1.5 space-x-reverse">
+                    <h4 class="text-sm font-bold text-slate-950 truncate">سارة حسن</h4>
+                    <span class="text-[9px] bg-purple-50 text-purple-600 px-1.5 py-0.2 rounded font-medium">مصممة</span>
+                  </div>
+                  <p class="text-xs text-slate-600 truncate mt-1 font-bold">مرحباً! هل اطلعت على تصميم واجهة LUMO الجديد؟</p>
+                </div>
+              </div>
+              <div class="flex flex-col items-end flex-shrink-0">
+                <span class="text-[10px] text-purple-600 font-bold">10:30 ص</span>
+                <span class="mt-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white text-[9px] font-bold h-5 w-5 flex items-center justify-center rounded-full shadow-sm">2</span>
+              </div>
+            </a>
+
+            <!-- Conversation Item 2 -->
+            <a href="javascript:void(0)" onclick="openChat('أحمد علي', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150', 'مطور')" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item" data-name="أحمد علي">
+              <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
+                <div class="flex-shrink-0">
+                  <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150" alt="أحمد علي" class="w-12 h-12 rounded-full object-cover">
+                </div>
+                <div class="overflow-hidden">
+                  <div class="flex items-center space-x-1.5 space-x-reverse">
+                    <h4 class="text-sm font-bold text-slate-950 truncate">أحمد علي</h4>
+                    <span class="text-[9px] bg-pink-50 text-pink-600 px-1.5 py-0.2 rounded font-medium">مطور</span>
+                  </div>
+                  <p class="text-xs text-slate-400 truncate mt-1">الرمز البرمجي جاهز للمراجعة، قمت برفعه على GitHub.</p>
+                </div>
+              </div>
+              <div class="flex flex-col items-end flex-shrink-0">
+                <span class="text-[10px] text-slate-400">أمس</span>
+                <span class="mt-2 text-[10px] text-slate-300">✓✓</span>
+              </div>
+            </a>
+
+            <!-- Conversation Item 3 -->
+            <a href="javascript:void(0)" onclick="openChat('ديما يوسف', 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=150', 'إدارة')" class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item" data-name="ديما يوسف">
+              <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
+                <div class="flex-shrink-0">
+                  <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=150" alt="ديما يوسف" class="w-12 h-12 rounded-full object-cover">
+                </div>
+                <div class="overflow-hidden">
+                  <div class="flex items-center space-x-1.5 space-x-reverse">
+                    <h4 class="text-sm font-bold text-slate-950 truncate">ديما يوسف</h4>
+                    <span class="text-[9px] bg-orange-50 text-orange-600 px-1.5 py-0.2 rounded font-medium">إدارة</span>
+                  </div>
+                  <p class="text-xs text-slate-400 truncate mt-1">شكراً لك، سأتواصل معك لمناقشة التفاصيل المالية لاحقاً.</p>
+                </div>
+              </div>
+              <div class="flex flex-col items-end flex-shrink-0">
+                <span class="text-[10px] text-slate-400">2 يونيو</span>
+                <span class="mt-2 text-[10px] text-slate-300">✓✓</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- ACTIVE CHAT WINDOW (Slides up from bottom overlay) -->
+        <div id="active-chat-window" class="fixed inset-0 bg-white z-[60] flex flex-col px-6 pt-4 pb-0 h-[100dvh] transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
+          
+          <!-- Chat Window Header -->
+          <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
+            <!-- Contact Details -->
+            <div class="flex items-center space-x-3 space-x-reverse">
+              <div class="relative flex-shrink-0">
+                <img id="active-chat-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+              </div>
+              <div>
+                <h3 id="active-chat-name" class="text-sm font-bold text-slate-900">سارة حسن</h3>
+              </div>
+            </div>
+
+            <!-- Back button (placed on the left side) -->
+            <button onclick="closeChat()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2 bg-slate-50 rounded-full">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Chat Messages Feed Area -->
+          <div id="active-chat-feed" class="flex-grow overflow-y-auto space-y-4 pr-1 pl-1 pb-4 hide-scrollbar flex flex-col">
+            <!-- Messages injected dynamically by JavaScript -->
+          </div>
+
+          <!-- Typing Indicator (Hidden by default) -->
+          <div id="active-typing-indicator" class="hidden flex items-center space-x-2 space-x-reverse max-w-[80%] pb-2.5">
+            <img id="active-typing-avatar" src="" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+            <div class="bg-slate-100 text-slate-400 text-xs px-4 py-3 rounded-2xl rounded-br-none border border-gray-100 shadow-sm flex items-center space-x-1 space-x-reverse">
+              <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+              <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+              <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+            </div>
+          </div>
+
+          <!-- Message Input Footer inside Box -->
+          <div class="border-t border-gray-100 pt-3 pb-6 pb-safe bg-white mt-auto -mx-6 px-4">
+            <div class="flex items-center bg-slate-50 rounded-full border border-gray-200 p-1 w-full focus-within:ring-2 focus-within:ring-purple-500/20 focus-within:border-purple-500/60 focus-within:bg-white transition-all duration-300">
+              <!-- Attach File Button -->
+              <button class="flex items-center justify-center h-9 w-9 rounded-full bg-white text-slate-400 hover:text-slate-600 shadow-sm border border-gray-100 transition-all flex-shrink-0 mr-1 hover:scale-105 active:scale-95">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                </svg>
+              </button>
+              
+              <!-- Input Field -->
+              <input id="active-message-input" type="text" placeholder="اكتب رسالتك هنا..." class="flex-grow bg-transparent border-none focus:outline-none focus:ring-0 text-sm text-slate-800 px-3 py-2 text-right">
+              
+              <!-- Send Message Button -->
+              <button onclick="sendChatMessage()" class="flex items-center justify-center h-9 w-9 rounded-full bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white shadow-md hover:scale-105 active:scale-95 transition-all flex-shrink-0 ml-1">
+                <svg class="h-4 w-4 -rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+
+    <!-- PAGE 3: GALLERY -->
+    <div id="page-gallery" class="w-full min-h-screen absolute top-0 left-0 page-left flex flex-col">
+      <!-- BEGIN: Hero Section -->
+      <section class="relative h-[220px] w-full overflow-hidden transition-all duration-300">
+        <!-- LUMO Glow Effect Background -->
+        <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
+          <!-- Glowing ambient blobs for depth -->
+          <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+          <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+          <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
+          
+          <!-- First Glow Layer (Deep Peaks & Valleys) -->
+          <svg class="absolute top-0 left-0 w-full h-[240px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-5" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#a855f7" stop-opacity="0.95"/>
+                <stop offset="45%" stop-color="#ec4899" stop-opacity="0.75"/>
+                <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-5)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+          </svg>
+
+          <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
+          <svg class="absolute top-0 left-0 w-full h-[220px] opacity-80 mix-blend-color-burn" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-5-burn" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ec4899" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#f97316" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-5-burn)" d="M0,128L60,112C120,96,240,64,360,80C480,96,600,160,720,170.7C840,181,960,139,1080,128C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+          </svg>
+        </div>
+
+        <!-- Header Area -->
+        <div class="relative z-10 px-6 py-4 flex justify-between items-center">
+          <!-- Right Heart Button -->
+          <button onclick="toggleFavorites(true)" class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </button>
+
+          <!-- Centered Title -->
+          <h1 class="text-xl font-bold text-white text-center filter drop-shadow-[0_1px_4px_rgba(0,0,0,0.25)]">معرض الأعمال</h1>
+
+          <!-- Left Notification Button -->
+          <button onclick="toggleNotifications(true)" class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <span id="unread-badge-gallery" class="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-purple-600 ring-1 ring-white animate-pulse"></span>
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="absolute bottom-6 left-0 right-0 px-6 z-20">
+          <div class="relative flex items-center bg-white rounded-2xl shadow-lg p-3">
+            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            <input id="search-projects" oninput="filterProjects()" class="w-full border-none focus:ring-0 text-right bg-transparent placeholder-gray-400 text-sm" placeholder="البحث عن مشاريع الطلاب..." type="text"/>
+            <button id="gallery-filter-btn" onclick="toggleFilterMenu(event)" class="p-1 hover:text-purple-600 transition-colors">
+              <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6h16M4 12h10M4 18h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Gallery Area -->
+      <main class="flex-grow bg-white rounded-t-[32px] -mt-4 pt-6 px-6 pb-24 shadow-inner relative z-20 overflow-y-auto">
+        <!-- Grid of Projects -->
+        <div class="grid grid-cols-1 gap-6" id="projects-grid">
+          <!-- Projects dynamically populated by JavaScript -->
+        </div>
+
+        <!-- PROJECT DETAILS SLIDE-UP OVERLAY -->
+        <div id="project-details-window" class="fixed inset-0 bg-white z-[60] flex flex-col h-[100dvh] transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
+          <!-- Close details button overlay -->
+          <div class="absolute top-4 left-4 z-50">
+            <button onclick="closeProjectDetails()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2.5 bg-white/85 backdrop-blur-md rounded-full shadow-md border border-gray-100">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Favorite heart button overlay on top-right -->
+          <div class="absolute top-4 right-4 z-50">
+            <button id="detail-fav-btn" class="text-gray-400 fill-transparent hover:text-red-500 transition-all active:scale-90 p-2.5 bg-white/85 backdrop-blur-md rounded-full shadow-md border border-gray-100">
+              <svg class="h-5 w-5 stroke-current fill-current" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Slide-up scrollable content -->
+          <div class="flex-grow overflow-y-auto hide-scrollbar flex flex-col pb-safe">
+            <!-- Project Cover Image -->
+            <div class="relative w-full h-[240px] bg-slate-100 flex-shrink-0">
+              <img id="detail-project-cover" src="" alt="Project Cover" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              <div class="absolute bottom-6 right-6 left-6 text-right">
+                <span id="detail-project-badge" class="bg-purple-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-md">برمجة</span>
+                <h2 id="detail-project-title" class="text-xl font-bold text-white mt-2 leading-tight">عنوان المشروع هنا</h2>
+              </div>
+            </div>
+
+            <!-- Project Details Text -->
+            <div class="px-6 py-6 flex-grow">
+              <h3 class="text-sm font-bold text-slate-900 mb-2.5">عن المشروع</h3>
+              <p id="detail-project-desc" class="text-xs text-slate-600 leading-relaxed mb-6">هذا النص هو وصف للمشروع الإبداعي الذي قام الطالب بتطويره باستخدام أحدث تقنيات BTEC المهنية.</p>
+
+              <h3 class="text-sm font-bold text-slate-900 mb-2.5">التقنيات المستخدمة</h3>
+              <div id="detail-project-techs" class="flex flex-wrap gap-2 mb-8">
+                <!-- Injected dynamically -->
+              </div>
+
+              <!-- Student Developer Card Info -->
+              <div class="bg-gradient-to-tr from-purple-50 via-pink-50/30 to-slate-50 border border-purple-100 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                <div onclick="openVisitedProfile(document.getElementById('detail-student-name').textContent)" class="flex items-center space-x-3 space-x-reverse cursor-pointer hover:opacity-80 transition-opacity">
+                  <img id="detail-student-avatar" src="" alt="Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-purple-200">
+                  <div>
+                    <h4 id="detail-student-name" class="text-sm font-bold text-slate-900">أحمد علي</h4>
+                    <span id="detail-student-title" class="text-[10px] text-purple-600 font-semibold block mt-0.5">مطور تطبيقات ويب</span>
+                  </div>
+                </div>
+                <!-- Contact Button -->
+                <button id="contact-student-btn" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-purple-500/10 active:scale-95 transition-all">
+                  تواصل الآن
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- PAGE 4: PROFILE -->
+    <div id="page-profile" class="w-full min-h-screen absolute top-0 left-0 page-left flex flex-col">
+      <!-- BEGIN: Hero Section / Top Glow -->
+      <section class="relative h-[180px] w-full overflow-hidden transition-all duration-300 flex-shrink-0">
+        <!-- LUMO Glow Effect Background -->
+        <div class="absolute inset-0 overflow-hidden bg-slate-50" data-purpose="lumo-glow-background">
+          <!-- Glowing ambient blobs for depth -->
+          <div class="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] bg-purple-600/35 rounded-full blur-[80px]"></div>
+          <div class="absolute top-[-80px] right-[10%] w-[350px] h-[300px] bg-pink-500/35 rounded-full blur-[100px]"></div>
+          <div class="absolute top-[-30px] right-[-50px] w-[250px] h-[250px] bg-orange-400/30 rounded-full blur-[70px]"></div>
+          
+          <!-- First Glow Layer -->
+          <svg class="absolute top-0 left-0 w-full h-[200px] opacity-90" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-6" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#a855f7" stop-opacity="0.95"/>
+                <stop offset="45%" stop-color="#ec4899" stop-opacity="0.75"/>
+                <stop offset="80%" stop-color="#f97316" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-6)" d="M0,64L48,85.3C96,107,192,149,288,181.3C384,213,480,235,576,213.3C672,192,768,128,864,117.3C960,107,1056,149,1152,181.3C1248,213,1344,235,1392,245.3L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+          </svg>
+
+          <!-- Second Glow Layer (Overlapping, Offset Peaks & Valleys) -->
+          <svg class="absolute top-0 left-0 w-full h-[180px] opacity-80 mix-blend-color-burn" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lumo-glow-grad-6-burn" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ec4899" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#f97316" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#lumo-glow-grad-6-burn)" d="M0,128L60,112C120,96,240,64,360,80C480,96,600,160,720,170.7C840,181,960,139,1080,128C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+          </svg>
+        </div>
+
+        <!-- Header Area -->
+        <div class="relative z-10 px-6 py-4 flex justify-between items-center">
+          <button onclick="toggleFavorites(true)" class="text-slate-800 hover:text-red-500 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </button>
+          <h1 class="text-xl font-bold text-white text-center filter drop-shadow-[0_1px_4px_rgba(0,0,0,0.25)]">الملف الشخصي</h1>
+          <button onclick="toggleNotifications(true)" class="text-slate-800 hover:text-purple-600 transition-all active:scale-95 focus:outline-none p-2 bg-white/40 backdrop-blur-sm rounded-full shadow-sm border border-white/20 relative">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <span id="unread-badge-profile" class="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-purple-600 ring-1 ring-white animate-pulse"></span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Main Profile Content Card -->
+      <main class="flex-grow bg-white rounded-t-[32px] -mt-8 pt-12 px-6 pb-24 shadow-inner relative z-20 flex flex-col overflow-visible">
+        <!-- User Avatar & Basic Info Overlay -->
+        <div class="flex flex-col items-center -mt-20 mb-6 flex-shrink-0">
+          <div class="relative w-24 h-24 rounded-full overflow-hidden border-[4px] border-white shadow-md bg-white">
+            <img id="my-profile-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=250&auto=format&fit=crop" alt="Profile Picture" class="w-full h-full object-cover">
+          </div>
+          <h2 id="my-profile-name" class="text-base font-bold text-slate-900 mt-3">أحمد المحاميد</h2>
+        </div>
+
+        <!-- Statistics Layout Grid -->
+        <div class="grid grid-cols-3 gap-3 mb-8 flex-shrink-0">
+          <div class="bg-gradient-to-tr from-purple-50/60 to-purple-50/20 border border-purple-100/40 p-3 rounded-2xl text-center shadow-sm">
+            <span id="profile-stats-projects" class="block text-base font-black text-purple-600">1</span>
+            <span class="text-[10px] text-slate-500 font-bold mt-0.5 block">الفرص المعلنة</span>
+          </div>
+          <div class="bg-gradient-to-tr from-pink-50/60 to-pink-50/20 border border-pink-100/40 p-3 rounded-2xl text-center shadow-sm">
+            <span class="block text-base font-black text-pink-600">1.2K</span>
+            <span class="text-[10px] text-slate-500 font-bold mt-0.5 block">المشاهدات</span>
+          </div>
+          <div class="bg-gradient-to-tr from-orange-50/60 to-orange-50/20 border border-orange-100/40 p-3 rounded-2xl text-center shadow-sm">
+            <span id="profile-stats-followed" class="block text-base font-black text-orange-600">2</span>
+            <span class="text-[10px] text-slate-500 font-bold mt-0.5 block">الحسابات المتابعة</span>
+          </div>
+        </div>
+
+        <!-- Profile Actions Menu List -->
+        <div class="space-y-3 flex-grow">
+          <!-- Edit Profile -->
+          <a href="javascript:void(0)" onclick="openEditProfile()" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100/80 active:scale-[0.99] border border-slate-100 transition-all">
+            <div class="flex items-center space-x-3 space-x-reverse">
+              <div class="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+              </div>
+              <span class="text-xs font-bold text-slate-800">تعديل الملف الشخصي</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </a>
+
+          <!-- Manage Jobs -->
+          <a href="javascript:void(0)" onclick="openManageJobs()" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100/80 active:scale-[0.99] border border-slate-100 transition-all">
+            <div class="flex items-center space-x-3 space-x-reverse">
+              <div class="w-9 h-9 rounded-xl bg-pink-100 flex items-center justify-center text-pink-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              </div>
+              <span class="text-xs font-bold text-slate-800">إدارة فرص العمل</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </a>
+
+          <!-- Support & Help -->
+          <a href="javascript:void(0)" onclick="openSupport()" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100/80 active:scale-[0.99] border border-slate-100 transition-all">
+            <div class="flex items-center space-x-3 space-x-reverse">
+              <div class="w-9 h-9 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <span class="text-xs font-bold text-slate-800">المساعدة والدعم الفني</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </a>
+
+          <!-- Logout Button -->
+          <a href="javascript:void(0)" onclick="handleLogout()" class="flex items-center justify-between p-3.5 rounded-2xl bg-red-50 hover:bg-red-100/60 active:scale-[0.99] border border-red-100/50 transition-all mt-6">
+            <div class="flex items-center space-x-3 space-x-reverse">
+              <div class="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center text-red-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+              </div>
+              <span class="text-xs font-bold text-red-600">تسجيل الخروج</span>
+            </div>
+            <svg class="w-4 h-4 text-red-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </main>
+    </div>
+
+  </div>
+
+  <!-- BEGIN: Notifications Modal Panel (Bottom Sheet) -->
+  <div id="notifications-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] opacity-0 pointer-events-none transition-all duration-300" onclick="toggleNotifications(false)"></div>
+  <div id="notifications-window" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-[32px] z-[80] shadow-2xl flex flex-col max-h-[85vh] transition-all duration-500 transform translate-y-full" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+    <!-- Header/Indicator -->
+    <div id="notifications-drag-zone" class="pt-3 pb-2 flex-shrink-0 cursor-grab active:cursor-grabbing">
+      <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-4 hover:bg-gray-300 transition-colors"></div>
+    </div>
+    
+    <!-- Title Area -->
+    <div class="px-6 pb-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+      <button onclick="toggleNotifications(false)" class="text-slate-500 hover:text-purple-600 transition-all p-2 bg-slate-50 rounded-full active:scale-95">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <h2 class="text-lg font-bold text-slate-900">الإشعارات</h2>
+      <button onclick="markAllNotificationsAsRead()" class="text-xs text-purple-600 hover:text-purple-700 font-bold">تحديد كقروء</button>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="flex-grow overflow-y-auto px-6 py-4 space-y-4 pb-12 hide-scrollbar">
+      <!-- Item 1 -->
+      <div class="notification-item flex items-start space-x-3 space-x-reverse p-3.5 rounded-2xl bg-purple-50/70 border border-purple-100/50 hover:bg-purple-50 transition-all active:scale-[0.99] cursor-pointer">
+        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0 relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+          <span class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-purple-600 rounded-full border-2 border-white"></span>
+        </div>
+        <div class="flex-grow">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-800">تفاعل جديد</span>
+            <span class="text-[10px] text-gray-400">منذ دقيقتين</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">قام <strong>أحمد علي</strong> بالإعجاب بمشروعك <strong>تطبيق LUMO الإبداعي</strong>.</p>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="notification-item flex items-start space-x-3 space-x-reverse p-3.5 rounded-2xl bg-purple-50/70 border border-purple-100/50 hover:bg-purple-50 transition-all active:scale-[0.99] cursor-pointer" onclick="toggleNotifications(false); showPage('chats'); openChat('سارة حسن', 'assets/logo_compressed_800.png', 'مصممة واجهات المستخدم');">
+        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0 relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+          <span class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-blue-500 rounded-full border-2 border-white"></span>
+        </div>
+        <div class="flex-grow">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-800">رسالة جديدة</span>
+            <span class="text-[10px] text-gray-400">منذ ساعة</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">أرسلت لك <strong>سارة حسن</strong>: "هل اطلعت على تصميم واجهة المستخدم الجديد؟"</p>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="notification-item flex items-start space-x-3 space-x-reverse p-3.5 rounded-2xl bg-white border border-gray-100 hover:bg-slate-50 transition-all active:scale-[0.99] cursor-pointer">
+        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div class="flex-grow">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-800">تحديث الحساب</span>
+            <span class="text-[10px] text-gray-400">أمس</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">تم قبول انضمامك إلى <strong>معرض أعمال طلاب LUMO</strong> بنجاح. يمكنك الآن رفع مشاريعك الإبداعية.</p>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="notification-item flex items-start space-x-3 space-x-reverse p-3.5 rounded-2xl bg-white border border-gray-100 hover:bg-slate-50 transition-all active:scale-[0.99] cursor-pointer">
+        <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+        </div>
+        <div class="flex-grow">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-800">إدارة المشاريع</span>
+            <span class="text-[10px] text-gray-400">منذ يومين</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">تمت الموافقة على نشر مشروعك <strong>نظام التعلم الذكي</strong> في المعرض العام.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- BEGIN: Favorites Modal Panel (Bottom Sheet) -->
+  <div id="favorites-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] opacity-0 pointer-events-none transition-all duration-300" onclick="toggleFavorites(false)"></div>
+  <div id="favorites-window" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-[32px] z-[80] shadow-2xl flex flex-col max-h-[85vh] transition-all duration-500 transform translate-y-full" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+    <!-- Header/Indicator -->
+    <div id="favorites-drag-zone" class="pt-3 pb-2 flex-shrink-0 cursor-grab active:cursor-grabbing">
+      <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-4 hover:bg-gray-300 transition-colors"></div>
+    </div>
+    
+    <!-- Title Area -->
+    <div class="px-6 pb-2 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+      <button onclick="toggleFavorites(false)" class="text-slate-500 hover:text-red-500 transition-all p-2 bg-slate-50 rounded-full active:scale-95">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <h2 class="text-lg font-bold text-slate-900">المفضلة</h2>
+      <div class="w-9 h-9 flex items-center justify-center text-red-500">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+      </div>
+    </div>
+
+    <!-- Tabs Selector -->
+    <div class="flex border-b border-gray-100 flex-shrink-0">
+      <button id="fav-tab-projects" onclick="switchFavoritesTab('projects')" class="flex-1 py-3 text-center text-sm font-bold border-b-2 border-purple-600 text-purple-600 transition-all">
+        المشاريع المفضلة
+      </button>
+      <button id="fav-tab-accounts" onclick="switchFavoritesTab('accounts')" class="flex-1 py-3 text-center text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-slate-800 transition-all">
+        الحسابات المتابعة
+      </button>
+    </div>
+
+    <!-- Favorites Content Feed -->
+    <div class="flex-grow overflow-y-auto px-6 py-4 pb-12 hide-scrollbar">
+      
+      <!-- Tab CONTENT 1: Projects -->
+      <div id="fav-content-projects" class="space-y-4">
+        <!-- Project Item 1 -->
+        <div class="flex items-center space-x-3 space-x-reverse p-3 rounded-2xl border border-gray-100 hover:bg-slate-50 transition-all active:scale-[0.99] cursor-pointer" onclick="toggleFavorites(false); showPage('gallery');">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=150" alt="project" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 bg-slate-100">
+          <div class="flex-grow min-w-0">
+            <h4 class="text-xs font-bold text-slate-900 truncate">تطبيق LUMO الإبداعي</h4>
+            <p class="text-[10px] text-gray-400 mt-0.5">بواسطة: سارة حسن</p>
+            <span class="inline-block text-[9px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full mt-1 border border-purple-100/30">برمجة وتصميم</span>
+          </div>
+          <button class="text-red-500 hover:text-gray-400 p-2" onclick="event.stopPropagation(); alert('تم إزالة المشروع من المفضلة')">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+          </button>
+        </div>
+
+        <!-- Project Item 2 -->
+        <div class="flex items-center space-x-3 space-x-reverse p-3 rounded-2xl border border-gray-100 hover:bg-slate-50 transition-all active:scale-[0.99] cursor-pointer" onclick="toggleFavorites(false); showPage('gallery');">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=150" alt="project" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 bg-slate-100">
+          <div class="flex-grow min-w-0">
+            <h4 class="text-xs font-bold text-slate-900 truncate">نظام إدارة العيادات الذكي</h4>
+            <p class="text-[10px] text-gray-400 mt-0.5">بواسطة: أحمد علي</p>
+            <span class="inline-block text-[9px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full mt-1 border border-blue-100/30">تصميم نظم</span>
+          </div>
+          <button class="text-red-500 hover:text-gray-400 p-2" onclick="event.stopPropagation(); alert('تم إزالة المشروع من المفضلة')">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab CONTENT 2: Accounts -->
+      <div id="fav-content-accounts" class="hidden space-y-4">
+      </div>
+
+    </div>
+  </div>  <!-- BEGIN: Visited Profile Modal Panel (Bottom Sheet) -->
+  <div id="visited-profile-window" class="fixed inset-0 bg-white z-[65] flex flex-col h-[100dvh] transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
+    <!-- Close button overlay on top-left (RTL: left is left) -->
+    <div class="absolute top-4 left-4 z-50">
+      <button onclick="closeVisitedProfile()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2 bg-white/70 backdrop-blur-md rounded-full shadow-md border border-gray-100/50">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Favorite/Follow button overlay on top-right -->
+    <div class="absolute top-4 right-4 z-50">
+      <button id="visited-follow-btn" class="text-gray-400 fill-transparent hover:text-red-500 transition-all active:scale-90 p-2 bg-white/70 backdrop-blur-md rounded-full shadow-md border border-gray-100/50">
+        <svg id="visited-profile-heart-icon" class="h-5 w-5 stroke-current fill-current" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Slide-up scrollable content -->
+    <div class="flex-grow overflow-y-auto hide-scrollbar flex flex-col pb-safe bg-slate-50/50">
+      <!-- Top banner / Cover area -->
+      <div id="visited-drag-zone" class="relative w-full h-[160px] flex-shrink-0 overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 cursor-grab active:cursor-grabbing">
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-[1px]"></div>
+        <div class="absolute -top-12 -left-12 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
+        <div class="absolute -bottom-16 -right-16 w-48 h-48 rounded-full bg-pink-400/20 blur-2xl"></div>
+      </div>
+
+      <!-- Main Profile Card Container -->
+      <div class="bg-white rounded-t-[32px] -mt-8 px-6 pt-12 pb-24 relative z-10 flex flex-col flex-grow shadow-inner">
+        <!-- User Avatar, Name and Title -->
+        <div class="flex flex-col items-center -mt-24 mb-6 flex-shrink-0">
+          <div class="relative w-24 h-24 rounded-full overflow-hidden border-[4px] border-white shadow-md bg-white">
+            <img id="visited-avatar" src="" alt="Profile Picture" class="w-full h-full object-cover">
+          </div>
+          <h2 id="visited-name" class="text-base font-bold text-slate-900 mt-3">الاسم</h2>
+          <span id="visited-role" class="text-[10px] bg-purple-50 text-purple-600 px-3 py-1 rounded-full font-bold mt-1.5 border border-purple-100/30">طالب BTEC</span>
+          <span id="visited-title" class="text-xs text-slate-500 font-medium mt-1">المسمى الوظيفي</span>
+        </div>
+
+        <!-- Action Buttons Row (Follow + Message) -->
+        <div class="flex items-center space-x-3 space-x-reverse mb-6">
+          <!-- Follow Button -->
+          <button id="visited-action-follow-btn" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-2xl text-xs font-bold shadow-md shadow-purple-500/10 active:scale-95 transition-all flex items-center justify-center space-x-2 space-x-reverse">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path id="follow-btn-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            <span id="follow-btn-text">متابعة</span>
+          </button>
+          <!-- Message Button -->
+          <button id="visited-action-chat-btn" class="flex-1 bg-slate-50 hover:bg-purple-50 text-slate-700 hover:text-purple-600 py-3 rounded-2xl text-xs font-bold border border-slate-100 hover:border-purple-200 active:scale-95 transition-all flex items-center justify-center space-x-2 space-x-reverse">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            <span>تواصل الآن</span>
+          </button>
+        </div>
+
+        <!-- Statistics Layout Grid -->
+        <div class="grid grid-cols-3 gap-3 mb-6 flex-shrink-0">
+          <div class="bg-gradient-to-tr from-purple-50/60 to-purple-50/20 border border-purple-100/40 p-3 rounded-2xl text-center shadow-sm">
+            <span id="visited-stats-projects" class="block text-base font-black text-purple-600">0</span>
+            <span class="text-[10px] text-slate-500 font-bold mt-0.5 block">المشاريع</span>
+          </div>
+          <div class="bg-gradient-to-tr from-pink-50/60 to-pink-50/20 border border-pink-100/40 p-3 rounded-2xl text-center shadow-sm">
+            <span id="visited-stats-views" class="block text-base font-black text-pink-600">0</span>
+            <span class="text-[10px] text-slate-500 font-bold mt-0.5 block">المشاهدات</span>
+          </div>
+          <div class="bg-gradient-to-tr from-orange-50/60 to-orange-50/20 border border-orange-100/40 p-3 rounded-2xl text-center shadow-sm">
+            <span id="visited-stats-likes" class="block text-base font-black text-orange-600">0</span>
+            <span class="text-[10px] text-slate-500 font-bold mt-0.5 block">التفاعلات</span>
+          </div>
+        </div>
+
+        <!-- Bio / About Section -->
+        <div class="mb-6 text-right">
+          <h3 class="text-xs font-bold text-slate-900 mb-2">نبذة تعريفية</h3>
+          <p id="visited-bio" class="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-3.5 rounded-2xl border border-slate-100/50">هنا النبذة التعريفية للطالب...</p>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="mb-6 text-right">
+          <h3 class="text-xs font-bold text-slate-900 mb-2">المهارات</h3>
+          <div id="visited-skills" class="flex flex-wrap gap-2 justify-start flex-row-reverse">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Student's Projects list -->
+        <div class="text-right">
+          <h3 class="text-xs font-bold text-slate-900 mb-3">مشاريع الطالب</h3>
+          <div id="visited-projects-list" class="space-y-4">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Style Top Toast Notification -->
+  <div id="toast-notification" class="fixed top-4 left-4 right-4 bg-white/95 backdrop-blur-md border border-slate-100 rounded-2xl shadow-xl p-4 flex items-center space-x-3 space-x-reverse z-[100] transform -translate-y-32 transition-transform duration-300 pointer-events-none max-w-sm mx-auto">
+    <div id="toast-icon-bg" class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-green-500 shadow-sm flex-shrink-0">
+      <svg id="toast-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <div class="flex-grow min-w-0">
+      <p id="toast-message" class="text-xs font-bold text-slate-800 text-right truncate">رسالة التنبيه</p>
+    </div>
+  </div>
+
+  <!-- BEGIN: Edit Profile Modal Panel -->
+  <div id="edit-profile-window" class="fixed inset-0 bg-white z-[65] flex flex-col h-[100dvh] transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
+    <!-- Close button overlay on top-left -->
+    <div class="absolute top-4 left-4 z-50">
+      <button onclick="closeEditProfile()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2 bg-slate-50 rounded-full border border-gray-100">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Title Area -->
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-center flex-shrink-0">
+      <h2 class="text-base font-bold text-slate-900">تعديل الملف الشخصي</h2>
+    </div>
+
+    <!-- Scrollable Form content -->
+    <div class="flex-grow overflow-y-auto px-6 py-6 pb-24 space-y-5 text-right hide-scrollbar">
+      <!-- Choose Avatar -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-slate-700 block">الصورة الشخصية</label>
+        <div class="flex items-center space-x-3 space-x-reverse justify-center py-2 overflow-x-auto hide-scrollbar">
+          <div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-purple-600 cursor-pointer flex-shrink-0 avatar-option" onclick="selectAvatarOption(this, 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=250')">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=250" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-purple-600/30 flex items-center justify-center text-white font-bold text-xs checkmark">✓</div>
+          </div>
+          <div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-transparent hover:border-slate-300 cursor-pointer flex-shrink-0 avatar-option" onclick="selectAvatarOption(this, 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=250')">
+            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=250" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-purple-600/30 hidden items-center justify-center text-white font-bold text-xs checkmark">✓</div>
+          </div>
+          <div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-transparent hover:border-slate-300 cursor-pointer flex-shrink-0 avatar-option" onclick="selectAvatarOption(this, 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=250')">
+            <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=250" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-purple-600/30 hidden items-center justify-center text-white font-bold text-xs checkmark">✓</div>
+          </div>
+          <div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-transparent hover:border-slate-300 cursor-pointer flex-shrink-0 avatar-option" onclick="selectAvatarOption(this, 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=250')">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=250" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-purple-600/30 hidden items-center justify-center text-white font-bold text-xs checkmark">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Name Input -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-slate-700 block">الاسم الكامل</label>
+        <input type="text" id="edit-name" class="w-full text-right px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-xs transition-all" placeholder="أدخل اسمك الكامل">
+      </div>
+
+      <!-- Save Button -->
+      <button onclick="saveEditProfile()" class="w-full py-3.5 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold rounded-2xl shadow-lg shadow-purple-500/10 active:scale-[0.98] transition-all text-xs mt-4">
+        حفظ التغييرات
+      </button>
+    </div>
+  </div>
+
+  <!-- BEGIN: Manage Projects Modal Panel -->
+  <div id="manage-projects-window" class="fixed inset-0 bg-white z-[65] flex flex-col h-[100dvh] transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
+    <!-- Close button overlay on top-left -->
+    <div id="manage-projects-close-btn" class="absolute top-4 left-4 z-50">
+      <button onclick="closeManageJobs()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2 bg-slate-50 rounded-full border border-gray-100">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Title Area -->
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-center flex-shrink-0">
+      <h2 class="text-base font-bold text-slate-900">إدارة فرص العمل</h2>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="manage-projects-content" class="flex-grow overflow-y-auto px-6 py-6 pb-24 text-right hide-scrollbar flex flex-col bg-slate-50/30">
+      <!-- Jobs list -->
+      <div class="flex justify-between items-center mb-4">
+        <button onclick="showAddNewJobForm(true)" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold shadow-sm active:scale-95 transition-all flex items-center space-x-1.5 space-x-reverse">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+          <span>فرصة عمل جديدة</span>
+        </button>
+        <h3 class="text-xs font-black text-slate-800">فرص العمل المعلنة</h3>
+      </div>
+
+      <div id="my-projects-list" class="space-y-4 flex-grow">
+        <!-- Dyn list -->
+      </div>
+    </div>
+
+    <!-- Add New Job Form Panel -->
+    <div id="add-project-form-panel" class="hidden absolute inset-0 bg-white z-[60] flex flex-col">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+        <h2 class="text-base font-bold text-slate-900">إضافة فرصة عمل</h2>
+        <button onclick="showAddNewJobForm(false)" class="text-slate-500 hover:text-purple-600 transition-all p-2 bg-slate-50 rounded-full active:scale-95">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex-grow overflow-y-auto px-6 py-6 pb-24 space-y-4 text-right hide-scrollbar">
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 block">المسمى الوظيفي</label>
+          <input type="text" id="job-title-input" class="w-full text-right px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-xs transition-all" placeholder="مثال: مطور تطبيقات ويب">
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 block">اسم الشركة</label>
+          <input type="text" id="job-company-input" class="w-full text-right px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-xs transition-all" placeholder="مثال: شركة LUMO التقنية">
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 block">موقع العمل</label>
+          <input type="text" id="job-location-input" class="w-full text-right px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-xs transition-all" placeholder="مثال: عمان، الأردن (أو عن بعد)">
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 block">الفئة المستهدفة</label>
+          <div class="relative">
+            <!-- Hidden input to store value -->
+            <input type="hidden" id="job-category-select" value="dev">
+            
+            <!-- Custom Dropdown Button -->
+            <button type="button" id="job-category-dropdown-btn" onclick="toggleCustomJobCategoryDropdown(event)" class="w-full text-right px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-xs transition-all flex items-center justify-between cursor-pointer text-slate-700 font-medium">
+              <span id="job-category-dropdown-label">💻 برمجة وتطوير</span>
+              <svg class="h-4 w-4 text-slate-400 transition-transform duration-300" id="job-category-dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            
+            <!-- Dropdown Options List -->
+            <div id="job-category-dropdown-options" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-1.5 z-50 text-right flex flex-col space-y-1 transition-all duration-200 opacity-0 transform -translate-y-2">
+              <button type="button" onclick="selectCustomJobCategory('dev', '💻 برمجة وتطوير', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all flex items-center justify-between">
+                <span>💻 برمجة وتطوير</span>
+                <span class="text-purple-600 checkmark hidden">✓</span>
+              </button>
+              <button type="button" onclick="selectCustomJobCategory('design', '🎨 تصاميم وفنون', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all flex items-center justify-between">
+                <span>🎨 تصاميم وفنون</span>
+                <span class="text-purple-600 checkmark hidden">✓</span>
+              </button>
+              <button type="button" onclick="selectCustomJobCategory('ai', '🤖 ذكاء اصطناعي', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all flex items-center justify-between">
+                <span>🤖 ذكاء اصطناعي</span>
+                <span class="text-purple-600 checkmark hidden">✓</span>
+              </button>
+              <button type="button" onclick="selectCustomJobCategory('eng', '⚙️ هندسة وشبكات', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all flex items-center justify-between">
+                <span>⚙️ هندسة وشبكات</span>
+                <span class="text-purple-600 checkmark hidden">✓</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 block">التفاصيل والمتطلبات</label>
+          <textarea id="job-desc-input" rows="3" class="w-full text-right px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-xs transition-all" placeholder="أدخل تفاصيل ومؤهلات الوظيفة المطلوبة..."></textarea>
+        </div>
+
+        <button onclick="saveNewJob()" class="w-full py-3.5 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold rounded-2xl shadow-lg shadow-purple-500/10 active:scale-[0.98] transition-all text-xs mt-4">
+          نشر فرصة العمل
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEGIN: Support Modal Panel -->
+  <div id="support-window" class="fixed inset-0 bg-white z-[65] flex flex-col h-[100dvh] transition-all duration-300 transform translate-y-full opacity-0 pointer-events-none">
+    <!-- Close button overlay on top-left -->
+    <div class="absolute top-4 left-4 z-50">
+      <button onclick="closeSupport()" class="text-slate-800 hover:text-purple-600 transition-all active:scale-90 p-2 bg-slate-50 rounded-full border border-gray-100">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Title Area -->
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-center flex-shrink-0">
+      <h2 class="text-base font-bold text-slate-900">المساعدة والدعم الفني</h2>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="flex-grow overflow-y-auto px-6 py-6 pb-24 space-y-6 text-right hide-scrollbar">
+      
+      <!-- Intro Card -->
+      <div class="bg-gradient-to-tr from-purple-50 to-pink-50 border border-purple-100 rounded-3xl p-5 shadow-sm">
+        <h3 class="text-xs font-black text-slate-800 mb-1">كيف يمكننا مساعدتك اليوم؟</h3>
+        <p class="text-[11px] text-slate-600 leading-relaxed">تصفح الأسئلة الشائعة لمعرفة حلول المشاكل الأكثر شيوعاً، أو تواصل فوراً مع الدعم الفني عبر فتح تذكرة.</p>
+      </div>
+
+      <!-- FAQ Section -->
+      <div>
+        <h3 class="text-xs font-black text-slate-800 mb-3">الأسئلة الشائعة</h3>
+        <div class="space-y-3">
+          <!-- Q1 -->
+          <div class="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50">
+            <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-4 text-right focus:outline-none transition-colors">
+              <svg class="w-4 h-4 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+              <span class="text-xs font-bold text-slate-800">كيف يمكنني رفع مشروعي في معرض الأعمال؟</span>
+            </button>
+            <div class="hidden px-4 pb-4 text-[11px] text-slate-500 leading-relaxed border-t border-slate-100/50 pt-2.5">
+              يمكنك ذلك بالدخول إلى صفحتك الشخصية ثم الضغط على "إدارة مشاريعي"، ومن هناك انقر على زر "مشروع جديد" واملأ تفاصيل المشروع وسينشر فوراً في المعرض.
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50">
+            <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-4 text-right focus:outline-none transition-colors">
+              <svg class="w-4 h-4 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+              <span class="text-xs font-bold text-slate-800">هل تظهر تفاصيلي المهنية للشركات والمؤسسات؟</span>
+            </button>
+            <div class="hidden px-4 pb-4 text-[11px] text-slate-500 leading-relaxed border-t border-slate-100/50 pt-2.5">
+              نعم، جميع بيانات ملفك الشخصي والمهارات والمشاريع المكتوبة تظهر للشركات عند تصفح المعرض أو ملفك المزار لمساعدتهم على اكتشاف موهبتك وتوظيفك.
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50">
+            <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-4 text-right focus:outline-none transition-colors">
+              <svg class="w-4 h-4 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+              <span class="text-xs font-bold text-slate-800">كيف يمكنني التواصل مع الشركات؟</span>
+            </button>
+            <div class="hidden px-4 pb-4 text-[11px] text-slate-500 leading-relaxed border-t border-slate-100/50 pt-2.5">
+              يمكنك بدء مراسلتهم من زر "تواصل الآن" الموجود في ملفاتهم التعريفية أو عند تواصلهم هم معك؛ ستجد كافة المحادثات نشطة بداخل تبويب "الدردشة".
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ticket Creation Form -->
+      <div class="border-t border-slate-100 pt-5 space-y-4">
+        <h3 class="text-xs font-black text-slate-800">فتح تذكرة دعم جديدة</h3>
+        
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 block">عنوان التذكرة</label>
+          <input type="text" id="support-subject" class="w-full text-right px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-xs transition-all" placeholder="مثال: مشكلة في رفع الصور">
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 block">شرح المشكلة بالتفصيل</label>
+          <textarea id="support-message" rows="3" class="w-full text-right px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-xs transition-all" placeholder="أشرح المشكلة الفنية التي تواجهها..."></textarea>
+        </div>
+
+        <button onclick="sendSupportTicket()" class="w-full py-3.5 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold rounded-2xl shadow-lg shadow-purple-500/10 active:scale-[0.98] transition-all text-xs">
+          إرسال تذكرة الدعم
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BEGIN: Bottom Navigation -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-1.5 flex justify-around items-center pb-safe z-50 transition-all duration-300 transform translate-y-0" data-purpose="bottom-navigation">
+    <!-- Home (Active initially) -->
+    <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="flex-1 flex flex-col items-center justify-center cursor-pointer hover:opacity-80 transition-all">
+      <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+      </svg>
+      <span class="text-[10px] mt-1 text-purple-600">الرئيسية</span>
+    </a>
+    <!-- Gallery -->
+    <a href="javascript:void(0)" id="nav-gallery" onclick="showPage('gallery')" class="flex-1 flex flex-col items-center justify-center cursor-pointer hover:opacity-80 transition-all">
+      <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+      </svg>
+      <span class="text-[10px] mt-1 text-gray-400">المعرض</span>
+    </a>
+    <!-- Add FAB -->
+    <div class="flex-1 flex justify-center items-center relative -top-0.5">
+      <div onclick="openManageJobs(); showAddNewJobForm(true, true);" class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 p-3.5 rounded-full shadow-md shadow-purple-500/20 border-[3px] border-white hover:scale-105 active:scale-95 transition-all cursor-pointer">
+        <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+      </div>
+    </div>
+    <!-- Chat -->
+    <a href="javascript:void(0)" id="nav-chat" onclick="showPage('chats')" class="flex-1 flex flex-col items-center justify-center cursor-pointer hover:opacity-80 transition-all">
+      <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+      </svg>
+      <span class="text-[10px] mt-1 text-gray-400">الدردشة</span>
+    </a>
+    <!-- Profile -->
+    <a href="javascript:void(0)" id="nav-profile" onclick="showPage('profile')" class="flex-1 flex flex-col items-center justify-center cursor-pointer hover:opacity-80 transition-all">
+      <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+      </svg>
+      <span class="text-[10px] mt-1 text-gray-400">الملف الشخصي</span>
+    </a>
+  </nav>
+  <!-- END: Bottom Navigation -->
+
+  <!-- Fixed Dropdown Menus (outside overflow:hidden parents) -->
+  <div id="home-classification-dropdown" class="hidden fixed bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-2 z-[200] min-w-[160px] text-right flex flex-col space-y-1"
+       style="top:0;left:0;">
+    <button onclick="selectHomeClassification('all', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">🌐 الكل</button>
+    <button onclick="selectHomeClassification('dev', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">💻 برمجة وتطوير</button>
+    <button onclick="selectHomeClassification('design', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">🎨 تصاميم وفنون</button>
+    <button onclick="selectHomeClassification('ai', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">🤖 ذكاء اصطناعي</button>
+    <button onclick="selectHomeClassification('eng', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">⚙️ هندسة وشبكات</button>
+  </div>
+
+  <div id="classification-dropdown" class="hidden fixed bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-2 z-[200] min-w-[160px] text-right flex flex-col space-y-1"
+       style="top:0;left:0;">
+    <button onclick="selectGalleryClassification('all', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">🌐 الكل</button>
+    <button onclick="selectGalleryClassification('dev', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">💻 برمجة وتطوير</button>
+    <button onclick="selectGalleryClassification('design', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">🎨 تصاميم وفنون</button>
+    <button onclick="selectGalleryClassification('ai', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">🤖 ذكاء اصطناعي</button>
+    <button onclick="selectGalleryClassification('eng', event)" class="w-full text-right px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all">⚙️ هندسة وشبكات</button>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // 1. Database of conversation histories
+    const conversations = {
+      "سارة حسن": [
+        { text: "مرحباً بك! يسعدني جداً التواصل معك لمناقشة مشروع LUMO الإبداعي. هل اطلعت على تصميم واجهة المستخدم الجديد؟", isOutgoing: false, time: "10:30 ص" },
+        { text: "أهلاً سارة، نعم لقد رأيت التحديثات الأخيرة! التصميم والتأثيرات التفاعلية تبدو ممتازة وجذابة للغاية.", isOutgoing: true, time: "10:32 ص" },
+        { text: "هذا رائع! سنقوم اليوم بالعمل على ضبط الأكواد البرمجية بالكامل وربطها بالمستودع. هل ترغب بإضافة أي ميزات أخرى؟", isOutgoing: false, time: "10:33 ص" }
+      ],
+      "أحمد علي": [
+        { text: "السلام عليكم، لقد قمت برفع آخر التحديثات لمشروع LUMO على مستودع GitHub.", isOutgoing: false, time: "09:15 ص" },
+        { text: "وعليكم السلام يا أحمد، رائع جداً! هل قمت بحل مشكلة شريط التنقل السفلي؟", isOutgoing: true, time: "09:20 ص" },
+        { text: "نعم، تم تعديل موضع الزر وتقليص ارتفاع البار والرمز البرمجي جاهز للمراجعة الآن.", isOutgoing: false, time: "09:22 ص" }
+      ],
+      "ديما يوسف": [
+        { text: "مرحباً، أردت فقط إعلامك بأن اجتماع مناقشة الميزانية والمشروع سيكون غداً الساعة الواحدة ظهراً.", isOutgoing: false, time: "أمس" },
+        { text: "مرحباً ديما، ممتاز! سأقوم بتجهيز التقارير المالية اللازمة قبل الاجتماع.", isOutgoing: true, time: "أمس" },
+        { text: "شكراً لك، سأتواصل معك لمناقشة التفاصيل المالية لاحقاً.", isOutgoing: false, time: "أمس" }
+      ]
+    };
+
+    const botResponses = [
+      "أشكرك على اهتمامك! سأقوم ببحث هذا الموضوع وإخبارك بالنتائج.",
+      "ممتاز، دعنا ننسق اجتماعاً سريعاً لمناقشة التفاصيل.",
+      "تمام، سأرسل لك الملفات المحدثة فور انتهائي منها.",
+      "رأي رائع! سأقوم بتطبيق هذه الملاحظات في كود المشروع."
+    ];
+    let responseIndex = 0;
+    let activeChatUser = null;
+    let activeChatAvatar = "";
+
+    // 1.4 Database of Student Profiles
+    const students = {
+      "أحمد علي": {
+        name: "أحمد علي",
+        avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150",
+        title: "مطور تطبيقات ويب متكاملة",
+        role: "طالب BTEC",
+        projectsCount: 1,
+        views: "890",
+        likes: "124",
+        bio: "طالب طموح في مسار BTEC لتطوير البرمجيات. أركز على بناء تطبيقات ويب متكاملة وسلسة باستخدام أحدث التقنيات مثل React وTailwind CSS.",
+        skills: ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Node.js"]
+      },
+      "سارة حسن": {
+        name: "سارة حسن",
+        avatar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=150",
+        title: "مصممة واجهات وتجربة المستخدم UI/UX",
+        role: "طالب BTEC",
+        projectsCount: 1,
+        views: "654",
+        likes: "98",
+        bio: "أصمم تجارب رقمية جذابة وسهلة الاستخدام. أعشق الألوان المتناسقة وأهتم بأدق التفاصيل والرسوم المتحركة الدقيقة لتحقيق أفضل تجربة للمستخدم.",
+        skills: ["Figma", "UI/UX Design", "Adobe Illustrator", "Color Theory"]
+      },
+      "خالد عمر": {
+        name: "خالد عمر",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150",
+        title: "مطور ذكاء اصطناعي ونظم تعلم آلي",
+        role: "طالب BTEC",
+        projectsCount: 1,
+        views: "1,205",
+        likes: "156",
+        bio: "شغوف بتحليل البيانات الكبيرة وتدريب نماذج التعلم الآلي والذكاء الاصطناعي لحل المشكلات الواقعية وتوقع اتجاهات السوق.",
+        skills: ["Python", "TensorFlow", "Pandas", "Data Analytics"]
+      },
+      "ديما يوسف": {
+        name: "ديما يوسف",
+        avatar: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=150",
+        title: "مطور واجهات أمامية وتفاعلية",
+        role: "طالب BTEC",
+        projectsCount: 1,
+        views: "742",
+        likes: "112",
+        bio: "أركز على بناء واجهات مستخدم متجاوبة وسريعة الاستجابة. لدي اهتمام خاص بمكتبات الرسوم المتحركة وجعل المواقع تنبض بالحياة.",
+        skills: ["Vue.js", "Tailwind CSS", "Firebase", "Web Animation"]
+      }
+    };
+
+    let followedAccountNames = ["سارة حسن", "أحمد علي"];
+
+    let myProfileData = {
+      name: "أحمد المحاميد",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=250"
+    };
+
+    let myJobs = [
+      {
+        id: 1,
+        title: "مطور واجهات أمامية (React)",
+        company: "شركة LUMO التقنية",
+        location: "عمان، الأردن (هجين)",
+        category: "dev",
+        categoryLabel: "برمجة وتطوير",
+        desc: "مطلوب مطور واجهات أمامية حديث التخرج أو بخبرة بسيطة للعمل على منصات تفاعلية باستخدام React و Tailwind CSS."
+      }
+    ];
+
+    // 1.5 Database of Student Projects
+    const projects = [
+      {
+        id: 1,
+        title: "منصة التوظيف الذكية لطلاب BTEC",
+        category: "dev",
+        categoryLabel: "برمجة وتطوير",
+        cover: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400&auto=format&fit=crop",
+        desc: "نظام ويب ذكي يهدف لربط المهارات الفنية لطلاب BTEC بالشركات الأردنية المحلية، ويوفر ملفات شخصية تفاعلية ومحاكاة لمقابلات العمل الفنية المدعومة بالذكاء الاصطناعي.",
+        techs: ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Node.js"],
+        likes: 124,
+        views: 890,
+        studentName: "أحمد علي",
+        studentAvatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150",
+        studentTitle: "مطور تطبيقات ويب"
+      },
+      {
+        id: 2,
+        title: "تصميم الهوية البصرية لتطبيق LUMO",
+        category: "design",
+        categoryLabel: "تصاميم وفنون",
+        cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400&auto=format&fit=crop",
+        desc: "تصميم متكامل لواجهات وتجربة مستخدم تطبيق LUMO للهواتف المحمولة، مع وضع دليل الألوان، الشعار التفاعلي، ورسم المكونات البصرية الفريدة التي تجمع بين الفخامة والبساطة.",
+        techs: ["Figma", "UI/UX Design", "Adobe Illustrator", "Color Theory"],
+        likes: 98,
+        views: 654,
+        studentName: "سارة حسن",
+        studentAvatar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=150",
+        studentTitle: "مصممة واجهات ومستخدم"
+      },
+      {
+        id: 3,
+        title: "نظام تحليل البيانات العقارية بالذكاء الاصطناعي",
+        category: "ai",
+        categoryLabel: "ذكاء اصطناعي",
+        cover: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=400&auto=format&fit=crop",
+        desc: "نموذج ذكاء اصطناعي يقوم بتحليل وتوقع تقلبات أسعار العقارات في السوق الأردني بناءً على بيانات جغرافية واقتصادية وتاريخية ممتدة على مدار عشر سنوات.",
+        techs: ["Python", "TensorFlow", "Pandas", "Data Analytics"],
+        likes: 156,
+        views: 1205,
+        studentName: "خالد عمر",
+        studentAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150",
+        studentTitle: "مطور ذكاء اصطناعي"
+      },
+      {
+        id: 4,
+        title: "بوابة التعليم الذاتي التفاعلية للأطفال",
+        category: "dev",
+        categoryLabel: "برمجة وتطوير",
+        cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=400&auto=format&fit=crop",
+        desc: "منصة تعليمية تقدم دروساً تفاعلية وألعاباً منطقية لتعليم الأطفال التفكير الخوارزمي وأساسيات البرمجة من خلال واجهات رسومية ملونة وجذابة بالكامل.",
+        techs: ["Vue.js", "Tailwind CSS", "Firebase", "Web Animation"],
+        likes: 112,
+        views: 742,
+        studentName: "ديما يوسف",
+        studentAvatar: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=150",
+        studentTitle: "مطور واجهات أمامية"
+      }
+    ];
+
+    let currentGalleryCategory = "all";
+    let activePageId = 'home';
+    let transitionTimeout = null;
+    let favoriteProjectIds = [1, 2];
+
+    // Page index map for directional transitions (RTL visual order: right→left)
+    const pageIndex = { home: 0, gallery: 1, chats: 2, profile: 3 };
+    // Base classes for each page element
+    const pageBaseClass = {
+      home: "w-full min-h-screen",
+      chats: "w-full min-h-screen flex flex-col",
+      gallery: "w-full min-h-screen flex flex-col",
+      profile: "w-full min-h-screen flex flex-col"
+    };
+    // Nav element ID → page ID mapping for highlighting
+    const navMap = {
+      home: 'nav-home',
+      chats: 'nav-chat',
+      gallery: 'nav-gallery',
+      profile: 'nav-profile'
+    };
+
+    // 2. Page Navigation Switcher with Index-Based Directional Slide
+    function showPage(pageId) {
+      if (pageId === activePageId) return; // No-op if same page
+
+      window.scrollTo(0, 0);
+
+      const previousPageId = activePageId;
+      activePageId = pageId;
+
+      const pages = {
+        home: document.getElementById('page-home'),
+        chats: document.getElementById('page-chats'),
+        gallery: document.getElementById('page-gallery'),
+        profile: document.getElementById('page-profile')
+      };
+
+      // If in active chat, close it first when switching page
+      if (activeChatUser) {
+        closeChat();
+      }
+      closeProjectDetails();
+
+      // Clear previous layout restore timeout if any
+      if (transitionTimeout) {
+        clearTimeout(transitionTimeout);
+      }
+
+      // Reset bottom nav active states
+      Object.values(navMap).forEach(navId => {
+        const nav = document.getElementById(navId);
+        if (nav) {
+          nav.querySelector('svg').className.baseVal = "h-6 w-6 text-gray-400";
+          nav.querySelector('span').className = "text-[10px] mt-1 text-gray-400";
+        }
+      });
+
+      // Determine slide direction based on page indices
+      const currentIdx = pageIndex[previousPageId];
+      const targetIdx = pageIndex[pageId];
+      // Going to higher index = new page enters from LEFT, old exits RIGHT
+      // Going to lower index = new page enters from RIGHT, old exits LEFT
+      const goingForward = targetIdx > currentIdx;
+      const enterClass = goingForward ? 'page-left' : 'page-right';
+      const exitClass = goingForward ? 'page-right' : 'page-left';
+
+      // Step 1: Position the entering page OFF-SCREEN instantly (no transition)
+      pages[pageId].style.transition = 'none';
+      pages[pageId].className = `${pageBaseClass[pageId]} absolute top-0 left-0 ${enterClass}`;
+
+      // Force a reflow so the browser registers the off-screen position
+      void pages[pageId].offsetWidth;
+
+      // Step 2: Re-enable transition and slide everything
+      pages[pageId].style.transition = '';
+
+      // Slide the target page to active
+      pages[pageId].className = `${pageBaseClass[pageId]} absolute top-0 left-0 page-active`;
+
+      // Slide the old page out
+      if (previousPageId !== pageId) {
+        pages[previousPageId].className = `${pageBaseClass[previousPageId]} absolute top-0 left-0 ${exitClass}`;
+      }
+
+      // Hide all other pages (not entering, not exiting) off-screen
+      Object.keys(pages).forEach(id => {
+        if (id !== pageId && id !== previousPageId) {
+          pages[id].style.transition = 'none';
+          pages[id].className = `${pageBaseClass[id]} absolute top-0 left-0 ${enterClass}`;
+          // Re-enable transition after hiding
+          requestAnimationFrame(() => { pages[id].style.transition = ''; });
+        }
+      });
+
+      // Highlight the active nav item
+      const activeNav = document.getElementById(navMap[pageId]);
+      if (activeNav) {
+        activeNav.querySelector('svg').className.baseVal = "h-6 w-6 text-purple-600";
+        activeNav.querySelector('span').className = "text-[10px] mt-1 text-purple-600";
+      }
+
+      // Load gallery projects when switching to gallery
+      if (pageId === 'gallery') {
+        renderProjects();
+      }
+
+      // 3. After transition completes (450ms), restore 'relative' layout to the active page
+      // so it scrolls properly and doesn't get cut off.
+      transitionTimeout = setTimeout(() => {
+        if (activePageId === pageId) {
+          pages[pageId].className = `${pageBaseClass[pageId]} relative page-active`;
+        }
+      }, 450);
+    }
+
+    // 2.7 Logout Handler
+    function handleLogout() {
+      if (confirm("هل أنت متأكد من رغبتك في تسجيل الخروج؟")) {
+        window.location.href = "index.html";
+      }
+    }
+
+    // 2.5 Projects Gallery Logics
+    function renderProjects() {
+      const grid = document.getElementById('projects-grid');
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      const query = document.getElementById('search-projects').value.trim().toLowerCase();
+
+      const filtered = projects.filter(p => {
+        const matchesCategory = (currentGalleryCategory === "all" || p.category === currentGalleryCategory);
+        const matchesQuery = p.title.toLowerCase().includes(query) || p.studentName.toLowerCase().includes(query);
+        return matchesCategory && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+            <svg class="h-12 w-12 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            <span class="text-xs font-semibold">لم نجد أي مشاريع تطابق بحثك</span>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const isFav = favoriteProjectIds.includes(p.id);
+
+        const card = document.createElement('div');
+        card.className = "bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col";
+        card.innerHTML = `
+          <div class="relative w-full h-[160px] bg-slate-100 flex-shrink-0">
+            <img src="${p.cover}" alt="${p.title}" class="w-full h-full object-cover">
+            <button onclick="toggleFavoriteProject(event, ${p.id})" class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm p-1.5 rounded-full shadow-sm border border-slate-100 transition-all active:scale-90 z-10 text-gray-500">
+              <svg class="h-4 w-4 stroke-current ${isFav ? 'text-red-500 fill-red-500 animate-pulse' : 'text-gray-400 fill-none'}" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </button>
+            <span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-lg shadow-sm border border-purple-50">${p.categoryLabel}</span>
+          </div>
+          <div class="p-4 flex-grow flex flex-col">
+            <h4 class="text-sm font-bold text-slate-900 leading-snug line-clamp-2 mb-3">${p.title}</h4>
+            
+            <div class="flex items-center justify-between mb-4 border-t border-slate-50 pt-3 flex-shrink-0">
+              <div class="flex items-center space-x-2 space-x-reverse">
+                <img src="${p.studentAvatar}" alt="${p.studentName}" class="w-7 h-7 rounded-full object-cover border border-purple-100">
+                <span class="text-[11px] font-bold text-slate-700">${p.studentName}</span>
+              </div>
+              <div class="flex items-center space-x-2.5 space-x-reverse text-[10px] text-slate-400">
+                <span class="flex items-center">
+                  <svg class="h-3.5 w-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                  ${p.likes}
+                </span>
+                <span class="flex items-center">
+                  <svg class="h-3.5 w-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  ${p.views}
+                </span>
+              </div>
+            </div>
+
+            <button onclick="openProjectDetails(${p.id})" class="w-full bg-slate-50 hover:bg-purple-50 text-slate-800 hover:text-purple-600 py-2 rounded-xl text-xs font-bold border border-slate-100 hover:border-purple-200 active:scale-95 transition-all text-center flex-shrink-0">
+              عرض التفاصيل
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function selectGalleryCategory(category) {
+      currentGalleryCategory = category;
+      renderProjects();
+    }
+
+    function filterProjects() {
+      renderProjects();
+    }
+
+    function openProjectDetails(projectId) {
+      const project = projects.find(p => p.id === projectId);
+      if (!project) return;
+
+      document.getElementById('detail-project-cover').src = project.cover;
+      document.getElementById('detail-project-badge').textContent = project.categoryLabel;
+      document.getElementById('detail-project-title').textContent = project.title;
+      document.getElementById('detail-project-desc').textContent = project.desc;
+      document.getElementById('detail-student-avatar').src = project.studentAvatar;
+      document.getElementById('detail-student-name').textContent = project.studentName;
+      document.getElementById('detail-student-title').textContent = project.studentTitle;
+
+      const techContainer = document.getElementById('detail-project-techs');
+      techContainer.innerHTML = "";
+      project.techs.forEach(t => {
+        const badge = document.createElement('span');
+        badge.className = "bg-slate-50 border border-slate-200/60 text-slate-700 text-[9px] font-bold px-2.5 py-1 rounded-lg";
+        badge.textContent = t;
+        techContainer.appendChild(badge);
+      });
+
+      // Update detail favorite button UI state and action
+      const isFav = favoriteProjectIds.includes(project.id);
+      const favBtn = document.getElementById('detail-fav-btn');
+      if (favBtn) {
+        const svg = favBtn.querySelector('svg');
+        if (svg) {
+          if (isFav) {
+            svg.setAttribute('class', 'h-5 w-5 stroke-current text-red-500 fill-red-500 animate-pulse');
+          } else {
+            svg.setAttribute('class', 'h-5 w-5 stroke-current text-gray-400 fill-none');
+          }
+        }
+        favBtn.onclick = function(e) {
+          toggleFavoriteProject(e, project.id);
+          const updatedFav = favoriteProjectIds.includes(project.id);
+          const svgUpdate = favBtn.querySelector('svg');
+          if (svgUpdate) {
+            if (updatedFav) {
+              svgUpdate.setAttribute('class', 'h-5 w-5 stroke-current text-red-500 fill-red-500 animate-pulse');
+            } else {
+              svgUpdate.setAttribute('class', 'h-5 w-5 stroke-current text-gray-400 fill-none');
+            }
+          }
+        };
+      }
+
+      // Bind contact button click
+      const contactBtn = document.getElementById('contact-student-btn');
+      contactBtn.onclick = function() {
+        closeProjectDetails();
+        showPage('chats');
+        openChat(project.studentName, project.studentAvatar, project.studentTitle);
+      };
+
+      // Disable page-level scrolling
+      document.body.classList.add('overflow-hidden', 'h-screen');
+
+      // Slide project details overlay up
+      const detailWin = document.getElementById('project-details-window');
+      detailWin.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      detailWin.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+
+    function closeProjectDetails() {
+      // Restore page-level scrolling
+      if (!activeChatUser) {
+        document.body.classList.remove('overflow-hidden', 'h-screen');
+      }
+
+      // Slide project details overlay down
+      const detailWin = document.getElementById('project-details-window');
+      if (detailWin) {
+        detailWin.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        detailWin.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+      }
+    }
+
+    // 3. Chat Navigation (Within Chats Page - Smooth Slide Up)
+    function openChat(name, avatar, title) {
+      window.scrollTo(0, 0);
+
+      activeChatUser = name;
+      activeChatAvatar = avatar;
+
+      // Update Chat Header details dynamically
+      document.getElementById('active-chat-name').textContent = name;
+      document.getElementById('active-chat-avatar').src = avatar;
+      document.getElementById('active-typing-avatar').src = avatar;
+
+      // Populate Message Feed
+      renderMessages(name);
+
+      // Slide bottom nav down offscreen
+      const bottomNav = document.querySelector('nav');
+      if (bottomNav) {
+        bottomNav.classList.remove('translate-y-0');
+        bottomNav.classList.add('translate-y-full');
+      }
+
+      // Prevent page-level scrolling
+      document.body.classList.add('overflow-hidden', 'h-screen');
+
+      // Slide active chat window overlay up
+      const activeChatWin = document.getElementById('active-chat-window');
+      activeChatWin.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      activeChatWin.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
+      setTimeout(scrollToBottom, 50);
+    }
+
+    function closeChat() {
+      activeChatUser = null;
+
+      // Restore bottom navigation bar
+      const bottomNav = document.querySelector('nav');
+      if (bottomNav) {
+        bottomNav.classList.remove('translate-y-full');
+        bottomNav.classList.add('translate-y-0');
+      }
+
+      // Restore page-level scrolling
+      document.body.classList.remove('overflow-hidden', 'h-screen');
+
+      // Slide active chat window overlay down
+      const activeChatWin = document.getElementById('active-chat-window');
+      activeChatWin.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      activeChatWin.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+    }
+
+    // Render messages for current user
+    function renderMessages(name) {
+      const feed = document.getElementById('active-chat-feed');
+      feed.innerHTML = '';
+      
+      const history = conversations[name] || [];
+      history.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        if (msg.isOutgoing) {
+          msgDiv.className = 'flex items-end space-x-2 space-x-reverse max-w-[85%] self-end';
+          msgDiv.innerHTML = `
+            <div>
+              <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 text-white text-xs px-4 py-3 rounded-2xl rounded-bl-none shadow-md shadow-purple-500/10 leading-relaxed break-words">
+                ${msg.text}
+              </div>
+              <div class="flex items-center justify-end space-x-1 space-x-reverse mt-1 ml-1">
+                <span class="text-[9px] text-gray-400">${msg.time}</span>
+                <span class="text-[9px] text-purple-600 font-bold">✓✓</span>
+              </div>
+            </div>
+          `;
+        } else {
+          msgDiv.className = 'flex items-end space-x-2 space-x-reverse max-w-[85%]';
+          msgDiv.innerHTML = `
+            <img src="${activeChatAvatar}" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+            <div>
+              <div class="bg-slate-100 text-slate-800 text-xs px-4 py-3 rounded-2xl rounded-br-none border border-gray-100 shadow-sm leading-relaxed break-words">
+                ${msg.text}
+              </div>
+              <span class="text-[9px] text-gray-400 mt-1 block mr-1">${msg.time}</span>
+            </div>
+          `;
+        }
+        feed.appendChild(msgDiv);
+      });
+      scrollToBottom();
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('active-message-input');
+      const text = input.value.trim();
+      if (!text || !activeChatUser) return;
+
+      const timeStr = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+      
+      // Save outgoing message to DB
+      if (!conversations[activeChatUser]) conversations[activeChatUser] = [];
+      conversations[activeChatUser].push({ text: text, isOutgoing: true, time: timeStr });
+
+      // Render outgoing message
+      renderMessages(activeChatUser);
+      input.value = '';
+
+      // Trigger automatic typing reply simulator
+      const typingIndicator = document.getElementById('active-typing-indicator');
+
+      setTimeout(() => {
+        // Show typing indicator in UI
+        typingIndicator.classList.remove('hidden');
+        scrollToBottom();
+
+        // Simulate reply from contact
+        setTimeout(() => {
+          typingIndicator.classList.add('hidden');
+
+          const replyText = botResponses[responseIndex % botResponses.length];
+          responseIndex++;
+
+          // Save and render bot message
+          conversations[activeChatUser].push({ text: replyText, isOutgoing: false, time: timeStr });
+          renderMessages(activeChatUser);
+        }, 1800);
+
+      }, 800);
+    }
+
+    // Bind keyboard enter key to send message
+    document.getElementById('active-message-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendChatMessage();
+      }
+    });
+
+    function scrollToBottom() {
+      const feed = document.getElementById('active-chat-feed');
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    // 4. Chat Search Filtering
+    document.getElementById('search-chats').addEventListener('input', function(e) {
+      const query = e.target.value.trim().toLowerCase();
+      const chatItems = document.querySelectorAll('.chat-item');
+      
+      chatItems.forEach(item => {
+        const name = item.getAttribute('data-name').toLowerCase();
+        if (name.includes(query)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker Registered Successfully!', reg))
+          .catch(err => console.log('Service Worker registration failed: ', err));
+      });
+    }
+
+    // 4. Notifications Panel handlers
+    function toggleNotifications(show) {
+      const backdrop = document.getElementById('notifications-backdrop');
+      const windowPanel = document.getElementById('notifications-window');
+      
+      if (!backdrop || !windowPanel) return;
+
+      if (show) {
+        // Close other overlays first
+        if (activeChatUser) {
+          closeChat();
+        }
+        closeProjectDetails();
+
+        // Reset to initial bottom sheet styling
+        windowPanel.style.maxHeight = '85vh';
+        windowPanel.style.height = '';
+        windowPanel.classList.remove('rounded-t-none');
+        windowPanel.classList.add('rounded-t-[32px]');
+
+        // Prevent body scroll
+        document.body.classList.add('overflow-hidden', 'h-screen');
+        
+        // Show backdrop
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        
+        // Slide up window
+        windowPanel.classList.remove('translate-y-full');
+        windowPanel.classList.add('translate-y-0');
+      } else {
+        // Restore body scroll
+        document.body.classList.remove('overflow-hidden', 'h-screen');
+        
+        // Hide backdrop
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        
+        // Slide down window
+        windowPanel.classList.remove('translate-y-0');
+        windowPanel.classList.add('translate-y-full');
+      }
+    }
+
+    function markAllNotificationsAsRead() {
+      // Hide red dots in notifications list
+      const items = document.querySelectorAll('.notification-item');
+      items.forEach(item => {
+        item.classList.remove('bg-purple-50/70', 'border-purple-100/50');
+        item.classList.add('bg-white', 'border-gray-100');
+        
+        const badge = item.querySelector('.absolute');
+        if (badge) {
+          badge.remove();
+        }
+      });
+      
+      // Hide active status dot on header icon badges
+      const badges = ['unread-badge-home', 'unread-badge-chats', 'unread-badge-gallery', 'unread-badge-profile'];
+      badges.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.remove();
+        }
+      });
+    }
+
+    // 5. Favorites Panel handlers
+    function toggleFavorites(show) {
+      const backdrop = document.getElementById('favorites-backdrop');
+      const windowPanel = document.getElementById('favorites-window');
+      
+      if (!backdrop || !windowPanel) return;
+
+      if (show) {
+        // Close other overlays first
+        if (activeChatUser) {
+          closeChat();
+        }
+        closeProjectDetails();
+        toggleNotifications(false);
+
+        // Reset to initial bottom sheet styling
+        windowPanel.style.maxHeight = '85vh';
+        windowPanel.style.height = '';
+        windowPanel.classList.remove('rounded-t-none');
+        windowPanel.classList.add('rounded-t-[32px]');
+
+        // Dynamically load projects list
+        renderFavoriteProjects();
+        renderFollowedAccounts();
+
+        // Prevent body scroll
+        document.body.classList.add('overflow-hidden', 'h-screen');
+        
+        // Show backdrop
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        
+        // Slide up window
+        windowPanel.classList.remove('translate-y-full');
+        windowPanel.classList.add('translate-y-0');
+      } else {
+        // Restore body scroll
+        document.body.classList.remove('overflow-hidden', 'h-screen');
+        
+        // Hide backdrop
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        
+        // Slide down window
+        windowPanel.classList.remove('translate-y-0');
+        windowPanel.classList.add('translate-y-full');
+      }
+    }
+
+    function switchFavoritesTab(tab) {
+      const tabProjects = document.getElementById('fav-tab-projects');
+      const tabAccounts = document.getElementById('fav-tab-accounts');
+      const contentProjects = document.getElementById('fav-content-projects');
+      const contentAccounts = document.getElementById('fav-content-accounts');
+
+      if (tab === 'projects') {
+        // Toggle tab highlights
+        tabProjects.className = "flex-1 py-3 text-center text-sm font-bold border-b-2 border-purple-600 text-purple-600 transition-all";
+        tabAccounts.className = "flex-1 py-3 text-center text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-slate-800 transition-all";
+        
+        // Toggle visibility
+        contentProjects.classList.remove('hidden');
+        contentAccounts.classList.add('hidden');
+      } else if (tab === 'accounts') {
+        // Toggle tab highlights
+        tabProjects.className = "flex-1 py-3 text-center text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-slate-800 transition-all";
+        tabAccounts.className = "flex-1 py-3 text-center text-sm font-bold border-b-2 border-purple-600 text-purple-600 transition-all";
+        
+        // Toggle visibility
+        contentProjects.classList.add('hidden');
+        contentAccounts.classList.remove('hidden');
+      }
+    }
+
+    function renderFavoriteProjects() {
+      const container = document.getElementById('fav-content-projects');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (favoriteProjectIds.length === 0) {
+        container.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12 text-slate-400 text-center">
+            <svg class="h-12 w-12 text-slate-300 mb-3 fill-none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            <span class="text-xs font-semibold">لا توجد مشاريع مفضلة مضافة حالياً</span>
+          </div>
+        `;
+        return;
+      }
+
+      favoriteProjectIds.forEach(id => {
+        const p = projects.find(proj => proj.id === id);
+        if (!p) return;
+
+        const item = document.createElement('div');
+        item.className = "flex items-center space-x-3 space-x-reverse p-3 rounded-2xl border border-gray-100 hover:bg-slate-50 transition-all active:scale-[0.99] cursor-pointer";
+        item.onclick = () => {
+          toggleFavorites(false);
+          showPage('gallery');
+          openProjectDetails(p.id);
+        };
+        item.innerHTML = `
+          <img src="${p.cover}" alt="project" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 bg-slate-100">
+          <div class="flex-grow min-w-0">
+            <h4 class="text-xs font-bold text-slate-900 truncate">${p.title}</h4>
+            <p class="text-[10px] text-gray-400 mt-0.5">بواسطة: ${p.studentName}</p>
+            <span class="inline-block text-[9px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full mt-1 border border-purple-100/30">${p.categoryLabel}</span>
+          </div>
+          <button class="text-red-500 hover:text-gray-400 p-2 active:scale-75 transition-all" onclick="event.stopPropagation(); toggleFavoriteProject(event, ${p.id})">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function toggleFavoriteProject(event, id) {
+      if (event) event.stopPropagation();
+      
+      const index = favoriteProjectIds.indexOf(id);
+      let isAdded = false;
+      const proj = projects.find(p => p.id === id);
+      const title = proj ? proj.title : "المشروع";
+
+      if (index === -1) {
+        favoriteProjectIds.push(id);
+        isAdded = true;
+        showToast(`تمت إضافة "${title}" إلى المفضلة`, 'success');
+      } else {
+        favoriteProjectIds.splice(index, 1);
+        showToast(`تمت إزالة "${title}" من المفضلة`, 'info');
+      }
+
+      // Re-render
+      renderFavoriteProjects();
+      renderProjects();
+    }
+
+    // --- Profile, Projects and Support Dynamic Workflows ---
+    function initProfileData() {
+      if (document.getElementById('my-profile-name')) {
+        document.getElementById('my-profile-name').textContent = myProfileData.name;
+        document.getElementById('my-profile-avatar').src = myProfileData.avatar;
+        document.getElementById('profile-stats-projects').textContent = myJobs.length;
+        document.getElementById('profile-stats-followed').textContent = followedAccountNames.length;
+      }
+    }
+
+    // Edit Profile Logic
+    let selectedAvatarUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=250";
+    
+    function openEditProfile() {
+      document.getElementById('edit-name').value = myProfileData.name;
+      selectedAvatarUrl = myProfileData.avatar;
+
+      // Highlight selected avatar
+      document.querySelectorAll('.avatar-option').forEach(el => {
+        const img = el.querySelector('img');
+        const check = el.querySelector('.checkmark');
+        if (img.src === myProfileData.avatar) {
+          el.classList.remove('border-transparent');
+          el.classList.add('border-purple-600');
+          check.classList.remove('hidden');
+          check.classList.add('flex');
+        } else {
+          el.classList.remove('border-purple-600');
+          el.classList.add('border-transparent');
+          check.classList.add('hidden');
+          check.classList.remove('flex');
+        }
+      });
+
+      document.body.classList.add('overflow-hidden', 'h-screen');
+      const win = document.getElementById('edit-profile-window');
+      win.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      win.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+
+    function selectAvatarOption(element, src) {
+      document.querySelectorAll('.avatar-option').forEach(el => {
+        el.classList.remove('border-purple-600');
+        el.classList.add('border-transparent');
+        const check = el.querySelector('.checkmark');
+        check.classList.add('hidden');
+        check.classList.remove('flex');
+      });
+
+      element.classList.remove('border-transparent');
+      element.classList.add('border-purple-600');
+      const check = element.querySelector('.checkmark');
+      check.classList.remove('hidden');
+      check.classList.add('flex');
+      selectedAvatarUrl = src;
+    }
+
+    function saveEditProfile() {
+      const name = document.getElementById('edit-name').value.trim();
+
+      if (!name) {
+        showToast('الاسم الكامل مطلوب!', 'error');
+        return;
+      }
+
+      myProfileData.name = name;
+      myProfileData.avatar = selectedAvatarUrl;
+
+      initProfileData();
+      closeEditProfile();
+      showToast('تم تحديث الملف الشخصي بنجاح!', 'success');
+    }
+
+    function closeEditProfile() {
+      document.body.classList.remove('overflow-hidden', 'h-screen');
+      const win = document.getElementById('edit-profile-window');
+      if (win) {
+        win.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        win.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+      }
+    }
+
+    // Manage Jobs Logic
+    function openManageJobs() {
+      renderMyJobsList();
+      document.body.classList.add('overflow-hidden', 'h-screen');
+      const win = document.getElementById('manage-projects-window');
+      win.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      win.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+
+    function renderMyJobsList() {
+      const list = document.getElementById('my-projects-list');
+      if (!list) return;
+      list.innerHTML = '';
+
+      if (myJobs.length === 0) {
+        list.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12 text-slate-400 text-center">
+            <svg class="h-12 w-12 text-slate-300 mb-3 fill-none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span class="text-xs font-semibold">لم تقم بإضافة أي فرص عمل بعد</span>
+          </div>
+        `;
+        return;
+      }
+
+      myJobs.forEach(job => {
+        const item = document.createElement('div');
+        item.className = "flex items-center space-x-3 space-x-reverse p-3.5 rounded-2xl border border-gray-100 bg-white hover:bg-slate-50/50 transition-all shadow-sm";
+        item.innerHTML = `
+          <div class="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0">
+            <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          </div>
+          <div class="flex-grow min-w-0 text-right">
+            <h4 class="text-xs font-bold text-slate-900 truncate">${job.title}</h4>
+            <p class="text-[10px] text-slate-500 mt-0.5 truncate">${job.company} - ${job.location}</p>
+            <span class="inline-block text-[9px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full mt-1 border border-purple-100/30">${job.categoryLabel}</span>
+          </div>
+          <div class="flex items-center space-x-1 space-x-reverse flex-shrink-0">
+            <button onclick="editMyJob(${job.id})" class="text-purple-600 hover:text-purple-700 p-2 active:scale-75 transition-all flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            </button>
+            <button onclick="deleteMyJob(${job.id})" class="text-red-500 hover:text-red-600 p-2 active:scale-75 transition-all flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    let closeEntireModalOnFormCancel = false;
+    let editingJobId = null;
+
+    function showAddNewJobForm(show, closeEntireModal = false) {
+      const panel = document.getElementById('add-project-form-panel');
+      if (!panel) return;
+
+      const parentCloseBtn = document.getElementById('manage-projects-close-btn');
+
+      if (show) {
+        closeEntireModalOnFormCancel = closeEntireModal;
+        
+        if (!editingJobId) {
+          const formTitle = document.querySelector('#add-project-form-panel h2');
+          if (formTitle) formTitle.textContent = "إضافة فرصة عمل";
+
+          const submitBtn = document.querySelector('#add-project-form-panel button[onclick="saveNewJob()"]');
+          if (submitBtn) submitBtn.textContent = "نشر فرصة العمل";
+
+          // Clear fields
+          document.getElementById('job-title-input').value = '';
+          document.getElementById('job-company-input').value = '';
+          document.getElementById('job-location-input').value = 'عمان، الأردن';
+          document.getElementById('job-desc-input').value = '';
+          
+          // Reset custom dropdown to default value
+          document.getElementById('job-category-select').value = 'dev';
+          document.getElementById('job-category-dropdown-label').textContent = '💻 برمجة وتطوير';
+        }
+        
+        panel.classList.remove('hidden');
+        if (parentCloseBtn) parentCloseBtn.classList.add('hidden');
+      } else {
+        panel.classList.add('hidden');
+        if (parentCloseBtn) parentCloseBtn.classList.remove('hidden');
+        
+        editingJobId = null; // reset
+        
+        if (closeEntireModalOnFormCancel) {
+          closeManageJobs();
+          closeEntireModalOnFormCancel = false; // reset
+        }
+      }
+    }
+
+    function editMyJob(id) {
+      const job = myJobs.find(j => j.id === id);
+      if (!job) return;
+
+      editingJobId = id;
+      
+      // Open form
+      showAddNewJobForm(true, false);
+      
+      // Update form header title and button text
+      const formTitle = document.querySelector('#add-project-form-panel h2');
+      if (formTitle) formTitle.textContent = "تعديل فرصة عمل";
+
+      const submitBtn = document.querySelector('#add-project-form-panel button[onclick="saveNewJob()"]');
+      if (submitBtn) submitBtn.textContent = "حفظ التعديلات";
+
+      // Pre-fill inputs
+      document.getElementById('job-title-input').value = job.title;
+      document.getElementById('job-company-input').value = job.company;
+      document.getElementById('job-location-input').value = job.location;
+      document.getElementById('job-desc-input').value = job.desc;
+      
+      // Set category
+      document.getElementById('job-category-select').value = job.category;
+      const categoryLabels = {
+        dev: "💻 برمجة وتطوير",
+        design: "🎨 تصاميم وفنون",
+        ai: "🤖 ذكاء اصطناعي",
+        eng: "⚙️ هندسة وشبكات"
+      };
+      document.getElementById('job-category-dropdown-label').textContent = categoryLabels[job.category] || "💻 برمجة وتطوير";
+    }
+
+    function saveNewJob() {
+      const title = document.getElementById('job-title-input').value.trim();
+      const company = document.getElementById('job-company-input').value.trim();
+      const location = document.getElementById('job-location-input').value.trim();
+      const category = document.getElementById('job-category-select').value;
+      const desc = document.getElementById('job-desc-input').value.trim();
+
+      if (!title || !company || !desc) {
+        showToast('يرجى ملء جميع الحقول المطلوبة!', 'error');
+        return;
+      }
+
+      const categoryLabels = {
+        dev: "برمجة وتطوير",
+        design: "تصاميم وفنون",
+        ai: "ذكاء اصطناعي",
+        eng: "هندسة وشبكات"
+      };
+
+      if (editingJobId !== null) {
+        // Edit mode: find existing and update it
+        const jobIndex = myJobs.findIndex(j => j.id === editingJobId);
+        if (jobIndex !== -1) {
+          myJobs[jobIndex].title = title;
+          myJobs[jobIndex].company = company;
+          myJobs[jobIndex].location = location;
+          myJobs[jobIndex].category = category;
+          myJobs[jobIndex].categoryLabel = categoryLabels[category];
+          myJobs[jobIndex].desc = desc;
+          
+          showToast('تمت تعديل فرصة العمل بنجاح!', 'success');
+        }
+        editingJobId = null; // reset
+      } else {
+        // Add mode
+        const newId = Date.now();
+        const newJob = {
+          id: newId,
+          title: title,
+          company: company,
+          location: location,
+          category: category,
+          categoryLabel: categoryLabels[category],
+          desc: desc
+        };
+        myJobs.unshift(newJob);
+        showToast('تم نشر فرصة العمل بنجاح في المنصة!', 'success');
+      }
+
+      renderMyJobsList();
+      showAddNewJobForm(false);
+      initProfileData();
+    }
+
+    function deleteMyJob(id) {
+      if (confirm('هل أنت متأكد من رغبتك في حذف هذه الفرصة؟')) {
+        myJobs = myJobs.filter(j => j.id !== id);
+        renderMyJobsList();
+        initProfileData();
+        showToast('تم حذف فرصة العمل بنجاح.', 'info');
+      }
+    }
+
+    function closeManageJobs() {
+      document.body.classList.remove('overflow-hidden', 'h-screen');
+      const win = document.getElementById('manage-projects-window');
+      if (win) {
+        win.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        win.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+      }
+    }
+
+    // Support Panel Logic
+    function openSupport() {
+      document.getElementById('support-subject').value = '';
+      document.getElementById('support-message').value = '';
+      document.body.classList.add('overflow-hidden', 'h-screen');
+      
+      const win = document.getElementById('support-window');
+      win.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      win.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+
+    function toggleFaq(btn) {
+      const panel = btn.nextElementSibling;
+      const svg = btn.querySelector('svg');
+      const isHidden = panel.classList.contains('hidden');
+
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        svg.classList.add('rotate-180');
+      } else {
+        panel.classList.add('hidden');
+        svg.classList.remove('rotate-180');
+      }
+    }
+
+    function sendSupportTicket() {
+      const subject = document.getElementById('support-subject').value.trim();
+      const message = document.getElementById('support-message').value.trim();
+
+      if (!subject || !message) {
+        showToast('يرجى كتابة موضوع التذكرة وشرح المشكلة!', 'error');
+        return;
+      }
+
+      const timeStr = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+      // Create conversation in database
+      conversations["الدعم الفني"] = [
+        { text: `مرحباً بك! لقد تلقينا تذكرتك بموضوع: "${subject}". سيقوم فريق الدعم الفني بمراجعة تفاصيل مشكلتك والرد عليك هنا فوراً.`, isOutgoing: false, time: timeStr }
+      ];
+
+      // Add chat item to chats tab
+      addSupportChatToList(subject, timeStr);
+
+      closeSupport();
+      showPage('chats');
+      openChat('الدعم الفني', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150', 'الدعم');
+
+      showToast('تم إرسال تذكرتك وجاري توجيهك لغرفة الدعم...', 'success');
+    }
+
+    function addSupportChatToList(subject, timeStr) {
+      const listContainer = document.getElementById('chats-list-container');
+      if (!listContainer) return;
+
+      let supportItem = listContainer.querySelector('[data-name="الدعم الفني"]');
+
+      if (!supportItem) {
+        const item = document.createElement('a');
+        item.href = "javascript:void(0)";
+        item.onclick = () => openChat('الدعم الفني', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150', 'الدعم');
+        item.className = "flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 active:bg-slate-100 transition-all border border-transparent hover:border-slate-100 chat-item";
+        item.setAttribute('data-name', 'الدعم الفني');
+        item.innerHTML = `
+          <div class="flex items-center space-x-3 space-x-reverse max-w-[75%]">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm">LUMO</div>
+            </div>
+            <div class="overflow-hidden text-right">
+              <div class="flex items-center space-x-1.5 space-x-reverse">
+                <h4 class="text-sm font-bold text-slate-900 truncate">الدعم الفني</h4>
+                <span class="text-[9px] bg-purple-50 text-purple-600 px-1.5 py-0.2 rounded font-medium">الدعم</span>
+              </div>
+              <p class="text-xs text-slate-600 truncate mt-1 font-bold" id="support-chat-last-msg">لقد تلقينا تذكرتك بموضوع: "${subject}"</p>
+            </div>
+          </div>
+          <div class="flex flex-col items-end flex-shrink-0">
+            <span class="text-[10px] text-purple-600 font-bold">${timeStr}</span>
+            <span class="mt-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white text-[9px] font-bold h-5 w-5 flex items-center justify-center rounded-full shadow-sm">1</span>
+          </div>
+        `;
+        listContainer.insertBefore(item, listContainer.firstChild);
+      } else {
+        document.getElementById('support-chat-last-msg').textContent = `لقد تلقينا تذكرتك بموضوع: "${subject}"`;
+      }
+    }
+
+    function closeSupport() {
+      document.body.classList.remove('overflow-hidden', 'h-screen');
+      const win = document.getElementById('support-window');
+      if (win) {
+        win.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        win.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+      }
+    }
+
+    // Visited Account and Toast Notification Logic
+    let toastTimeout = null;
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast-notification');
+      const msgEl = document.getElementById('toast-message');
+      const iconBg = document.getElementById('toast-icon-bg');
+      const iconPath = document.getElementById('toast-icon').querySelector('path');
+      
+      if (!toast || !msgEl || !iconBg) return;
+
+      msgEl.textContent = message;
+
+      if (type === 'success') {
+        iconBg.className = "w-8 h-8 rounded-full flex items-center justify-center text-white bg-green-500 shadow-sm flex-shrink-0";
+        iconPath.setAttribute('d', 'M5 13l4 4L19 7'); // check
+      } else if (type === 'info') {
+        iconBg.className = "w-8 h-8 rounded-full flex items-center justify-center text-white bg-blue-500 shadow-sm flex-shrink-0";
+        iconPath.setAttribute('d', 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'); // info
+      } else {
+        iconBg.className = "w-8 h-8 rounded-full flex items-center justify-center text-white bg-red-500 shadow-sm flex-shrink-0";
+        iconPath.setAttribute('d', 'M6 18L18 6M6 6l12 12'); // cross
+      }
+
+      toast.classList.remove('-translate-y-32');
+      toast.classList.add('translate-y-0');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0');
+        toast.classList.add('-translate-y-32');
+      }, 3000);
+    }
+
+    function openVisitedProfile(studentName) {
+      const stud = students[studentName];
+      if (!stud) return;
+
+      // Close other sheets that might conflict
+      toggleNotifications(false);
+
+      document.getElementById('visited-avatar').src = stud.avatar;
+      document.getElementById('visited-name').textContent = stud.name;
+      document.getElementById('visited-role').textContent = stud.role;
+      document.getElementById('visited-title').textContent = stud.title;
+      document.getElementById('visited-stats-projects').textContent = stud.projectsCount;
+      document.getElementById('visited-stats-views').textContent = stud.views;
+      document.getElementById('visited-stats-likes').textContent = stud.likes;
+      document.getElementById('visited-bio').textContent = stud.bio;
+
+      // Render skills
+      const skillsContainer = document.getElementById('visited-skills');
+      skillsContainer.innerHTML = '';
+      stud.skills.forEach(skill => {
+        const badge = document.createElement('span');
+        badge.className = "bg-slate-50 border border-slate-200/60 text-slate-700 text-[9px] font-bold px-2.5 py-1 rounded-lg";
+        badge.textContent = skill;
+        skillsContainer.appendChild(badge);
+      });
+
+      // Render projects
+      const projectsContainer = document.getElementById('visited-projects-list');
+      projectsContainer.innerHTML = '';
+      const studProjects = projects.filter(p => p.studentName === studentName);
+      if (studProjects.length === 0) {
+        projectsContainer.innerHTML = `
+          <p class="text-[10px] text-slate-400 text-center py-4">لا توجد مشاريع مضافة حالياً لهذا الطالب</p>
+        `;
+      } else {
+        studProjects.forEach(p => {
+          const card = document.createElement('div');
+          card.className = "flex items-center space-x-3 space-x-reverse p-3 rounded-2xl border border-gray-100 hover:bg-slate-50 transition-all active:scale-[0.99] cursor-pointer bg-white";
+          card.onclick = () => {
+            closeVisitedProfile();
+            openProjectDetails(p.id);
+          };
+          card.innerHTML = `
+            <img src="${p.cover}" alt="project" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 bg-slate-100 border border-slate-100">
+            <div class="flex-grow min-w-0 text-right">
+              <h4 class="text-xs font-bold text-slate-900 truncate">${p.title}</h4>
+              <span class="inline-block text-[9px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full mt-1 border border-purple-100/30">${p.categoryLabel}</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          `;
+          projectsContainer.appendChild(card);
+        });
+      }
+
+      // Update Follow button state
+      updateVisitedProfileFollowUI(studentName);
+
+      // Disable body scroll
+      document.body.classList.add('overflow-hidden', 'h-screen');
+
+      // Slide up
+      const win = document.getElementById('visited-profile-window');
+      win.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      win.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+
+    function closeVisitedProfile() {
+      // Check if project details is still active underneath to keep body scroll disabled
+      const detailWin = document.getElementById('project-details-window');
+      const detailWinActive = detailWin && detailWin.classList.contains('translate-y-0');
+      if (!detailWinActive && !activeChatUser) {
+        document.body.classList.remove('overflow-hidden', 'h-screen');
+      }
+
+      const win = document.getElementById('visited-profile-window');
+      if (win) {
+        win.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        win.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function updateVisitedProfileFollowUI(studentName) {
+      const isFollowing = followedAccountNames.includes(studentName);
+      
+      const heartIcon = document.getElementById('visited-profile-heart-icon');
+      if (heartIcon) {
+        if (isFollowing) {
+          heartIcon.classList.remove('text-gray-400', 'fill-transparent');
+          heartIcon.classList.add('text-red-500', 'fill-red-500');
+        } else {
+          heartIcon.classList.remove('text-red-500', 'fill-red-500');
+          heartIcon.classList.add('text-gray-400', 'fill-transparent');
+        }
+      }
+
+      const followBtn = document.getElementById('visited-action-follow-btn');
+      const followBtnText = document.getElementById('follow-btn-text');
+      const followBtnIconPath = document.getElementById('follow-btn-icon-path');
+
+      if (followBtn && followBtnText && followBtnIconPath) {
+        if (isFollowing) {
+          followBtn.className = "flex-1 bg-slate-100 hover:bg-slate-200/80 text-slate-700 py-3 rounded-2xl text-xs font-bold active:scale-95 transition-all flex items-center justify-center space-x-2 space-x-reverse border border-slate-200/60";
+          followBtnText.textContent = "متابَع";
+          followBtnIconPath.setAttribute('d', 'M5 13l4 4L19 7'); // checkmark
+        } else {
+          followBtn.className = "flex-1 bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-2xl text-xs font-bold shadow-md shadow-purple-500/10 active:scale-95 transition-all flex items-center justify-center space-x-2 space-x-reverse";
+          followBtnText.textContent = "متابعة";
+          followBtnIconPath.setAttribute('d', 'M12 4v16m8-8H4'); // plus
+        }
+
+        followBtn.onclick = (e) => {
+          e.stopPropagation();
+          toggleFollowAccount(studentName);
+        };
+      }
+
+      const heartBtn = document.getElementById('visited-follow-btn');
+      if (heartBtn) {
+        heartBtn.onclick = (e) => {
+          e.stopPropagation();
+          toggleFollowAccount(studentName);
+        };
+      }
+
+      const chatBtn = document.getElementById('visited-action-chat-btn');
+      if (chatBtn) {
+        const stud = students[studentName];
+        chatBtn.onclick = (e) => {
+          e.stopPropagation();
+          closeVisitedProfile();
+          closeProjectDetails(); // Close project details too if open
+          showPage('chats');
+          openChat(studentName, stud.avatar, stud.title);
+        };
+      }
+    }
+
+    function toggleFollowAccount(name) {
+      const index = followedAccountNames.indexOf(name);
+      if (index === -1) {
+        followedAccountNames.push(name);
+        showToast(`تمت إضافة ${name} إلى المفضلة`, 'success');
+      } else {
+        followedAccountNames.splice(index, 1);
+        showToast(`تمت إزالة ${name} من المفضلة`, 'info');
+      }
+
+      renderFollowedAccounts();
+      updateVisitedProfileFollowUI(name);
+      initProfileData();
+    }
+
+    function renderFollowedAccounts() {
+      const container = document.getElementById('fav-content-accounts');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (followedAccountNames.length === 0) {
+        container.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12 text-slate-400 text-center">
+            <svg class="h-12 w-12 text-slate-300 mb-3 fill-none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.35C12.1 4.35 12 4.35 12 4.35M16.5 21a4.5 4.5 0 00-9 0M12 12a4 4 0 100-8 4 4 0 000 8z"></path>
+            </svg>
+            <span class="text-xs font-semibold">لا توجد حسابات متابعة حالياً</span>
+          </div>
+        `;
+        return;
+      }
+
+      followedAccountNames.forEach(name => {
+        const stud = students[name];
+        if (!stud) return;
+
+        const item = document.createElement('div');
+        item.className = "flex items-center justify-between p-3 rounded-2xl border border-gray-100 hover:bg-slate-50 transition-all active:scale-[0.99] cursor-pointer";
+        item.onclick = () => {
+          toggleFavorites(false);
+          openVisitedProfile(name);
+        };
+        item.innerHTML = `
+          <div class="flex items-center space-x-3 space-x-reverse min-w-0">
+            <img src="${stud.avatar}" alt="avatar" class="w-11 h-11 rounded-full object-cover flex-shrink-0 bg-slate-100 border border-purple-100">
+            <div class="min-w-0 text-right">
+              <h4 class="text-xs font-bold text-slate-900 truncate">${stud.name}</h4>
+              <p class="text-[10px] text-gray-400 mt-0.5">${stud.title}</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 space-x-reverse flex-shrink-0">
+            <!-- Message Icon -->
+            <button class="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center hover:bg-purple-100 transition-colors active:scale-90" onclick="event.stopPropagation(); toggleFavorites(false); showPage('chats'); openChat('${stud.name}', '${stud.avatar}', '${stud.title}');">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+            </button>
+            <!-- Unfollow heart button -->
+            <button class="text-red-500 hover:text-gray-400 p-2 active:scale-90 transition-all flex items-center justify-center" onclick="event.stopPropagation(); toggleFollowAccount('${stud.name}')">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+            </button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Enable drag up to full screen or drag down to close
+    function initDragSheet(dragZoneId, windowId, closeFunc) {
+      const dragZone = document.getElementById(dragZoneId);
+      const win = document.getElementById(windowId);
+      if (!dragZone || !win) return;
+
+      let startY = 0;
+
+      dragZone.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+
+      dragZone.addEventListener('touchmove', (e) => {
+        const currentY = e.touches[0].clientY;
+        const deltaY = currentY - startY;
+
+        // Swipe UP: Expand sheet to full screen height
+        if (deltaY < -45) {
+          win.style.maxHeight = '100dvh';
+          win.style.height = '100dvh';
+          win.classList.remove('rounded-t-[32px]');
+          win.classList.add('rounded-t-none');
+        }
+        // Swipe DOWN: Close panel
+        else if (deltaY > 120) {
+          closeFunc(false);
+        }
+      }, { passive: true });
+    }
+
+    // Initialize drag sheets
+    initDragSheet('notifications-drag-zone', 'notifications-window', toggleNotifications);
+    initDragSheet('favorites-drag-zone', 'favorites-window', toggleFavorites);
+    initDragSheet('visited-drag-zone', 'visited-profile-window', closeVisitedProfile);
+    
+    // Add new modals drag-zones
+    initDragSheet('edit-profile-window', 'edit-profile-window', closeEditProfile);
+    initDragSheet('manage-projects-window', 'manage-projects-window', closeManageJobs);
+    initDragSheet('support-window', 'support-window', closeSupport);
+
+    // Call profile init
+    initProfileData();
+
+    // 6. Classification Filter Dropdown Logics
+    // Position a fixed dropdown below a given button element
+    function positionDropdownBelowBtn(dropdown, btn) {
+      const rect = btn.getBoundingClientRect();
+      const dropH = 220; // estimated height
+      const spaceBelow = window.innerHeight - rect.bottom;
+      
+      // Always show below the button
+      dropdown.style.top = (rect.bottom + 8) + 'px';
+      dropdown.style.bottom = 'auto';
+
+      // Align to left edge of button, but keep within viewport
+      let left = rect.left;
+      if (left + 160 > window.innerWidth) {
+        left = window.innerWidth - 168;
+      }
+      dropdown.style.left = left + 'px';
+      dropdown.style.right = 'auto';
+    }
+
+    function toggleFilterMenu(event) {
+      if (event) event.stopPropagation();
+      const dropdown = document.getElementById('classification-dropdown');
+      const btn = document.getElementById('gallery-filter-btn');
+      if (!dropdown || !btn) return;
+
+      const isHidden = dropdown.classList.contains('hidden');
+      // Close home dropdown first
+      document.getElementById('home-classification-dropdown')?.classList.add('hidden');
+      
+      if (isHidden) {
+        positionDropdownBelowBtn(dropdown, btn);
+        dropdown.classList.remove('hidden');
+      } else {
+        dropdown.classList.add('hidden');
+      }
+    }
+
+    function selectGalleryClassification(category, event) {
+      if (event) event.stopPropagation();
+      selectGalleryCategory(category);
+      document.getElementById('classification-dropdown')?.classList.add('hidden');
+    }
+
+    function toggleHomeFilterMenu(event) {
+      if (event) event.stopPropagation();
+      const dropdown = document.getElementById('home-classification-dropdown');
+      const btn = document.getElementById('home-filter-btn');
+      if (!dropdown || !btn) return;
+
+      const isHidden = dropdown.classList.contains('hidden');
+      // Close gallery dropdown first
+      document.getElementById('classification-dropdown')?.classList.add('hidden');
+
+      if (isHidden) {
+        positionDropdownBelowBtn(dropdown, btn);
+        dropdown.classList.remove('hidden');
+      } else {
+        dropdown.classList.add('hidden');
+      }
+    }
+
+    function selectHomeClassification(category, event) {
+      if (event) event.stopPropagation();
+      document.getElementById('home-classification-dropdown')?.classList.add('hidden');
+      showPage('gallery');
+      selectGalleryCategory(category);
+    }
+
+    function selectHomeCardCategory(category, searchQuery, event) {
+      if (event) event.stopPropagation();
+      const galleryInput = document.getElementById('search-projects');
+      if (galleryInput) {
+        galleryInput.value = searchQuery || '';
+      }
+      showPage('gallery');
+      selectGalleryCategory(category);
+    }
+
+    function updateHomeSearchBtnColor() {
+      const homeVal = document.getElementById('home-search-input').value.trim();
+      const btn = document.getElementById('home-search-btn');
+      if (!btn) return;
+      if (homeVal.length > 0) {
+        btn.classList.remove('text-gray-400');
+        btn.classList.add('text-purple-600');
+      } else {
+        btn.classList.remove('text-purple-600');
+        btn.classList.add('text-gray-400');
+      }
+    }
+
+    function triggerHomeSearch() {
+      const homeInput = document.getElementById('home-search-input');
+      const homeVal = homeInput.value.trim();
+      const galleryInput = document.getElementById('search-projects');
+      if (galleryInput) {
+        galleryInput.value = homeVal;
+      }
+      // reset home input and button color
+      homeInput.value = '';
+      updateHomeSearchBtnColor();
+      
+      showPage('gallery');
+      renderProjects();
+    }
+
+    function handleHomeSearchKey(event) {
+      if (event.key === 'Enter') {
+        triggerHomeSearch();
+      }
+    }
+
+    function toggleCustomJobCategoryDropdown(event) {
+      if (event) event.stopPropagation();
+      const dropdown = document.getElementById('job-category-dropdown-options');
+      const arrow = document.getElementById('job-category-dropdown-arrow');
+      if (!dropdown || !arrow) return;
+
+      const isHidden = dropdown.classList.contains('hidden');
+      
+      // Close other dropdowns if open
+      document.getElementById('classification-dropdown')?.classList.add('hidden');
+      document.getElementById('home-classification-dropdown')?.classList.add('hidden');
+
+      if (isHidden) {
+        dropdown.classList.remove('hidden');
+        // Force reflow
+        void dropdown.offsetWidth;
+        dropdown.classList.remove('opacity-0', '-translate-y-2');
+        dropdown.classList.add('opacity-100', 'translate-y-0');
+        arrow.classList.add('rotate-180');
+        
+        // Highlight active selection checkmark
+        const currentValue = document.getElementById('job-category-select').value;
+        const options = dropdown.querySelectorAll('button');
+        options.forEach(opt => {
+          const check = opt.querySelector('.checkmark');
+          if (opt.getAttribute('onclick').includes(`'${currentValue}'`)) {
+            check?.classList.remove('hidden');
+          } else {
+            check?.classList.add('hidden');
+          }
+        });
+      } else {
+        closeCustomJobCategoryDropdown();
+      }
+    }
+
+    function closeCustomJobCategoryDropdown() {
+      const dropdown = document.getElementById('job-category-dropdown-options');
+      const arrow = document.getElementById('job-category-dropdown-arrow');
+      if (!dropdown || !arrow) return;
+
+      dropdown.classList.remove('opacity-100', 'translate-y-0');
+      dropdown.classList.add('opacity-0', '-translate-y-2');
+      arrow.classList.remove('rotate-180');
+      
+      setTimeout(() => {
+        if (dropdown.classList.contains('opacity-0')) {
+          dropdown.classList.add('hidden');
+        }
+      }, 200);
+    }
+
+    function selectCustomJobCategory(value, label, event) {
+      if (event) event.stopPropagation();
+      
+      document.getElementById('job-category-select').value = value;
+      document.getElementById('job-category-dropdown-label').textContent = label;
+      
+      closeCustomJobCategoryDropdown();
+    }
+
+    // Dismiss dropdown on outside clicks
+    document.addEventListener('click', (e) => {
+      // Gallery dropdown
+      const dropdown = document.getElementById('classification-dropdown');
+      const filterBtn = document.getElementById('gallery-filter-btn');
+      if (dropdown && !dropdown.classList.contains('hidden')) {
+        if (e.target !== filterBtn && !filterBtn?.contains(e.target) && e.target !== dropdown && !dropdown.contains(e.target)) {
+          dropdown.classList.add('hidden');
+        }
+      }
+
+      // Home dropdown
+      const homeDropdown = document.getElementById('home-classification-dropdown');
+      const homeFilterBtn = document.getElementById('home-filter-btn');
+      if (homeDropdown && !homeDropdown.classList.contains('hidden')) {
+        if (e.target !== homeFilterBtn && !homeFilterBtn?.contains(e.target) && e.target !== homeDropdown && !homeDropdown.contains(e.target)) {
+          homeDropdown.classList.add('hidden');
+        }
+      }
+
+      // Custom Job Category Dropdown
+      const jobDropdown = document.getElementById('job-category-dropdown-options');
+      const jobBtn = document.getElementById('job-category-dropdown-btn');
+      if (jobDropdown && !jobDropdown.classList.contains('hidden')) {
+        if (e.target !== jobBtn && !jobBtn?.contains(e.target) && e.target !== jobDropdown && !jobDropdown.contains(e.target)) {
+          closeCustomJobCategoryDropdown();
+        }
+      }
+    });
+
+    // Prevent copying text
+    document.addEventListener('copy', (e) => e.preventDefault());
+
+    // Prevent right-click / context menu (except on inputs)
+    document.addEventListener('contextmenu', (e) => {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+      }
+    });
+
+    // Prevent pinch zoom gestures on iOS devices
+    document.addEventListener('gesturestart', (e) => {
+      e.preventDefault();
+    });
+  </script>
+</body>
+</html>
