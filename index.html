@@ -835,24 +835,24 @@
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const uid = userCredential.user.uid;
 
-                // Create user document in Firestore with pending status
+                // Create user document in Firestore with approved status
                 await db.collection('users').doc(uid).set({
                     name: name,
                     contact: contact,
                     id: id,
                     nationalId: id,
                     role: 'student',
-                    status: 'pending',
+                    status: 'approved',
                     specialization: 'تطوير البرمجيات - طالب BTEC',
                     skills: 'مبتدئ BTEC, ريادة الأعمال',
                     date: new Date().toISOString().split('T')[0]
                 });
 
-                // Sign out immediately so they don't remain logged in as pending student
-                await auth.signOut();
-
-                showAlert(`تم تقديم طلب تسجيلك يا ${name} بنجاح! بانتظار موافقة الإدارة لتفعيل حسابك 🌟`, 'success');
+                showAlert(`أهلاً بك يا ${name}! تم إنشاء حسابك ودخولك بنجاح...`, 'success');
                 regStudentForm.reset();
+                setTimeout(() => {
+                    window.location.href = 'student.html';
+                }, 800);
 
             } catch (err) {
                 console.error("Register student error:", err);
@@ -917,8 +917,11 @@
                     date: new Date().toISOString().split('T')[0]
                 });
 
-                showAlert(`مرحباً بك يا ${name}! تم تسجيل حسابك بنجاح. يمكنك الآن تسجيل الدخول فوراً بالبيانات الجديدة ✨`, 'success');
+                showAlert(`أهلاً بك يا ${name}! تم إنشاء حسابك ودخولك بنجاح...`, 'success');
                 regCompanyForm.reset();
+                setTimeout(() => {
+                    window.location.href = 'user.html';
+                }, 800);
 
             } catch (err) {
                 console.error("Register company error:", err);
