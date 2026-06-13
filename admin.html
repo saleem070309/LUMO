@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LUMO - لوحة تحكم المسؤول</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <style>
+        html, body {
+            font-family: 'Tajawal', sans-serif;
+            background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, rgba(236, 72, 153, 0.04) 90%);
+            touch-action: manipulation;
+        }
+
+        /* Prevent Tap highlight on mobile */
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        /* Prevent copying text except inside inputs */
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        input {
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .lumo-gradient-text {
+            background: linear-gradient(45deg, #a855f7, #ec4899, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Smooth transition for tab changes */
+        .tab-content {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-indicator {
+            transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen pb-16 bg-slate-50 relative overflow-x-hidden">
+
+    <!-- Background decorative blur elements representing LUMO colors -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-[-10%] right-[-10%] w-[300px] h-[300px] rounded-full bg-purple-400/20 blur-[80px]"></div>
+        <div class="absolute top-[40%] left-[-10%] w-[350px] h-[350px] rounded-full bg-orange-400/15 blur-[100px]"></div>
+    </div>
+
+    <!-- Floating Top Bar -->
+    <header class="sticky top-0 z-40 w-full px-4 py-3 bg-white/70 backdrop-blur-md border-b border-slate-200/50 shadow-sm">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="assets/logo_compressed_800.png" alt="LUMO Logo" class="h-10 w-auto object-contain">
+                <div class="h-6 w-[1px] bg-slate-200"></div>
+                <span class="text-sm font-bold text-slate-800">لوحة تحكم المسؤول</span>
+            </div>
+            
+            <button onclick="handleLogout()" class="px-4 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100/70 border border-red-200/50 rounded-xl transition-all flex items-center gap-1.5 active:scale-95">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span>تسجيل الخروج</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 mt-6 relative z-10">
+        
+        <!-- Welcome banner -->
+        <div class="mb-6">
+            <h1 class="text-xl sm:text-2xl font-black text-slate-900 mb-1">أهلاً بك يا مسؤول المنصة 👋</h1>
+            <p class="text-xs sm:text-sm text-slate-500">إدارة طلبات التسجيل، ومتابعة الطلاب والمؤسسات المسجلين في LUMO.</p>
+        </div>
+
+        <!-- Dashboard Stats Grid -->
+        <section class="grid grid-cols-3 gap-3 sm:gap-6 mb-8">
+            <!-- Stat 1: Pending requests -->
+            <div class="bg-white/80 backdrop-blur-sm p-3 sm:p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-500">طلبات معلقة</span>
+                    <span class="p-1.5 bg-amber-50 rounded-lg text-amber-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </span>
+                </div>
+                <div class="flex items-baseline gap-1">
+                    <span id="stat-pending-count" class="text-xl sm:text-3xl font-black text-amber-600">0</span>
+                    <span class="text-[9px] text-slate-400">طلب</span>
+                </div>
+            </div>
+
+            <!-- Stat 2: Registered Students -->
+            <div class="bg-white/80 backdrop-blur-sm p-3 sm:p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-500">الطلاب المقبولين</span>
+                    <span class="p-1.5 bg-green-50 rounded-lg text-green-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                        </svg>
+                    </span>
+                </div>
+                <div class="flex items-baseline gap-1">
+                    <span id="stat-students-count" class="text-xl sm:text-3xl font-black text-green-600">0</span>
+                    <span class="text-[9px] text-slate-400">طالب</span>
+                </div>
+            </div>
+
+            <!-- Stat 3: Registered Companies -->
+            <div class="bg-white/80 backdrop-blur-sm p-3 sm:p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-500">المستخدمين/الشركات</span>
+                    <span class="p-1.5 bg-purple-50 rounded-lg text-purple-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </span>
+                </div>
+                <div class="flex items-baseline gap-1">
+                    <span id="stat-companies-count" class="text-xl sm:text-3xl font-black text-purple-600">0</span>
+                    <span class="text-[9px] text-slate-400">مستخدم</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Panel Section -->
+        <section class="bg-white/90 backdrop-blur-md border border-slate-200/50 rounded-3xl p-4 sm:p-6 shadow-md">
+            
+            <!-- Main Tabs Switcher -->
+            <div class="relative flex p-1 mb-6 bg-slate-100 rounded-2xl max-w-lg">
+                <button onclick="switchTab('pending')" id="tab-pending-btn" class="flex-1 py-2.5 text-xs sm:text-sm font-bold text-slate-800 relative z-10 rounded-xl transition-all focus:outline-none">
+                    طلبات تسجيل الطلاب
+                </button>
+                <button onclick="switchTab('students')" id="tab-students-btn" class="flex-1 py-2.5 text-xs sm:text-sm font-bold text-slate-500 relative z-10 rounded-xl transition-all focus:outline-none">
+                    الطلاب المقبولين
+                </button>
+                <button onclick="switchTab('companies')" id="tab-companies-btn" class="flex-1 py-2.5 text-xs sm:text-sm font-bold text-slate-500 relative z-10 rounded-xl transition-all focus:outline-none">
+                    المستخدمين / الشركات
+                </button>
+                <!-- Sliding active background -->
+                <div id="tab-slider" class="absolute top-1 bottom-1 w-[calc(33.33%-3px)] bg-white rounded-xl shadow-sm tab-indicator" style="right: 4px;"></div>
+            </div>
+
+            <!-- Search Bar inside Dashboard -->
+            <div class="relative mb-6">
+                <span class="absolute right-3.5 top-3.5 text-slate-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </span>
+                <input type="text" id="search-input" oninput="filterLists()" placeholder="ابحث بالاسم أو رقم الاتصال أو الرقم الوطني..." class="w-full pr-10 pl-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-purple-500 rounded-xl focus:outline-none text-xs sm:text-sm placeholder:text-slate-400">
+            </div>
+
+            <!-- Tab Area: 1. PENDING REQUESTS -->
+            <div id="content-pending" class="tab-content block space-y-4">
+                <div id="pending-list" class="grid gap-4 sm:grid-cols-2">
+                    <!-- Dynamic requests render -->
+                </div>
+                <!-- Empty State -->
+                <div id="pending-empty" class="hidden text-center py-12">
+                    <div class="inline-flex items-center justify-center p-3 bg-amber-50 rounded-full text-amber-500 mb-3 animate-pulse">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-xs sm:text-sm font-bold text-slate-600">لا توجد طلبات تسجيل معلقة حالياً</p>
+                    <p class="text-[10px] text-slate-400 mt-1">عندما يسجل أي طالب جديد، سيظهر طلبه هنا للمراجعة والموافقة.</p>
+                </div>
+            </div>
+
+            <!-- Tab Area: 2. REGISTERED STUDENTS -->
+            <div id="content-students" class="tab-content hidden space-y-4">
+                <div id="students-list" class="grid gap-4 sm:grid-cols-2">
+                    <!-- Dynamic active students render -->
+                </div>
+                <!-- Empty State -->
+                <div id="students-empty" class="hidden text-center py-12">
+                    <div class="inline-flex items-center justify-center p-3 bg-slate-100 rounded-full text-slate-400 mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-xs sm:text-sm font-bold text-slate-600">لا يوجد طلاب مقبولين حالياً</p>
+                    <p class="text-[10px] text-slate-400 mt-1">قم بالموافقة على طلبات الطلاب المعلقة لإضافتهم للقائمة.</p>
+                </div>
+            </div>
+
+            <!-- Tab Area: 3. REGISTERED COMPANIES -->
+            <div id="content-companies" class="tab-content hidden space-y-4">
+                <div id="companies-list" class="grid gap-4 sm:grid-cols-2">
+                    <!-- Dynamic active companies render -->
+                </div>
+                <!-- Empty State -->
+                <div id="companies-empty" class="hidden text-center py-12">
+                    <div class="inline-flex items-center justify-center p-3 bg-slate-100 rounded-full text-slate-400 mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <p class="text-xs sm:text-sm font-bold text-slate-600">لا يوجد شركات أو مستخدمين مسجلين</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Custom Toast notifications container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none w-80 max-w-[calc(100vw-32px)]"></div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyA7XmFN_Zb0Y_4V5lPfmsOGzZhxa-8s6Fw",
+          authDomain: "lumo-8c397.firebaseapp.com",
+          projectId: "lumo-8c397",
+          storageBucket: "lumo-8c397.firebasestorage.app",
+          messagingSenderId: "845051675996",
+          appId: "1:845051675996:web:e28febf0ef226f3314ad99",
+          measurementId: "G-PJ914KGRJM"
+        };
+
+        // Initialize Firebase Compat
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // State
+        let currentTab = 'pending'; // 'pending', 'students', 'companies'
+        
+        // Data arrays from Firestore
+        let students = [];
+        let companies = [];
+        let requests = [];
+
+        // DOM elements
+        const statPendingCount = document.getElementById('stat-pending-count');
+        const statStudentsCount = document.getElementById('stat-students-count');
+        const statCompaniesCount = document.getElementById('stat-companies-count');
+
+        const tabPendingBtn = document.getElementById('tab-pending-btn');
+        const tabStudentsBtn = document.getElementById('tab-students-btn');
+        const tabCompaniesBtn = document.getElementById('tab-companies-btn');
+        const tabSlider = document.getElementById('tab-slider');
+
+        const contentPending = document.getElementById('content-pending');
+        const contentStudents = document.getElementById('content-students');
+        const contentcompanies = document.getElementById('content-companies');
+
+        const pendingList = document.getElementById('pending-list');
+        const studentsList = document.getElementById('students-list');
+        const companiesList = document.getElementById('companies-list');
+
+        const pendingEmpty = document.getElementById('pending-empty');
+        const studentsEmpty = document.getElementById('students-empty');
+        const companiesEmpty = document.getElementById('companies-empty');
+        
+        const searchInput = document.getElementById('search-input');
+
+        // Verify Admin Session on Page Load
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists && doc.data().role === 'admin') {
+                        // Authorized, load dynamic Firestore listeners
+                        initializeFirestoreListeners();
+                    } else {
+                        showToast('غير مصرح لك بالدخول! جاري تسجيل الخروج...', 'error');
+                        setTimeout(() => {
+                            auth.signOut().then(() => {
+                                window.location.href = 'index.html';
+                            });
+                        }, 1000);
+                    }
+                }).catch(err => {
+                    console.error("Firestore auth check failed:", err);
+                    window.location.href = 'index.html';
+                });
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Initialize Real-time Firestore Listeners
+        function initializeFirestoreListeners() {
+            // 1. Pending student requests listener
+            db.collection('users')
+                .where('role', '==', 'student')
+                .where('status', '==', 'pending')
+                .onSnapshot(snapshot => {
+                    requests = [];
+                    snapshot.forEach(doc => {
+                        requests.push({ uid: doc.id, ...doc.data() });
+                    });
+                    statPendingCount.textContent = requests.length;
+                    if (currentTab === 'pending') {
+                        filterLists();
+                    }
+                }, err => console.error("Requests listener err:", err));
+
+            // 2. Approved students listener
+            db.collection('users')
+                .where('role', '==', 'student')
+                .where('status', '==', 'approved')
+                .onSnapshot(snapshot => {
+                    students = [];
+                    snapshot.forEach(doc => {
+                        students.push({ uid: doc.id, ...doc.data() });
+                    });
+                    statStudentsCount.textContent = students.length;
+                    if (currentTab === 'students') {
+                        filterLists();
+                    }
+                }, err => console.error("Students listener err:", err));
+
+            // 3. Registered companies listener
+            db.collection('users')
+                .where('role', '==', 'company')
+                .onSnapshot(snapshot => {
+                    companies = [];
+                    snapshot.forEach(doc => {
+                        companies.push({ uid: doc.id, ...doc.data() });
+                    });
+                    statCompaniesCount.textContent = companies.length;
+                    if (currentTab === 'companies') {
+                        filterLists();
+                    }
+                }, err => console.error("Companies listener err:", err));
+        }
+
+        // Switch Dashboard Tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Buttons visual updates
+            tabPendingBtn.classList.remove('text-slate-800');
+            tabPendingBtn.classList.add('text-slate-500');
+            tabStudentsBtn.classList.remove('text-slate-800');
+            tabStudentsBtn.classList.add('text-slate-500');
+            tabCompaniesBtn.classList.remove('text-slate-800');
+            tabCompaniesBtn.classList.add('text-slate-500');
+
+            // Toggle contents display
+            contentPending.classList.add('hidden');
+            contentStudents.classList.add('hidden');
+            contentcompanies.classList.add('hidden');
+
+            if (tab === 'pending') {
+                tabPendingBtn.classList.add('text-slate-800');
+                tabPendingBtn.classList.remove('text-slate-500');
+                tabSlider.style.right = '4px';
+                contentPending.classList.remove('hidden');
+            } else if (tab === 'students') {
+                tabStudentsBtn.classList.add('text-slate-800');
+                tabStudentsBtn.classList.remove('text-slate-500');
+                tabSlider.style.right = 'calc(33.33% + 2px)';
+                contentStudents.classList.remove('hidden');
+            } else {
+                tabCompaniesBtn.classList.add('text-slate-800');
+                tabCompaniesBtn.classList.remove('text-slate-500');
+                tabSlider.style.right = 'calc(66.66% + 1px)';
+                contentcompanies.classList.remove('hidden');
+            }
+
+            filterLists(); // Re-filter on tab switch
+        }
+
+        // Show toast alert
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            toast.className = `p-4 rounded-xl shadow-lg border text-xs sm:text-sm font-bold flex items-center gap-3 transition-all duration-300 transform translate-y-6 opacity-0 pointer-events-auto w-full`;
+            
+            if (type === 'success') {
+                toast.className += ' bg-green-50 border-green-200 text-green-800';
+                toast.innerHTML = `
+                    <span class="p-1 bg-green-500 text-white rounded-full">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                    </span>
+                    <span>${message}</span>
+                `;
+            } else if (type === 'error') {
+                toast.className += ' bg-red-50 border-red-200 text-red-800';
+                toast.innerHTML = `
+                    <span class="p-1 bg-red-500 text-white rounded-full">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </span>
+                    <span>${message}</span>
+                `;
+            } else {
+                toast.className += ' bg-blue-50 border-blue-200 text-blue-800';
+                toast.innerHTML = `
+                    <span class="p-1 bg-blue-500 text-white rounded-full">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </span>
+                    <span>${message}</span>
+                `;
+            }
+
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-6', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-[-24px]', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        // Render DOM components
+        function renderPending(filteredData = requests) {
+            pendingList.innerHTML = '';
+            if (filteredData.length === 0) {
+                pendingEmpty.classList.remove('hidden');
+                return;
+            }
+            pendingEmpty.classList.add('hidden');
+
+            filteredData.forEach((req) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col justify-between hover:shadow-md transition-all';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-black text-slate-800">${req.name}</h3>
+                            <span class="text-[9px] px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-200/50 rounded-full font-bold">قيد الانتظار</span>
+                        </div>
+                        <div class="space-y-1.5 text-[10px] sm:text-xs text-slate-500 mb-4">
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 00.996.808H12a1 1 0 00.745-.325L13.73 5.3a1 1 0 011.06-.217L18.2 6.6a1 1 0 01.69 1.15l-.47 2.01a1 1 0 00.08.685L19 12a1 1 0 01.4 1.135l-1.3 4.5a1 1 0 01-1.07.69l-3.2-.35a1 1 0 00-.735.215l-1.7 1.3a1 1 0 01-1.12.08L6.8 17.9a1 1 0 01-.43-.915l.13-3.26a1 1 0 00-.265-.675l-2.1-2.1a1 1 0 01-.215-1.06l1.3-3.2A1 1 0 016.12 6H7a1 1 0 00.707-.293L8.7 4.7a1 1 0 011.06-.217L13 6"></path></svg>
+                                <span>الاتصال/البريد: ${req.contact}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.333 0 4 .667 4 2V15H3v-1c0-1.333 2.667-2 4-2z"></path></svg>
+                                <span>الرقم الوطني: ${req.nationalId || req.id || 'غير متوفر'}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span>تاريخ التقديم: ${req.date || 'اليوم'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="approveStudent('${req.uid}', '${req.name}')" class="flex-1 py-2 text-xs font-bold text-white bg-green-600 hover:bg-green-700 rounded-xl transition-all shadow-sm active:scale-95 flex items-center justify-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                            قبــــول
+                        </button>
+                        <button onclick="declineStudent('${req.uid}', '${req.name}')" class="flex-1 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100/70 border border-red-200/50 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            رفــض
+                        </button>
+                    </div>
+                `;
+                pendingList.appendChild(card);
+            });
+        }
+
+        function renderStudents(filteredData = students) {
+            studentsList.innerHTML = '';
+            if (filteredData.length === 0) {
+                studentsEmpty.classList.remove('hidden');
+                return;
+            }
+            studentsEmpty.classList.add('hidden');
+
+            filteredData.forEach((student) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col justify-between hover:shadow-md transition-all';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-black text-slate-800">${student.name}</h3>
+                            <span class="text-[9px] px-2 py-0.5 bg-green-50 text-green-600 border border-green-200/50 rounded-full font-bold">نشط</span>
+                        </div>
+                        <div class="space-y-1.5 text-[10px] sm:text-xs text-slate-500 mb-4">
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold text-slate-700">التخصص:</span>
+                                <span class="px-2 py-0.5 bg-purple-50 text-purple-600 rounded font-bold">${student.specialization || 'طالب BTEC'}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold text-slate-700">المهارات:</span>
+                                <span class="text-slate-600 truncate">${student.skills || 'لم تحدد بعد'}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold text-slate-700">الاتصال/البريد:</span>
+                                <span>${student.contact}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold text-slate-700">الرقم الوطني:</span>
+                                <span>${student.nationalId || student.id || 'غير متوفر'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="deleteStudent('${student.uid}', '${student.name}')" class="w-full py-2 text-xs font-bold text-red-500 hover:text-white hover:bg-red-500/90 border border-red-200 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            حذف الطالب من النظام
+                        </button>
+                    </div>
+                `;
+                studentsList.appendChild(card);
+            });
+        }
+
+        function renderCompanies(filteredData = companies) {
+            companiesList.innerHTML = '';
+            if (filteredData.length === 0) {
+                companiesEmpty.classList.remove('hidden');
+                return;
+            }
+            companiesEmpty.classList.add('hidden');
+
+            filteredData.forEach((company) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col justify-between hover:shadow-md transition-all';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-black text-slate-800">${company.name}</h3>
+                            <span class="text-[9px] px-2 py-0.5 bg-purple-50 text-purple-600 border border-purple-200/50 rounded-full font-bold">حساب موثق</span>
+                        </div>
+                        <div class="space-y-1.5 text-[10px] sm:text-xs text-slate-500 mb-4">
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold text-slate-700">رقم الاتصال/البريد:</span>
+                                <span>${company.contact}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold text-slate-700">نوع الحساب:</span>
+                                <span>مستثمر / شركة / عميل أعمال</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="deleteCompany('${company.contact}', '${company.name}')" class="w-full py-2 text-xs font-bold text-red-500 hover:text-white hover:bg-red-500/90 border border-red-200 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            حذف الحساب
+                        </button>
+                    </div>
+                `;
+                companiesList.appendChild(card);
+            });
+        }
+
+        // Approve Student Request (تحديث حالة الطالب إلى Firestore)
+        function approveStudent(uid, name) {
+            db.collection('users').doc(uid).update({
+                status: 'approved'
+            }).then(() => {
+                showToast(`تمت الموافقة على انضمام الطالب ${name} بنجاح!`, 'success');
+            }).catch(err => {
+                console.error("Approve student err:", err);
+                showToast('فشل تحديث حالة الطالب في Firestore.', 'error');
+            });
+        }
+
+        // Decline Student Request
+        function declineStudent(uid, name) {
+            if (!confirm(`هل أنت متأكد من رفض طلب تسجيل الطالب ${name} وحذفه من قاعدة البيانات؟`)) {
+                return;
+            }
+            db.collection('users').doc(uid).delete().then(() => {
+                showToast(`تم رفض وحذف طلب الطالب ${name}.`, 'error');
+            }).catch(err => {
+                console.error("Decline student err:", err);
+                showToast('فشل حذف طلب الطالب.', 'error');
+            });
+        }
+
+        // Delete active student
+        function deleteStudent(uid, name) {
+            if (!confirm(`هل أنت متأكد من رغبتك في حذف حساب الطالب ${name} نهائياً؟`)) {
+                return;
+            }
+            db.collection('users').doc(uid).delete().then(() => {
+                showToast(`تم حذف حساب الطالب ${name} بنجاح.`, 'error');
+            }).catch(err => {
+                console.error("Delete student err:", err);
+                showToast('فشل حذف حساب الطالب.', 'error');
+            });
+        }
+
+        // Delete active company
+        function deleteCompany(uid, name) {
+            if (!confirm(`هل أنت متأكد من رغبتك في حذف حساب ${name} نهائياً؟`)) {
+                return;
+            }
+            db.collection('users').doc(uid).delete().then(() => {
+                showToast(`تم حذف حساب الشركة بنجاح.`, 'error');
+            }).catch(err => {
+                console.error("Delete company err:", err);
+                showToast('فشل حذف حساب الشركة.', 'error');
+            });
+        }
+
+        // Search and local filtering
+        function filterLists() {
+            const query = searchInput.value.trim().toLowerCase();
+
+            if (currentTab === 'pending') {
+                if (!query) {
+                    renderPending(requests);
+                } else {
+                    const filtered = requests.filter(r => 
+                        r.name.toLowerCase().includes(query) || 
+                        r.contact.toLowerCase().includes(query) || 
+                        (r.nationalId && r.nationalId.includes(query)) ||
+                        (r.id && r.id.includes(query))
+                    );
+                    renderPending(filtered);
+                }
+            } else if (currentTab === 'students') {
+                if (!query) {
+                    renderStudents(students);
+                } else {
+                    const filtered = students.filter(s => 
+                        s.name.toLowerCase().includes(query) || 
+                        s.contact.toLowerCase().includes(query) || 
+                        (s.nationalId && s.nationalId.includes(query)) ||
+                        (s.id && s.id.includes(query)) ||
+                        (s.specialization && s.specialization.toLowerCase().includes(query))
+                    );
+                    renderStudents(filtered);
+                }
+            } else {
+                if (!query) {
+                    renderCompanies(companies);
+                } else {
+                    const filtered = companies.filter(c => 
+                        c.name.toLowerCase().includes(query) || 
+                        c.contact.toLowerCase().includes(query)
+                    );
+                    renderCompanies(filtered);
+                }
+            }
+        }
+
+        // Logout
+        function handleLogout() {
+            showToast('جاري تسجيل الخروج والعودة للبوابة...', 'info');
+            setTimeout(() => {
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html';
+                });
+            }, 800);
+        }
+    </script>
+</body>
+
+</html>

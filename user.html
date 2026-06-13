@@ -6,6 +6,10 @@
   <title>LUMO</title>
   <!-- PWA Manifest Link -->
   <link rel="manifest" href="manifest.json">
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <!-- Tailwind CSS v3 with Plugins -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <!-- Font Setup: Using a readable Arabic sans-serif stack -->
@@ -1366,137 +1370,96 @@
     let activeChatUser = null;
     let activeChatAvatar = "";
 
-    // 1.4 Database of Student Profiles
-    const students = {
-      "أحمد علي": {
-        name: "أحمد علي",
-        avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150",
-        title: "مطور تطبيقات ويب متكاملة",
-        role: "طالب BTEC",
-        projectsCount: 1,
-        views: "890",
-        likes: "124",
-        bio: "طالب طموح في مسار BTEC لتطوير البرمجيات. أركز على بناء تطبيقات ويب متكاملة وسلسة باستخدام أحدث التقنيات مثل React وTailwind CSS.",
-        skills: ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Node.js"]
-      },
-      "سارة حسن": {
-        name: "سارة حسن",
-        avatar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=150",
-        title: "مصممة واجهات وتجربة المستخدم UI/UX",
-        role: "طالب BTEC",
-        projectsCount: 1,
-        views: "654",
-        likes: "98",
-        bio: "أصمم تجارب رقمية جذابة وسهلة الاستخدام. أعشق الألوان المتناسقة وأهتم بأدق التفاصيل والرسوم المتحركة الدقيقة لتحقيق أفضل تجربة للمستخدم.",
-        skills: ["Figma", "UI/UX Design", "Adobe Illustrator", "Color Theory"]
-      },
-      "خالد عمر": {
-        name: "خالد عمر",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150",
-        title: "مطور ذكاء اصطناعي ونظم تعلم آلي",
-        role: "طالب BTEC",
-        projectsCount: 1,
-        views: "1,205",
-        likes: "156",
-        bio: "شغوف بتحليل البيانات الكبيرة وتدريب نماذج التعلم الآلي والذكاء الاصطناعي لحل المشكلات الواقعية وتوقع اتجاهات السوق.",
-        skills: ["Python", "TensorFlow", "Pandas", "Data Analytics"]
-      },
-      "ديما يوسف": {
-        name: "ديما يوسف",
-        avatar: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=150",
-        title: "مطور واجهات أمامية وتفاعلية",
-        role: "طالب BTEC",
-        projectsCount: 1,
-        views: "742",
-        likes: "112",
-        bio: "أركز على بناء واجهات مستخدم متجاوبة وسريعة الاستجابة. لدي اهتمام خاص بمكتبات الرسوم المتحركة وجعل المواقع تنبض بالحياة.",
-        skills: ["Vue.js", "Tailwind CSS", "Firebase", "Web Animation"]
-      }
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7XmFN_Zb0Y_4V5lPfmsOGzZhxa-8s6Fw",
+      authDomain: "lumo-8c397.firebaseapp.com",
+      projectId: "lumo-8c397",
+      storageBucket: "lumo-8c397.firebasestorage.app",
+      messagingSenderId: "845051675996",
+      appId: "1:845051675996:web:e28febf0ef226f3314ad99",
+      measurementId: "G-PJ914KGRJM"
     };
+
+    // Initialize Firebase Compat
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
     let followedAccountNames = ["سارة حسن", "أحمد علي"];
 
     let myProfileData = {
-      name: "أحمد المحاميد",
+      name: "جاري التحميل...",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=250"
     };
 
-    let myJobs = [
-      {
-        id: 1,
-        title: "مطور واجهات أمامية (React)",
-        company: "شركة LUMO التقنية",
-        location: "عمان، الأردن (هجين)",
-        category: "dev",
-        categoryLabel: "برمجة وتطوير",
-        desc: "مطلوب مطور واجهات أمامية حديث التخرج أو بخبرة بسيطة للعمل على منصات تفاعلية باستخدام React و Tailwind CSS."
-      }
-    ];
+    let myJobs = [];
+    let projects = []; 
+    let students = {}; // Loaded dynamically from Firestore
+    let currentUid = null;
 
-    // 1.5 Database of Student Projects
-    const projects = [
-      {
-        id: 1,
-        title: "منصة التوظيف الذكية لطلاب BTEC",
-        category: "dev",
-        categoryLabel: "برمجة وتطوير",
-        cover: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400&auto=format&fit=crop",
-        desc: "نظام ويب ذكي يهدف لربط المهارات الفنية لطلاب BTEC بالشركات الأردنية المحلية، ويوفر ملفات شخصية تفاعلية ومحاكاة لمقابلات العمل الفنية المدعومة بالذكاء الاصطناعي.",
-        techs: ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Node.js"],
-        likes: 124,
-        views: 890,
-        studentName: "أحمد علي",
-        studentAvatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150",
-        studentTitle: "مطور تطبيقات ويب"
-      },
-      {
-        id: 2,
-        title: "تصميم الهوية البصرية لتطبيق LUMO",
-        category: "design",
-        categoryLabel: "تصاميم وفنون",
-        cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400&auto=format&fit=crop",
-        desc: "تصميم متكامل لواجهات وتجربة مستخدم تطبيق LUMO للهواتف المحمولة، مع وضع دليل الألوان، الشعار التفاعلي، ورسم المكونات البصرية الفريدة التي تجمع بين الفخامة والبساطة.",
-        techs: ["Figma", "UI/UX Design", "Adobe Illustrator", "Color Theory"],
-        likes: 98,
-        views: 654,
-        studentName: "سارة حسن",
-        studentAvatar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=150",
-        studentTitle: "مصممة واجهات ومستخدم"
-      },
-      {
-        id: 3,
-        title: "نظام تحليل البيانات العقارية بالذكاء الاصطناعي",
-        category: "ai",
-        categoryLabel: "ذكاء اصطناعي",
-        cover: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=400&auto=format&fit=crop",
-        desc: "نموذج ذكاء اصطناعي يقوم بتحليل وتوقع تقلبات أسعار العقارات في السوق الأردني بناءً على بيانات جغرافية واقتصادية وتاريخية ممتدة على مدار عشر سنوات.",
-        techs: ["Python", "TensorFlow", "Pandas", "Data Analytics"],
-        likes: 156,
-        views: 1205,
-        studentName: "خالد عمر",
-        studentAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150",
-        studentTitle: "مطور ذكاء اصطناعي"
-      },
-      {
-        id: 4,
-        title: "بوابة التعليم الذاتي التفاعلية للأطفال",
-        category: "dev",
-        categoryLabel: "برمجة وتطوير",
-        cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=400&auto=format&fit=crop",
-        desc: "منصة تعليمية تقدم دروساً تفاعلية وألعاباً منطقية لتعليم الأطفال التفكير الخوارزمي وأساسيات البرمجة من خلال واجهات رسومية ملونة وجذابة بالكامل.",
-        techs: ["Vue.js", "Tailwind CSS", "Firebase", "Web Animation"],
-        likes: 112,
-        views: 742,
-        studentName: "ديما يوسف",
-        studentAvatar: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=150",
-        studentTitle: "مطور واجهات أمامية"
-      }
-    ];
+    // Verify session & listen to data in real time
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            currentUid = user.uid;
+            
+            // 1. Listen to company's own profile doc in Firestore
+            db.collection('users').doc(user.uid).onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    myProfileData.name = data.name || "شركة LUMO";
+                    myProfileData.avatar = data.avatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=250";
+                    initProfileData();
+                }
+            });
+
+            // 2. Listen to company's own posted jobs/opportunities in Firestore
+            db.collection('projects').where('ownerUid', '==', user.uid).onSnapshot(snapshot => {
+                myJobs = [];
+                snapshot.forEach(doc => {
+                    myJobs.push({ id: doc.id, ...doc.data() });
+                });
+                renderMyJobsList();
+                initProfileData();
+            });
+
+            // 3. Listen to all student projects in Firestore (for the company's talent gallery)
+            db.collection('projects').where('category', '==', 'project').onSnapshot(snapshot => {
+                projects = [];
+                snapshot.forEach(doc => {
+                    projects.push({ id: doc.id, ...doc.data() });
+                });
+                renderProjects();
+            });
+
+            // 4. Listen to all students in Firestore to display visited student profiles correctly
+            db.collection('users').where('role', '==', 'student').onSnapshot(snapshot => {
+                students = {};
+                snapshot.forEach(doc => {
+                    const u = doc.data();
+                    students[u.name] = {
+                        name: u.name,
+                        avatar: u.avatar || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150",
+                        title: u.specialization || "طالب BTEC",
+                        role: "طالب BTEC",
+                        projectsCount: 1, 
+                        views: "100",
+                        likes: "15",
+                        bio: u.bio || `طالب طموح في مسار BTEC المهني في تخصص ${u.specialization || 'التطبيقات ويب'}.`,
+                        skills: u.skills || []
+                    };
+                });
+            });
+
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
 
     let currentGalleryCategory = "all";
     let activePageId = 'home';
     let transitionTimeout = null;
-    let favoriteProjectIds = [1, 2];
+    let favoriteProjectIds = [];
 
     // Page index map for directional transitions (RTL visual order: right→left)
     const pageIndex = { home: 0, gallery: 1, chats: 2, profile: 3 };
@@ -1612,7 +1575,9 @@
     // 2.7 Logout Handler
     function handleLogout() {
       if (confirm("هل أنت متأكد من رغبتك في تسجيل الخروج؟")) {
-        window.location.href = "index.html";
+        auth.signOut().then(() => {
+          window.location.href = "index.html";
+        });
       }
     }
 
@@ -1650,7 +1615,7 @@
         card.innerHTML = `
           <div class="relative w-full h-[160px] bg-slate-100 flex-shrink-0">
             <img src="${p.cover}" alt="${p.title}" class="w-full h-full object-cover">
-            <button onclick="toggleFavoriteProject(event, ${p.id})" class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm p-1.5 rounded-full shadow-sm border border-slate-100 transition-all active:scale-90 z-10 text-gray-500">
+            <button onclick="toggleFavoriteProject(event, '${p.id}')" class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm p-1.5 rounded-full shadow-sm border border-slate-100 transition-all active:scale-90 z-10 text-gray-500">
               <svg class="h-4 w-4 stroke-current ${isFav ? 'text-red-500 fill-red-500 animate-pulse' : 'text-gray-400 fill-none'}" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
@@ -1677,7 +1642,7 @@
               </div>
             </div>
 
-            <button onclick="openProjectDetails(${p.id})" class="w-full bg-slate-50 hover:bg-purple-50 text-slate-800 hover:text-purple-600 py-2 rounded-xl text-xs font-bold border border-slate-100 hover:border-purple-200 active:scale-95 transition-all text-center flex-shrink-0">
+            <button onclick="openProjectDetails('${p.id}')" class="w-full bg-slate-50 hover:bg-purple-50 text-slate-800 hover:text-purple-600 py-2 rounded-xl text-xs font-bold border border-slate-100 hover:border-purple-200 active:scale-95 transition-all text-center flex-shrink-0">
               عرض التفاصيل
             </button>
           </div>
@@ -2109,7 +2074,7 @@
             <p class="text-[10px] text-gray-400 mt-0.5">بواسطة: ${p.studentName}</p>
             <span class="inline-block text-[9px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full mt-1 border border-purple-100/30">${p.categoryLabel}</span>
           </div>
-          <button class="text-red-500 hover:text-gray-400 p-2 active:scale-75 transition-all" onclick="event.stopPropagation(); toggleFavoriteProject(event, ${p.id})">
+          <button class="text-red-500 hover:text-gray-400 p-2 active:scale-75 transition-all" onclick="event.stopPropagation(); toggleFavoriteProject(event, '${p.id}')">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
           </button>
         `;
@@ -2204,12 +2169,18 @@
         return;
       }
 
-      myProfileData.name = name;
-      myProfileData.avatar = selectedAvatarUrl;
-
-      initProfileData();
-      closeEditProfile();
-      showToast('تم تحديث الملف الشخصي بنجاح!', 'success');
+      db.collection('users').doc(currentUid).update({
+        name: name,
+        avatar: selectedAvatarUrl
+      })
+      .then(() => {
+        closeEditProfile();
+        showToast('تم تحديث الملف الشخصي بنجاح!', 'success');
+      })
+      .catch(err => {
+        console.error(err);
+        showToast('فشل تحديث الملف الشخصي.', 'error');
+      });
     }
 
     function closeEditProfile() {
@@ -2260,10 +2231,10 @@
             <span class="inline-block text-[9px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full mt-1 border border-purple-100/30">${job.categoryLabel}</span>
           </div>
           <div class="flex items-center space-x-1 space-x-reverse flex-shrink-0">
-            <button onclick="editMyJob(${job.id})" class="text-purple-600 hover:text-purple-700 p-2 active:scale-75 transition-all flex items-center justify-center">
+            <button onclick="editMyJob('${job.id}')" class="text-purple-600 hover:text-purple-700 p-2 active:scale-75 transition-all flex items-center justify-center">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
             </button>
-            <button onclick="deleteMyJob(${job.id})" class="text-red-500 hover:text-red-600 p-2 active:scale-75 transition-all flex items-center justify-center">
+            <button onclick="deleteMyJob('${job.id}')" class="text-red-500 hover:text-red-600 p-2 active:scale-75 transition-all flex items-center justify-center">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
             </button>
           </div>
@@ -2370,46 +2341,59 @@
       };
 
       if (editingJobId !== null) {
-        // Edit mode: find existing and update it
-        const jobIndex = myJobs.findIndex(j => j.id === editingJobId);
-        if (jobIndex !== -1) {
-          myJobs[jobIndex].title = title;
-          myJobs[jobIndex].company = company;
-          myJobs[jobIndex].location = location;
-          myJobs[jobIndex].category = category;
-          myJobs[jobIndex].categoryLabel = categoryLabels[category];
-          myJobs[jobIndex].desc = desc;
-          
-          showToast('تمت تعديل فرصة العمل بنجاح!', 'success');
-        }
-        editingJobId = null; // reset
-      } else {
-        // Add mode
-        const newId = Date.now();
-        const newJob = {
-          id: newId,
+        // Edit mode: update existing doc in Firestore
+        db.collection('projects').doc(editingJobId).update({
           title: title,
           company: company,
           location: location,
           category: category,
           categoryLabel: categoryLabels[category],
           desc: desc
+        })
+        .then(() => {
+          showToast('تمت تعديل فرصة العمل بنجاح!', 'success');
+          editingJobId = null; // reset
+          showAddNewJobForm(false);
+        })
+        .catch(err => {
+          console.error(err);
+          showToast('فشل تعديل فرصة العمل.', 'error');
+        });
+      } else {
+        // Add mode: add new doc to Firestore
+        const newJob = {
+          title: title,
+          company: company,
+          location: location,
+          category: category,
+          categoryLabel: categoryLabels[category],
+          desc: desc,
+          ownerUid: currentUid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
-        myJobs.unshift(newJob);
-        showToast('تم نشر فرصة العمل بنجاح في المنصة!', 'success');
-      }
 
-      renderMyJobsList();
-      showAddNewJobForm(false);
-      initProfileData();
+        db.collection('projects').add(newJob)
+        .then(() => {
+          showToast('تم نشر فرصة العمل بنجاح في المنصة!', 'success');
+          showAddNewJobForm(false);
+        })
+        .catch(err => {
+          console.error(err);
+          showToast('فشل نشر فرصة العمل.', 'error');
+        });
+      }
     }
 
     function deleteMyJob(id) {
       if (confirm('هل أنت متأكد من رغبتك في حذف هذه الفرصة؟')) {
-        myJobs = myJobs.filter(j => j.id !== id);
-        renderMyJobsList();
-        initProfileData();
-        showToast('تم حذف فرصة العمل بنجاح.', 'info');
+        db.collection('projects').doc(id).delete()
+        .then(() => {
+          showToast('تم حذف فرصة العمل بنجاح.', 'info');
+        })
+        .catch(err => {
+          console.error(err);
+          showToast('فشل حذف فرصة العمل.', 'error');
+        });
       }
     }
 

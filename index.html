@@ -15,6 +15,10 @@
     <link rel="preload" href="assets/logo_compressed_800.png" as="image" type="image/png">
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="manifest.json">
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <style>
         html {
             scroll-behavior: smooth;
@@ -599,52 +603,333 @@
             });
         }
 
-        // Handle Unified Login Form
-        function handleLogin(event) {
-            event.preventDefault();
-            const identifier = document.getElementById('login-identifier').value.trim();
-            const password = document.getElementById('login-password').value.trim();
+        // Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyA7XmFN_Zb0Y_4V5lPfmsOGzZhxa-8s6Fw",
+          authDomain: "lumo-8c397.firebaseapp.com",
+          projectId: "lumo-8c397",
+          storageBucket: "lumo-8c397.firebasestorage.app",
+          messagingSenderId: "845051675996",
+          appId: "1:845051675996:web:e28febf0ef226f3314ad99",
+          measurementId: "G-PJ914KGRJM"
+        };
 
+        // Initialize Firebase Compat
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Helper to format phone/identifier to a valid firebase email
+        function formatContactToEmail(contact) {
+            contact = contact.trim().replace(/\s+/g, '');
+            
+            // Normalize Eastern Arabic numerals (٠-٩) and Persian numerals (۰-۹) to Western Arabic (0-9)
+            const arabicNumerals = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+            const persianNumerals = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+            for (let i = 0; i < 10; i++) {
+                contact = contact.replace(arabicNumerals[i], i).replace(persianNumerals[i], i);
+            }
+
+            if (contact.includes('@')) {
+                return contact.toLowerCase();
+            }
+            if (contact === 'admin') {
+                return 'admin@lumo.com';
+            }
+            // Remove spaces and non-alphanumeric characters for phone/names
+            const clean = contact.replace(/[^a-zA-Z0-9]/g, '');
+            return `${clean || 'user'}@lumo.com`.toLowerCase();
+        }
+
+        // Seed demo accounts in Firebase if they do not exist
+        async function seedFirebaseDemoAccounts() {
+            if (localStorage.getItem('lumo_firebase_seeded')) return;
+
+            const demoAccounts = [
+                {
+                    email: 'admin@lumo.com',
+                    password: 'admin123',
+                    name: 'مسؤول المنصة',
+                    role: 'admin',
+                    status: 'approved'
+                },
+                {
+                    email: 'student@lumo.com',
+                    password: '123456',
+                    name: 'أحمد العتيبي',
+                    role: 'student',
+                    status: 'approved',
+                    nationalId: '2001928374',
+                    specialization: 'تطوير البرمجيات - طالب BTEC',
+                    skills: 'HTML, CSS, JavaScript, React'
+                },
+                {
+                    email: 'company@lumo.com',
+                    password: '123456',
+                    name: 'شركة الحلول المتقدمة',
+                    role: 'company',
+                    status: 'approved'
+                }
+            ];
+
+            for (const account of demoAccounts) {
+                try {
+                    // Try to log in first
+                    await auth.signInWithEmailAndPassword(account.email, account.password);
+                    await auth.signOut();
+                } catch (err) {
+                    // If doesn't exist, create it
+                    if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+                        try {
+                            const cred = await auth.createUserWithEmailAndPassword(account.email, account.password);
+                            const uid = cred.user.uid;
+                            const docData = {
+                                name: account.name,
+                                contact: account.email,
+                                role: account.role,
+                                status: account.status
+                            };
+                            if (account.role === 'student') {
+                                docData.nationalId = account.nationalId;
+                                docData.specialization = account.specialization;
+                                docData.skills = account.skills;
+                            }
+                            await db.collection('users').doc(uid).set(docData);
+                        } catch (createErr) {
+                            console.log("Seeding create err for:", account.email, createErr.message);
+                        }
+                    }
+                }
+            }
+            localStorage.setItem('lumo_firebase_seeded', 'true');
+        }
+        seedFirebaseDemoAccounts();
+
+        // Handle Unified Login Form
+        async function handleLogin(event) {
+            event.preventDefault();
+            let identifier = document.getElementById('login-identifier').value.trim();
+            let password = document.getElementById('login-password').value.trim();
+
+            // Support demo shortcuts
             if (identifier === '1' && password === '1') {
-                showAlert('تم تسجيل الدخول بنجاح! جاري تحويلك إلى المنصة...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'code.html';
-                }, 800);
-            } else {
-                showAlert('رقم الهاتف/البريد الإلكتروني أو كلمة السر غير صحيحة! (استخدم 1 و 1 للدخول)', 'error');
+                identifier = 'student@lumo.com';
+                password = '123456';
+            } else if (identifier === '2' && password === '2') {
+                identifier = 'company@lumo.com';
+                password = '123456';
+            } else if (identifier === 'admin' && password === 'admin') {
+                identifier = 'admin@lumo.com';
+                password = 'admin123';
+            }
+
+            const email = formatContactToEmail(identifier);
+
+            // Minimum length check for Firebase password
+            if (password.length < 6) {
+                showAlert('كلمة السر يجب أن لا تقل عن 6 خانات لمصادقة Firebase!', 'error');
+                return;
+            }
+
+            showAlert('جاري التحقق من الحساب...', 'info');
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const uid = userCredential.user.uid;
+
+                // Fetch user data from Firestore
+                const doc = await db.collection('users').doc(uid).get();
+
+                if (!doc.exists) {
+                    showAlert('حسابك موثق في Auth ولكن لا توجد تفاصيل في Firestore. جاري تسجيل الخروج...', 'error');
+                    await auth.signOut();
+                    return;
+                }
+
+                const userData = doc.data();
+
+                if (userData.role === 'admin') {
+                    showAlert('تم تسجيل دخول المسؤول بنجاح! جاري تحويلك...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 800);
+                } else if (userData.role === 'student') {
+                    if (userData.status === 'pending') {
+                        showAlert('عذراً، طلب حسابك كطالب ما زال قيد المراجعة والموافقة من قبل الإدارة.', 'error');
+                        await auth.signOut();
+                    } else {
+                        showAlert(`أهلاً بك يا ${userData.name}! تم الدخول بنجاح...`, 'success');
+                        setTimeout(() => {
+                            window.location.href = 'student.html';
+                        }, 800);
+                    }
+                } else if (userData.role === 'company') {
+                    showAlert(`أهلاً بك يا ${userData.name}! تم الدخول بنجاح...`, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'user.html';
+                    }, 800);
+                } else {
+                    showAlert('نوع الحساب غير معروف!', 'error');
+                    await auth.signOut();
+                }
+
+            } catch (err) {
+                console.error("Login error:", err);
+                let msg = 'البريد/رقم الهاتف أو كلمة السر غير صحيحة!';
+                if (err.code === 'auth/user-not-found') {
+                    msg = 'هذا الحساب غير موجود في النظام!';
+                } else if (err.code === 'auth/wrong-password') {
+                    msg = 'كلمة السر غير صحيحة!';
+                } else if (err.code === 'auth/network-request-failed') {
+                    msg = 'فشل الاتصال بالشبكة! يرجى التحقق من اتصالك بالإنترنت.';
+                }
+                showAlert(msg, 'error');
             }
         }
 
         // Handle Register Student Form
-        function handleRegisterStudent(event) {
+        async function handleRegisterStudent(event) {
             event.preventDefault();
-            const name = document.getElementById('reg-student-name').value;
-            const contact = document.getElementById('reg-student-contact').value;
-            const id = document.getElementById('reg-student-id').value;
-            const password = document.getElementById('reg-student-password').value;
+            const name = document.getElementById('reg-student-name').value.trim();
+            const contact = document.getElementById('reg-student-contact').value.trim();
+            const id = document.getElementById('reg-student-id').value.trim();
+            const password = document.getElementById('reg-student-password').value.trim();
 
             if (id.length !== 10) {
                 showAlert('الرقم الوطني الأردني يجب أن يتكون من 10 خانات رقمية!', 'error');
                 return;
             }
 
-            showAlert(`تهانينا يا ${name}! تم إنشاء حسابك كطالب BTEC بنجاح. سننقل أعمالك من الظل إلى الضوء 🌟`, 'success');
+            if (password.length < 6) {
+                showAlert('كلمة السر يجب أن تتكون من 6 خانات على الأقل!', 'error');
+                return;
+            }
 
-            // Clear form
-            regStudentForm.reset();
+            // Client-side validation for contact field
+            if (contact.includes('@')) {
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(contact.replace(/\s+/g, ''))) {
+                    showAlert('يرجى إدخال بريد إلكتروني صحيح باللغة الإنجليزية (مثال: student@lumo.com)', 'error');
+                    return;
+                }
+            } else {
+                const cleanPhone = contact.replace(/[+\s]/g, '');
+                let normalizedPhone = cleanPhone;
+                const arabicNumerals = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+                const persianNumerals = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+                for (let i = 0; i < 10; i++) {
+                    normalizedPhone = normalizedPhone.replace(arabicNumerals[i], i).replace(persianNumerals[i], i);
+                }
+                if (!/^[0-9]+$/.test(normalizedPhone) || normalizedPhone.length < 9) {
+                    showAlert('يرجى إدخال رقم هاتف صحيح وصالح (مثال: 0791234567)', 'error');
+                    return;
+                }
+            }
+
+            showAlert('جاري تقديم طلب التسجيل...', 'info');
+
+            const email = formatContactToEmail(contact);
+
+            try {
+                // Register in Auth
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCredential.user.uid;
+
+                // Create user document in Firestore with pending status
+                await db.collection('users').doc(uid).set({
+                    name: name,
+                    contact: contact,
+                    id: id,
+                    nationalId: id,
+                    role: 'student',
+                    status: 'pending',
+                    specialization: 'تطوير البرمجيات - طالب BTEC',
+                    skills: 'مبتدئ BTEC, ريادة الأعمال',
+                    date: new Date().toISOString().split('T')[0]
+                });
+
+                // Sign out immediately so they don't remain logged in as pending student
+                await auth.signOut();
+
+                showAlert(`تم تقديم طلب تسجيلك يا ${name} بنجاح! بانتظار موافقة الإدارة لتفعيل حسابك 🌟`, 'success');
+                regStudentForm.reset();
+
+            } catch (err) {
+                console.error("Register student error:", err);
+                let msg = 'فشل إنشاء الحساب! قد يكون البريد الإلكتروني أو الهاتف مسجلاً بالفعل.';
+                if (err.code === 'auth/email-already-in-use') {
+                    msg = 'البريد الإلكتروني أو الهاتف المدخل مسجل بالفعل في النظام!';
+                } else if (err.code === 'auth/invalid-email') {
+                    msg = 'صيغة البريد الإلكتروني أو رقم الهاتف غير صحيحة!';
+                }
+                showAlert(msg, 'error');
+            }
         }
 
         // Handle Register Company Form
-        function handleRegisterCompany(event) {
+        async function handleRegisterCompany(event) {
             event.preventDefault();
-            const name = document.getElementById('reg-company-name').value;
-            const contact = document.getElementById('reg-company-contact').value;
-            const password = document.getElementById('reg-company-password').value;
+            const name = document.getElementById('reg-company-name').value.trim();
+            const contact = document.getElementById('reg-company-contact').value.trim();
+            const password = document.getElementById('reg-company-password').value.trim();
 
-            showAlert(`مرحباً بك يا ${name}! تم تسجيل مؤسستك/حسابك بنجاح. أنت الآن على بعد خطوة من اكتشاف ألمع مواهب BTEC! ✨`, 'success');
+            if (password.length < 6) {
+                showAlert('كلمة السر يجب أن تتكون من 6 خانات على الأقل!', 'error');
+                return;
+            }
 
-            // Clear form
-            regCompanyForm.reset();
+            // Client-side validation for contact field
+            if (contact.includes('@')) {
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(contact.replace(/\s+/g, ''))) {
+                    showAlert('يرجى إدخال بريد إلكتروني صحيح باللغة الإنجليزية (مثال: info@company.com)', 'error');
+                    return;
+                }
+            } else {
+                const cleanPhone = contact.replace(/[+\s]/g, '');
+                let normalizedPhone = cleanPhone;
+                const arabicNumerals = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+                const persianNumerals = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+                for (let i = 0; i < 10; i++) {
+                    normalizedPhone = normalizedPhone.replace(arabicNumerals[i], i).replace(persianNumerals[i], i);
+                }
+                if (!/^[0-9]+$/.test(normalizedPhone) || normalizedPhone.length < 9) {
+                    showAlert('يرجى إدخال رقم هاتف صحيح وصالح (مثال: 0791234567)', 'error');
+                    return;
+                }
+            }
+
+            showAlert('جاري تسجيل حساب الشركة...', 'info');
+
+            const email = formatContactToEmail(contact);
+
+            try {
+                // Register in Auth
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCredential.user.uid;
+
+                // Create user document in Firestore with approved status
+                await db.collection('users').doc(uid).set({
+                    name: name,
+                    contact: contact,
+                    role: 'company',
+                    status: 'approved',
+                    date: new Date().toISOString().split('T')[0]
+                });
+
+                showAlert(`مرحباً بك يا ${name}! تم تسجيل حسابك بنجاح. يمكنك الآن تسجيل الدخول فوراً بالبيانات الجديدة ✨`, 'success');
+                regCompanyForm.reset();
+
+            } catch (err) {
+                console.error("Register company error:", err);
+                let msg = 'فشل إنشاء الحساب! قد يكون البريد أو الهاتف مسجلاً بالفعل.';
+                if (err.code === 'auth/email-already-in-use') {
+                    msg = 'البريد الإلكتروني أو الهاتف المدخل مسجل بالفعل!';
+                } else if (err.code === 'auth/invalid-email') {
+                    msg = 'صيغة البريد الإلكتروني أو رقم الهاتف غير صحيحة!';
+                }
+                showAlert(msg, 'error');
+            }
         }
 
         // PWA Service Worker Registration
